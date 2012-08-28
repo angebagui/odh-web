@@ -1,0 +1,60 @@
+#{extends 'web.html' /}
+#{set title : document.title /}
+#{set 'subTitle'}
+        &{'document.clones'}
+#{/set}
+#{if clones}
+<div class="row-fluid">
+    <ul class="thumbnails">
+        %{
+        i = 1;
+        for (_ in clones) {
+        }%
+        <li class="span2">
+            <div class="thumbnail">
+                <a href="${_.permalink}">
+                    <img src="${_.thumbnailUrl}" alt="${_.title}">
+                </a>
+                <div class="caption">
+                    <h5>
+                        <a href="${_.permalink}">
+                            ${_.title}
+                        </a>
+                    </h5>
+                    <p>
+                        <small>&{'clonedBy'} <strong><a href="#">${_.owner}</a></strong></small>
+                        <small><time class="timeago" datetime="${_.created}">${_.created}</time></small>
+                    <div><small>${_.fileSize?.formatSize()}</small></div>
+                    </p>
+                    <div>
+                        <i class="icon-eye-open"></i> <strong>${_.readCount}</strong>
+                        |
+                        <i class="icon-download-alt"></i> <strong>${_.downloadCount}</strong>
+                        |
+                        <i class="icon-copy"></i> <strong>${_.cloneCount}</strong>
+                    </div>
+                </div>
+            </div>
+        </li>
+        %{
+        if (i % 6 == 0) {
+        out.println('</ul>');
+    out.println('<ul class="thumbnails">');
+    }
+    i++;
+    }
+    }%
+</ul>
+</div>
+
+#{/if}
+#{else}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="alert alert-warning">
+            <h3>&{'sorry'}</h3>
+            <p>&{'document.clones.empty'}</p>
+        </div>
+    </div>
+</div>
+#{/else}

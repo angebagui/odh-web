@@ -1,0 +1,25 @@
+#{extends 'web.html' /}
+#{set title : document.title/}
+#{set 'subTitle'}
+    &{'edit.documentDetails'}
+#{/set}
+<div class="row-fluid">
+    <div class="span12">
+        #{form @web.Documents.updateDetails(document.id), enctype:'multipart/form-data', class : 'form-horizontal'}
+            #{field 'title'}
+                #{form.input field : field, value : document?.title, class : 'input-xxlarge', required  : true /}
+            #{/field}
+            #{field 'category.id'}
+                #{form.select field : field, items : categories, valueProperty : 'id', labelProperty : 'name',  value : document?.category?.id /}
+            #{/field}
+            #{field 'source'}
+                #{form.input field : field, value : document?.source, class : 'input-xxlarge', required  : false /}
+            #{/field}
+            <div class="form-actions">
+                <input type="submit" value="&{'update.documentDetails'}" class="btn btn-primary" />
+            </div>
+        #{/form}
+
+        #{a @delete(document.id), class : 'btn btn-danger'}&{'delete.document'}#{/a}
+    </div>
+</div>

@@ -1,0 +1,210 @@
+#{extends 'web.html' /}
+#{set title : document.title /}
+#{i18n keys:['document.upload.error.notice'] /}
+<div class="row-fluid">
+    <div class="span3">
+        <div class="well well-small">
+            <div class="box">
+                <div class="clearfix user-preview">
+                    <a href="#" class="pull-left">
+                        #{if document.owner?.picture}
+                            <img src="${document.owner?.picture}?sz=50" alt="${document.owner?.name}" class="picture-small" width="50" height="50"/>
+                        #{/if}
+                        #{else}
+                            <img src="/public/images/user.png" alt="${document.owner?.name}" class="picture-small" width="50" height="50"/>
+                        #{/else}
+                    </a>
+                    &{'sharedBy'}
+                        <a href="#" class="user-preview-name">
+                            <strong>${document.owner.name}</strong>
+                        </a>
+                    #{if document.originalDocument}
+                        <small>via
+                        <a href="@{read(document.originalDocument.id, document.originalDocument.slug)}" class="user-preview-name">
+                            <strong>${document.originalDocument.owner.name}</strong>
+                        </a></small>
+                    #{/if}
+                </div>
+            </div>
+            <div class="box">
+                    <div class="row-fluid document-view-numbers">
+                        <div class="span4">
+                            <div class="document-view-number">
+                                <strong>${document.readCount}</strong>
+                                <p><small>&{'reads'}</small></p>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="document-view-number">
+                                <strong>${document.downloadCount}</strong>
+                                <p><small>&{'downloads'}</small></p>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="document-view-number">
+                                <strong><a href="@{web.Documents.listClones(document.id)}">${document.cloneCount}</a></strong>
+                                <p><small>&{'clones'}</small></p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="box">
+                #{if me?.id == document.owner?.id}
+                    <a href="@{editDetails(document.id)}"  class="btn btn-block btn-danger"><i class="icon-pencil"></i>
+                        &{'document.editDetails'}
+                    </a>
+                #{/if}
+                #{else}
+                    <div class="clone-result"></div>
+                    <div class="progress progress-striped active hide">
+                        <div class="bar" style="width: 100%;"></div>
+                    </div>
+                    <button type="button" class="btn btn-block btn-success button-clone" data-loading-text="&{'loading'}"><i class="icon-copy"></i>
+                        &{'clone.document'}
+                    </button>
+                #{/else}
+                <a href="${document.alternateLink}" target="_blank" class="btn btn-block btn-primary"><i class="icon-external-link"></i> &{'open.document.googleDocs'}</a>
+            </div>
+            <div class="box">
+                    <h5>&{'download.document.asFormat'}</h5>
+                #{list document.exportLinks}
+                    <div>
+                    #{a @download(_.id), class : 'btn btn-block'}
+                        <i class="icon-download-alt"></i> ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
+                    #{/a}
+                    </div>
+                #{/list}
+            </div>
+            <div class="box">
+                <h5>&{'share.document'}</h5>
+                <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
+                    <i class="icon icon-google-plus-sign"></i> Google +
+                </a>
+                <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=Je lis ${document.title} sur @civdocs - " class="share-button btn btn-block">
+                    <i class="icon icon-twitter"></i> Twitter
+                </a>
+                <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
+                    <i class="icon icon-facebook"></i> Facebook
+                </a>
+            </div>
+            <div class="box">
+                <h5>&{'document.about'}</h5>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>&{'document.category.id'}</td><td><a href="@{list(document.category.id, document.category.slug, null, null)}">${document.category.name}</a></td>
+                    </tr>
+                    <tr>
+                        <td>&{'document.mimeType'}</td>
+                        <td>
+                            ${document.mime.humanFriendlyName}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&{'document.fileSize'}</td><td>${document.fileSize.formatSize()}</td>
+                    </tr>
+                    <tr>
+                        <td>&{'document.created'}</td><td><time class="timeago" datetime="${_.created}">${document.created}</time></td>
+                    </tr>
+                    <tr>
+                        <td>&{'document.source'}</td>
+                        <td>
+                            ${document.source}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="span9">
+        #{if document.embedLink}
+            <iframe src="${document.embedLink.raw()}" width="100%" height="1000" frameborder="0"></iframe>
+        #{/if}
+        #{else}
+            <div class="alert alert-error">
+                <h3>&{'sorry'}</h3>
+                <p>&{'document.deleted'}</p>
+            </div>
+        #{/else}
+    </div>
+</div>
+#{set 'moreScripts'}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.share-button').click(function() {
+            var width  = 575,
+                height = 400,
+                left   = ($(window).width()  - width)  / 2,
+                top    = ($(window).height() - height) / 2,
+                //url    = this.href,
+                url = this.href;
+                opts   = '';
+                window.open(url, 'share', 'title="Share", toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + width +', height=' + height +', top='+top+', left='+left);
+            return false;
+        });
+        $('button.btn').button();
+        $('.button-clone').click(function() {
+            #{if me == null}
+                $('.clone-result').html('<div class="alert">Veuillez <a href="/auth/google/code">vous connecter</a> SVP :-)</div>');
+                return false;
+            #{/if}
+            $('button.btn').button('loading');
+            $('.progress').show();
+            var createCloneAction = #{jsRoute @web.Documents.createClone(':id') /}
+            $.ajax({
+                url : createCloneAction.url({id: ${document.id}}),
+                type : createCloneAction.method,
+                data : { authenticityToken : '${session.authenticityToken}'}
+            }).success(function(data) {
+                if (data.id) {
+                    var jobStatusId = data.id;
+                    $('.progress').show();
+                    var trialCount = 0;
+                    var checkInterval = setInterval(
+                        function() {
+                            if (trialCount < 10) {
+                                trialCount++;
+                                var checkCloneDocumentJobStatusAction = #{jsRoute @web.Documents.checkCloneDocumentJobStatus(':cloneDocumentJobStatusId') /}
+                                $.ajax({
+                                    url : checkCloneDocumentJobStatusAction.url({cloneDocumentJobStatusId: jobStatusId}),
+                                    type : checkCloneDocumentJobStatusAction.method,
+                                    data : { authenticityToken : '${session.authenticityToken}'}
+                                }).success(function(data) {
+                                    if (data.done) {
+                                        $('.progress').addClass('progress-success');
+                                        window.location = 'http://${request.host}/documents/' + data.clonedDocumentId + '/go';
+                                        clearInterval(checkInterval);
+                                    } else {
+                                        $('.progress').addClass('progress-warning');
+                                    }
+                                }).error(function(data) {});
+                            } else {
+                                $('.clone-result').html('<div class="alert alert-error">' + i18n('document.upload.error.notice') + '</div>');
+                                $('.progress').addClass('progress-danger');
+                                $('button.btn').button('reset');
+                                trialCount = 0;
+                            }
+                        },
+                        2000
+                    );
+                }
+            }).error(function(data) {
+                $('.clone-result').html('<div class="alert alert-error">' + i18n('document.upload.error.notice') + '</div>');
+                $('.progress').addClass('progress-danger');
+                $('button.btn').button('reset');
+            });
+            return false;
+        });
+        setTimeout(
+            function() {
+                var incrementReadCountAction = #{jsRoute @web.Documents.incrementReadCount(':id') /}
+                $.ajax({
+                    url : incrementReadCountAction.url({id: ${document.id}}),
+                    type : incrementReadCountAction.method,
+                    data : { authenticityToken : '${session.authenticityToken}'}
+                });
+            },
+            30000
+        );
+    });
+</script>
+#{/set}

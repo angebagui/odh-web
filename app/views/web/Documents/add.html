@@ -1,0 +1,110 @@
+#{extends 'web.html' /}
+#{set 'title'}
+    &{'upload.document'}
+#{/set}
+#{i18n keys:['document.read', 'document.editDetails', 'document.upload.error.notice'] /}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="alert alert-error hide">
+            <h3>&{'error.title'}</h3>
+            <p></p>
+        </div>
+        #{form @api.Documents.create(), enctype:'multipart/form-data', class : 'form-horizontal'}
+            #{field 'document.title'}
+                #{form.input field : field, value : document?.title, class : 'input-xxlarge', required  : true /}
+            #{/field}
+            #{field 'document.category.id'}
+                #{form.select field : field, items : categories, valueProperty : 'id', labelProperty : 'name',  value : document?.category?.id/}
+            #{/field}
+            #{field 'document.file'}
+                #{form.input field : field, type : 'file', 'help' : '.pdf, .doc, .docx, .ppt, .pptx, .txt, .rtf, .html' , required  : true /}
+            #{/field}
+            #{field 'document.source'}
+                #{form.input field : field, label : 'Source', value : document?.source, class : 'input-xxlarge', 'help' : 'document.source.help', required  : false /}
+            #{/field}
+            <p class="alert">
+                &{'document.upload.notice', 'civdocs'}
+            </p>
+            <div class="form-actions">
+                <div class="progress progress-striped active hide">
+                    <div class="bar" style="width: 0%;"></div>
+                </div>
+                <input type="submit" value="&{'document.upload.submit'}" class="btn btn-primary" data-loading-text="&{'loading'}"/>
+            </div>
+        #{/form}
+        <div id="upload-result" class="hide">
+            <div class="alert alert-success">
+                <h3>&{'success.title'}</h3>
+                <p>
+                    &{'document.uploaded'}
+                </p>
+            </div>
+            <div class="span2">
+                <div class="result-document-thumbnail"></div>
+            </div>
+            <div class="span6">
+                <div class="result-document-info">
+                    <h3 class="result-document-title"></h3>
+                    <p class="alert alert-info">&{'document.upload.thumbnail.notice'}</p>
+                    <span class="result-document-read-link"></span>
+                    <span class="result-document-edit-link"></span>
+                    <hr />
+                    <div>
+                        <a href="@{web.Documents.add()}" class="btn btn-primary"><i class="icon-upload-alt"></i> &{'upload.document'}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#{set 'moreScripts'}
+<script type="text/javascript">
+    (function() {
+        $('.btn').button();
+        var barElement = $('.bar');
+
+        $('form').ajaxForm({
+            beforeSubmit: function() {
+                $('form .btn-primary').button('loading');
+                $('.progress').show();
+                $('.progress').removeClass('progress-danger');
+                $('.alert-error').hide();
+                $('.control-group').removeClass('error');
+                $('.control-group').find('.label').html("").hide();
+                var percentVal = '0%';
+                barElement.css('width', percentVal)
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                barElement.css('width', percentVal)
+            },
+            success: function(document) {
+                barElement.parents('.progress').addClass('progress-success');
+                $('form').slideUp('slow');
+                $('form').remove();
+                $('.result-document-thumbnail').html('<a href="' + document.permalink + '" class="thumbnail"><img src="' + document.thumbnailUrl +'" alt="' + document.title + '" /></a>');
+                $('.result-document-title').html('<a href="' + document.permalink + '">' + document.title + '</a>');
+                $('.result-document-read-link').html('<a href="' + document.permalink + '" class="btn"><i class="icon-eye-open"></i> ' + i18n('document.read') + '</a>');
+                $('.result-document-edit-link').html('<a href="/documents/' + document.id + '/edit" class="btn"><i class="icon-pencil"></i> ' + i18n('document.editDetails') + '</a>');
+                $('#upload-result').show();
+            },
+            error: function(xhr) {
+                $('.btn-primary').button('reset');
+                if (xhr.status == 500) {
+                    $('.alert-error p').html(i18n('document.upload.error.notice'));
+                    $('.alert-error').show();
+                } else if (xhr.status == 400) {
+                    $('.alert-error p').html(i18n('document.upload.error.notice'));
+                    $('.alert-error').show();
+                    var errors = JSON.parse(xhr.responseText);
+                    $.each(errors, function(field, message){
+                        $('[name=\'' + field + '\']').parents('.control-group').addClass('error');
+                        $('[name=\'' + field + '\']').parents('.control-group').find('.label').html(message).show();
+                    });
+                }
+                barElement.parents('.progress').addClass('progress-danger');
+            }
+        });
+    })();
+</script>
+#{/set}

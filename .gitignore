@@ -5,12 +5,23 @@
 !.gitignore
 
 # Ignore Play! working directory #
+.classpath
+.project
+.settings
 db
 eclipse
+javadoc
+lib
 log
 logs
+modules
+nbproject
 precompiled
 tmp
 test-result
 eclipse
 server.pid
+*.iws
+*.ipr
+*.iml
+*.log

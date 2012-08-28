@@ -1,0 +1,133 @@
+#{extends 'web.html' /}
+#{set title : 'Documents' /}
+#{if category}
+    #{set title : category.name /}
+#{/if}
+#{if order == null}
+    #{set 'title' }
+        &{'welcome'}
+    #{/set}
+#{/if}
+#{if order == 'recent'}
+    #{set 'subTitle' }
+        &{'recent'}
+    #{/set}
+#{/if}
+#{if order == 'reads'}
+    #{set 'subTitle' }
+        &{'mostRead'}
+    #{/set}
+#{/if}
+#{if order == 'downloads'}
+    #{set 'subTitle' }
+        &{'mostDownloaded'}
+    #{/set}
+#{/if}
+#{if order == 'clones'}
+    #{set 'subTitle' }
+        &{'mostCloned'}
+    #{/set}
+#{/if}
+<div class="row-fluid">
+    <div class="span12">
+        <ul class="nav nav-pills">
+            <li class="${order == null || order == 'recent' ? 'active' : ''}">
+                <a href="@{list(category?.id, category?.slug, 'recent', null)}">
+                    &{'recent'}
+                </a>
+            </li>
+            <li class="${order == 'reads' ? 'active' : ''}">
+                <a href="@{list(category?.id, category?.slug, 'reads', null)}">
+                    &{'mostRead'}
+                </a>
+            </li>
+            <li class="${order == 'downloads' ? 'active' : ''}">
+                <a href="@{list(category?.id, category?.slug, 'downloads', null)}">
+                    &{'mostDownloaded'}
+                </a>
+            </li>
+            <li class="${order == 'clones' ? 'active' : ''}">
+                <a href="@{list(category?.id, category?.slug, 'clones', null)}">
+                    &{'mostCloned'}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+#{if documents}
+    <div class="row-fluid">
+        <ul class="thumbnails">
+            %{
+                i = 1;
+                for (_ in documents) {
+            }%
+            <li class="span2">
+                <div class="thumbnail">
+                    <a href="${_.permalink}">
+                        <img src="${_.thumbnailUrl}" alt="${_.title}">
+                    </a>
+                    <div class="caption">
+                        <h5>
+                            <a href="${_.permalink}">
+                                ${_.title}
+                            </a>
+                        </h5>
+                        <p>
+                            <small>&{'sharedBy'}<strong> <a href="#">${_.owner}</a></strong></small>
+                            <div>
+                                <small><time class="timeago" datetime="${_.created}">${_.created}</time></small>
+                            </div>
+                            <div><small>${_.fileSize?.formatSize()}</small></div>
+                        </p>
+                        <div>
+                        <i class="icon-eye-open"></i> <strong>${_.readCount}</strong>
+                        |
+                        <i class="icon-download-alt"></i> <strong>${_.downloadCount}</strong>
+                        |
+                        <i class="icon-copy"></i> <strong>${_.cloneCount}</strong>
+                        </div>
+                    </div>
+                </div>
+                </li>
+            %{
+                if (i % 6 == 0) {
+                    out.println('</ul>');
+                    out.println('<ul class="thumbnails">');
+                }
+            i++;
+            }
+            }%
+        </ul>
+    </div>
+    <div class="row-fluid">
+        <div class="pager">
+            <ul>
+                <li>
+                    #{if page > 1}
+                        <a href="@{list(category?.id, category?.slug, order, (page != null ? page - 1 : 1))}">
+                            &larr; &{'prev'}
+                        </a>
+                    #{/if}
+                    #{else}
+                        &larr; &{'prev'}
+                    #{/else}
+                </li>
+                <li>
+                    <a href="@{list(category?.id, category?.slug, order, (page != null ? 1 + page : 2))}" class="next">
+                        &{'next'} &rarr;
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+#{/if}
+#{else}
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="alert alert-warning">
+                <h3>&{'sorry'}</h3>
+                <p>&{'document.list.end'}</p>
+            </div>
+        </div>
+    </div>
+#{/else}

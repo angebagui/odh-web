@@ -1,0 +1,51 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET   /admin           AdminController.index
+*     /admin           module:crud
+
+# Home page
+
+GET     /auth/google/code                                                       web.Auth.googleCode
+GET     /auth/google/token                                                      web.Auth.googleToken
+GET     /google/drive/files                                                     web.GoogleDrive.listFiles
+GET     /upload                                                                 web.Documents.add
+POST    /logout                                                                 web.Auth.logout
+
+#WEB
+POST    /lang                                                                   web.WebController.updateLanguage
+GET     /categories/{<[0-9]+>categoryId}-{categorySlug}/documents               web.Documents.list
+GET     /                                                                       web.Documents.list
+GET     /documents/{<[0-9]+>id}-{slug}                                          web.Documents.read
+GET     /documents/{<[0-9]+>id}/go                                              web.Documents.go
+GET     /documents/{<[0-9]+>id}/details/edit                                    web.Documents.editDetails
+POST    /documents/{<[0-9]+>id}/details                                         web.Documents.updateDetails
+POST    /documents/{<[0-9]+>id}/clones                                          web.Documents.createClone
+GET     /documents/{<[0-9]+>id}/clones                                          web.Documents.listClones
+POST    /documents/{<[0-9]+>id}/readCount                                       web.Documents.incrementReadCount
+POST    /documents/{<[0-9]+>id}/deletet                                         web.Documents.delete
+POST    /documents/downloads/{<[0-9]+>exportLinkId}                             web.Documents.download
+
+
+# ================== API =====================
+GET     /api/categories                                                         api.Categories.list
+GET     /api/categories/{<[0-9]+>id}/documents                                  api.Categories.listDocuments
+GET     /api/categories/{<[0-9]+>id}                                            api.Categories.read
+POST    /api/categories                                                         api.Categories.create
+PUT     /api/categories/{<[0-9]+>id}                                            api.Categories.update
+DELETE  /api/categories/{<[0-9]+>id}                                            api.Categories.delete
+POST    /api/documents                                                          api.Documents.create
+GET     /api/documents/{<[0-9]+>id}/thumbnail                                   api.Documents.readThumbnail
+
+
+*       /api/*                                                                  404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                                                staticDir:public
+
+# Ignore favicon requests
+GET     /favicon.ico                                                            404
+
+# Catch all
+*       /{controller}/{action}                                                  {controller}.{action}

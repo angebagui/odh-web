@@ -1,0 +1,14 @@
+<div class="${_field.errorClass} control-group">
+    <label for="${_field.id}" class="control-label">&{_field.name}</label>
+    <div class="controls">
+        #{doBody /}
+        <span class="label label-important radius red error  ${_field.error == null ? 'hide' : '' }">
+            ${_field.error}
+        </span>
+        #{if _help}
+            <p class="help-block">
+                <small>&{_help}</small>
+            </p>
+        #{/if}
+    </div>
+</div>

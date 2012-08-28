@@ -1,0 +1,68 @@
+application.description = The open-source documents sharing platform.
+application.welcomeMessage = Welcome to <strong>%s</strong>, the open-source documents sharing platform.
+home=Home
+categories=Categories
+upload.document=Share a document
+auth.logout = Logout
+auth.login = Sign in with Google +
+recent = Shared recently
+mostRead = Most read
+mostDownloaded = Most downloaded
+mostCloned = Most cloned
+
+
+error.title = Error!
+success.title = Success!
+
+
+loading = Loading...
+
+read.document.on = Read %s on
+
+# document stuff
+title = Document title
+category.id = Document Category
+source = Document source
+document.title = Document title
+document.category.id = Document category
+document.file = File
+document.source = Document source
+document.source.help = Is the document accurate? What is the source?
+document.upload.notice = A copy of this file will be uploaded to your Google Drive and shared on %s.
+document.upload.submit = Upload !
+document.upload.thumbnail.notice = The thumbnail for this document will be generated in a few minutes. Meanwhile you can keep using the website.
+document.uploaded = Your document has been uploaded.
+document.editDetails = Edit details
+document.read = Read
+document.upload.error.notice = An error occurred. Please try again.
+delete.document =  Delete this document
+update.documentDetails = Save changes
+edit.documentDetails = Edit details
+document.list.end = There is no more documents to show.
+document.clones = Clones
+document.clones.empty = There are no clones available for this document.
+reads = Reads
+downloads = Downloads
+clones = Clones
+clone.document = Clone this document
+open.document.googleDocs = Open this document on Google Docs
+download.document.asFormat = Download this document as
+share.document = Share this document
+document.about = About this document
+document.mimeType = Mime Type
+document.fileSize = File Size
+document.created = Upload date
+document.delete.success = Your document was deleted.
+document.updateDetails.success = Your document details have been saved.
+document.read.error = This document has been deleted by its owner.
+document.unavailable = This document is not available anymore. Please check one of its clones.
+auth.unauthorizedAccess = You are not authorized to access this resource
+welcome = Welcome
+sorry = Sorry!
+auth.login.success = Welcome %s
+auth.logout.success = Good Bye %s, See you soon :-)
+auth.login.needed = Please sign in :-)
+sharedBy = Shared by
+clonedBy = Cloned by
+prev = Prev
+next = Next
