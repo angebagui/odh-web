@@ -20,7 +20,7 @@ Installation
 
 First clone the repo
 
-    git clone repo
+    git clone https://github.com/regisbamba/opendocshub.git
 
 Then create or update the following environment variables :
 
