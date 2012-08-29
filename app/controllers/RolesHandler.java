@@ -8,12 +8,6 @@ import models.deadbolt.RoleHolder;
 import play.Logger;
 import play.mvc.Controller;
 
-/**
- * Controller that checks Users (AdminController) roles.
- *
- * @author Regis Bamba
- * @since 3/7/12
- */
 public class RolesHandler extends Controller implements DeadboltHandler {
 
     /**
