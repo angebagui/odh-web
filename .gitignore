@@ -9,7 +9,6 @@
 .project
 .settings
 conf/application.conf
-db
 eclipse
 javadoc
 lib
