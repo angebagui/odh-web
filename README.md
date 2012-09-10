@@ -22,14 +22,18 @@ First clone the repo
 
     git clone https://github.com/regisbamba/opendocshub.git
 
-Then create or update the following environment variables :
+Then open the configuration file **/conf/application.conf** and change the following properties :
 
-* **ODH_APP_NAME** (Your application name, ex : opendocshub)
-* **ODH_FULL_APP_NAME** (Your application full name, ex : The Open Docs Hub Project)
-* **ODH_DATABASE_URL** (The url to your database, ex : postgres://user:pwd@host/database)
-* **ODH_JPA_DIALECT** (The JPA dialect, ex : org.hibernate.dialect.PostgreSQLDialect)
-* **ODH_GOOGLE_OAUTH_CLIENT** (The Google OAuth client id, ex : 123456789.apps.googleusercontent.com)
-* **ODH_GOOGLE_OAUTH_SECRET** (The Google OAuth client secret)
+    application.name=OpenDocsHub
+    application.fullName=Open Docs Hub
+    application.secret=YOUR_APPLICATION_SECRET
+
+    db=postgres://user:pass@host/db
+    jpa.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+    google.oAuth.client_id=YOUR_GOOGLE_OAUTH_CLIENT_ID (ex : 123456789.apps.googleusercontent.com)
+    google.oAuth.client_secret=YOUR_GOOGLE_OAUTH_CLIENT_SECRET
+
 
 Then change the redirect url in the Google Api console to http://**your_server_url**/auth/google/token
 
@@ -38,3 +42,16 @@ Then you can run
     play deps --sync
     play evolutions:apply
     play run
+
+
+Point your browser to **http://your_server_url** if everything goes right you should see the homepage.
+
+If you are developping locally you should point your browser to **http://localhost:9000**
+
+Setting up your platform
+-------------------------
+
+By default the first user to login will be set as an admin. So on the home page, click on the **Sign in with Google +** and you will be set as an admin.
+
+Then you can go to **http://your_server_url/admin** to add new categories and set up other users as admin.
+
