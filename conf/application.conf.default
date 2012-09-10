@@ -5,7 +5,7 @@ application.name=OpenDocsHub
 application.fullName=Open Docs Hub
 application.secret=YOUR_APPLICATION_SECRET
 
-db=postgres://postgres:ch748Awrek@localhost/opendocshub
+db=postgres://user:pass@host/db
 jpa.dialect=org.hibernate.dialect.PostgreSQLDialect
 
 google.oAuth.client_id=YOUR_GOOGLE_OAUTH_CLIENT_ID
@@ -234,3 +234,7 @@ mail.smtp=mock
 %test.db.url=jdbc:h2:mem:play;MODE=MYSQL;LOCK_MODE=0
 %test.jpa.ddl=create
 %test.mail.smtp=mock
+
+
+
+
