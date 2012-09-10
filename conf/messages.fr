@@ -1,5 +1,5 @@
 application.description = La plateforme d'&eacute;changes de documents et de donn&eacute;es.
-application.welcomeMessage = Bienvenue sur <strong>%s</strong>, la plateforme ivoirienne d'&eacute;changes de documents et de donn&eacute;es.
+application.welcomeMessage = Bienvenue sur <strong>%s</strong>, la plateforme d'&eacute;changes de documents et de donn&eacute;es.
 home=Accueil
 categories=Cat&eacute;gories
 upload.document=Partager un document
