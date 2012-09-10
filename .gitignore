@@ -8,6 +8,7 @@
 .classpath
 .project
 .settings
+conf/application.conf
 db
 eclipse
 javadoc
