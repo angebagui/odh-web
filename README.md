@@ -22,7 +22,7 @@ First clone the repo
 
     git clone https://github.com/regisbamba/opendocshub.git
 
-Then rename in the **conf** folder, rename or copy **application.conf.default** to **application.conf** and change the following properties :
+Then in the **/conf** folder, rename or copy **application.conf.default** to **application.conf** and change the following properties :
 
     application.name=OpenDocsHub
     application.fullName=Open Docs Hub
