@@ -15,10 +15,6 @@ import play.mvc.Util;
 
 public class AppController extends Controller {
 
-    protected static final String COUNT_PARAMETER_LABEL = "count";
-    protected static final int COUNT_PARAMETER_DEFAULT_VALUE = 20;
-    protected static final int COUNT_PARAMETER_MAX_VALUE = 100;
-
     protected static ObjectMapper jsonObjectMapper = null;
 
     @Before
