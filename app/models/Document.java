@@ -1,11 +1,21 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.api.client.http.FileContent;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.Permission;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+
 import jobs.FetchDocumentThumbnailJob;
 import jobs.IncrementDocumentCloneCountJob;
 import models.enums.Mime;
@@ -18,46 +28,68 @@ import play.db.jpa.Transactional;
 import play.templates.JavaExtensions;
 import services.googleoauth.GoogleOAuth;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.persistence.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.api.client.http.FileContent;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.Permission;
 
 @Entity
 public class Document extends BaseModel {
 
-    @Required
-    @JsonProperty
-    public String title;
+    public static class MimeTypeCheck extends Check {
+
+        @Override
+        public boolean isSatisfied(Object document, Object mimeTypeName) {
+            this.setMessage("validation.mimetype.invalid", (String) mimeTypeName);
+            Mime mimeType = Mime.parseName((String) mimeTypeName);
+            return (mimeType != null);
+        }
+
+    }
 
     @NoBinding
-    public String slug;
-
     @JsonProperty
-    public String description;
+    public String alternateLink;
 
     @Required
     @ManyToOne
     @JsonProperty
     public Category category;
 
-
-    @ManyToOne
     @NoBinding
     @JsonProperty
-    public User owner;
+    public int cloneCount;
+
+    @NoBinding
+    @JsonProperty
+    public int commentCount;
+
+    @JsonProperty
+    public String description;
+
+    @NoBinding
+    @JsonProperty
+    public int downloadCount;
+
+    @NoBinding
+    @JsonProperty
+    public String embedLink;
+
+    @Required
+    public transient Upload file;
+
+    @Required
+    @NoBinding
+    @JsonProperty
+    public long fileSize;
 
     @NoBinding
     @JsonProperty
     public String googleDriveFileId;
+
+    public boolean isArchived;
 
     @CheckWith(MimeTypeCheck.class)
     @NoBinding
@@ -68,37 +100,20 @@ public class Document extends BaseModel {
     @JsonProperty
     public String modifiedDate;
 
-    @NoBinding
-    @JsonProperty
-    public String embedLink;
+    @ManyToOne
+    public Document originalDocument;
 
+    @ManyToOne
     @NoBinding
     @JsonProperty
-    public String alternateLink;
-
-    @NoBinding
-    @JsonProperty
-    public int downloadCount;
+    public User owner;
 
     @NoBinding
     @JsonProperty
     public int readCount;
 
     @NoBinding
-    @JsonProperty
-    public int commentCount;
-
-    @NoBinding
-    @JsonProperty
-    public int cloneCount;
-
-    @Required
-    public transient Upload file;
-
-    @Required
-    @NoBinding
-    @JsonProperty
-    public long fileSize;
+    public String slug;
 
     @JsonProperty
     public String source;
@@ -107,105 +122,11 @@ public class Document extends BaseModel {
     @NoBinding
     public Thumbnail thumbnail;
 
-    @ManyToOne
-    public Document originalDocument;
+    @Required
+    @JsonProperty
+    public String title;
 
-    public boolean isArchived;
-
-    public Mime getMime() {
-        return Mime.parseName(this.mimeType);
-    }
-
-    public void setMime(Mime mime) {
-        if (mime != null) {
-            this.mimeType = mime.getType();
-        }
-    }
-
-    @JsonGetter
-    public List<ExportLink> getExportLinks() {
-        if (this.id != null) {
-            return ExportLink.find("document is ?", this).fetch();
-        } else {
-            return null;
-        }
-    }
-
-    @JsonGetter
-    public String getPermalink() {
-        return String.format("/documents/%s-%s", this.id, this.slug);
-    }
-
-    @JsonGetter
-    public String getThumbnailUrl() {
-        if (this.id != null) {
-            return String.format("/api/documents/%s/thumbnail", this.id);
-        } else {
-            return null;
-        }
-    }
-
-    @Transactional
-    public void incrementCloneCount() {
-        this.cloneCount++;
-        this.save();
-    }
-
-    @Transactional
-    public void decreaseCloneCount() {
-        this.cloneCount--;
-        this.save();
-    }
-
-    @Transactional
-    public void incrementReadCount() {
-        this.readCount++;
-        this.save();
-    }
-
-    @Transactional
-    public void incrementDownloadCount() {
-        this.downloadCount++;
-        this.save();
-    }
-
-    public ExportLink getExportLinkForMime(Mime mime) {
-        return ExportLink.find("document is ? and mimeType is ?", this, mime.getType()).first();
-    }
-
-    public void updateOnGoogleDrive() throws IOException {
-        File driveFile = new File();
-        driveFile.setTitle(this.title);
-        Drive driveService = GoogleOAuth.buildDriveServiceForUser(this.owner);
-        driveService.files().update(this.googleDriveFileId, driveFile);
-    }
-    public void fetchThumbnailFromGoogleDrive() throws IOException {
-        if (this.id != null) {
-            URL url = new URL(String.format("https://docs.google.com/viewer?url=%s&export=download&a=bi&pagenumber=1&w=300", URLEncoder.encode(this.getExportLinkForMime(Mime.ADOBE_PDF).link, "UTF-8")));
-            ImageReader reader = ImageIO.getImageReadersBySuffix("png").next();
-            reader.setInput(ImageIO.createImageInputStream(url.openStream()));
-            int i = reader.getMinIndex();
-            try {
-                while (true) {
-                    BufferedImage thumbnailImage = reader.read(i++);
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    ImageIO.write(thumbnailImage, "png", outputStream);
-
-                    Thumbnail documentThumbnail = new Thumbnail();
-                    documentThumbnail.image = outputStream.toByteArray();
-                    documentThumbnail.mimeType = "image/png";
-                    documentThumbnail.save();
-
-                    this.thumbnail = documentThumbnail;
-                    this.save();
-                }
-            } catch (IndexOutOfBoundsException ex) {
-                // do nothing
-            }
-        }
-    }
-
-    public Document copyToGoogleDrive(User user) throws IOException {
+    public Document cloneForUserAndSave(User user) throws IOException {
         if (this.owner != user) {
             Drive driveService = GoogleOAuth.buildDriveServiceForUser(user);
 
@@ -261,7 +182,113 @@ public class Document extends BaseModel {
         return null;
     }
 
-    public void uploadToGoogleDrive() throws IOException {
+    @Transactional
+    public void decreaseCloneCountAndSave() {
+        this.cloneCount--;
+        this.save();
+    }
+
+    public File fetchFileFromGoogleDrive() throws IOException {
+        Drive driveService = GoogleOAuth.buildDriveServiceForUser(this.owner);
+        File driveFile = driveService.files().get(this.id.toString()).execute();
+        return driveFile;
+    }
+
+    public void fetchThumbnailFromGoogleDriveAndSave() throws IOException {
+        if (this.id != null) {
+            URL url = new URL(String.format("https://docs.google.com/viewer?url=%s&export=download&a=bi&pagenumber=1&w=300", URLEncoder.encode(this.getExportLinkForMime(Mime.ADOBE_PDF).link, "UTF-8")));
+            ImageReader reader = ImageIO.getImageReadersBySuffix("png").next();
+            reader.setInput(ImageIO.createImageInputStream(url.openStream()));
+            int i = reader.getMinIndex();
+            try {
+                while (true) {
+                    BufferedImage thumbnailImage = reader.read(i++);
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    ImageIO.write(thumbnailImage, "png", outputStream);
+
+                    Thumbnail documentThumbnail = new Thumbnail();
+                    documentThumbnail.image = outputStream.toByteArray();
+                    documentThumbnail.mimeType = "image/png";
+                    documentThumbnail.save();
+
+                    this.thumbnail = documentThumbnail;
+                    this.save();
+                }
+            } catch (IndexOutOfBoundsException ex) {
+                // do nothing
+            }
+        }
+    }
+
+    public ExportLink getExportLinkForMime(Mime mime) {
+        return ExportLink.find("document is ? and mimeType is ?", this, mime.getType()).first();
+    }
+
+    @JsonGetter
+    public List<ExportLink> getExportLinks() {
+        if (this.id != null) {
+            return ExportLink.find("document is ?", this).fetch();
+        } else {
+            return null;
+        }
+    }
+
+    public Mime getMime() {
+        return Mime.parseName(this.mimeType);
+    }
+
+    @JsonGetter
+    public String getPermalink() {
+        return String.format("/documents/%s-%s", this.id, this.slug);
+    }
+
+    @JsonGetter
+    public String getThumbnailUrl() {
+        if (this.id != null) {
+            return String.format("/api/documents/%s/thumbnail", this.id);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void incrementCloneCountAndSave() {
+        this.cloneCount++;
+        this.save();
+    }
+
+    @Transactional
+    public void incrementDownloadCountAndSave() {
+        this.downloadCount++;
+        this.save();
+    }
+
+    @Transactional
+    public void incrementReadCountAndSave() {
+        this.readCount++;
+        this.save();
+    }
+
+    @PrePersist
+    @PreUpdate
+    protected void preSave() {
+        this.slug = JavaExtensions.slugify(this.title);
+    }
+
+    public void setMime(Mime mime) {
+        if (mime != null) {
+            this.mimeType = mime.getType();
+        }
+    }
+
+    public void updateOnGoogleDrive() throws IOException {
+        File driveFile = new File();
+        driveFile.setTitle(this.title);
+        Drive driveService = GoogleOAuth.buildDriveServiceForUser(this.owner);
+        driveService.files().update(this.googleDriveFileId, driveFile);
+    }
+
+    public void uploadToGoogleDriveAndSave() throws IOException {
         File driveFile = new File();
         driveFile.setTitle(this.title);
         driveFile.setIndexableText(new File.IndexableText().setText(this.description));
@@ -301,27 +328,12 @@ public class Document extends BaseModel {
             exportLink.save();
         }
 
+        // We can fetch the thumbnail later on
         new FetchDocumentThumbnailJob(this.id).in(30);
 
-        //this.category.documentCount = this.category.documentCount + 1;
-        //this.category.save();
+        // this.category.documentCount = this.category.documentCount + 1;
+        // this.category.save();
 
-    }
-
-    @PrePersist
-    @PreUpdate
-    protected void preSave() {
-        this.slug = JavaExtensions.slugify(this.title);
-    }
-
-    public static List<Document> search(long categoryId, String order, String keyword, int start) {
-        return null;
-    }
-
-    public File fetchFileFromGoogleDrive() throws IOException {
-        Drive driveService = GoogleOAuth.buildDriveServiceForUser(this.owner);
-        File driveFile = driveService.files().get(this.id.toString()).execute();
-        return driveFile;
     }
 
     public static List<Document> find(String order, Integer page) {
@@ -341,7 +353,7 @@ public class Document extends BaseModel {
             queryString += " order by cloneCount desc ";
         }
 
-        if (page == null || page < 1) {
+        if ((page == null) || (page < 1)) {
             page = 1;
         }
 
@@ -368,10 +380,9 @@ public class Document extends BaseModel {
                 queryString += " order by cloneCount desc ";
             }
 
-            if (page == null || page < 1) {
+            if ((page == null) || (page < 1)) {
                 page = 1;
             }
-
 
             return Document.find(queryString, category, false).fetch(page, DEFAULT_PAGINATE_COUNT);
         } else {
@@ -380,14 +391,7 @@ public class Document extends BaseModel {
 
     }
 
-
-    public static class MimeTypeCheck extends Check {
-
-        public boolean isSatisfied(Object document, Object mimeTypeName) {
-            setMessage("validation.mimetype.invalid", (String) mimeTypeName);
-            Mime mimeType = Mime.parseName((String) mimeTypeName);
-            return (mimeType != null);
-        }
-
+    public static List<Document> search(long categoryId, String order, String keyword, int start) {
+        return null;
     }
 }

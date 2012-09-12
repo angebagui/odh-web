@@ -1,11 +1,12 @@
 package services.googleoauth;
 
+import models.User;
+import play.Logger;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponse;
-import models.User;
-import play.Logger;
 
 public class GoogleOAuthCredentialListener implements CredentialRefreshListener {
 
@@ -16,14 +17,14 @@ public class GoogleOAuthCredentialListener implements CredentialRefreshListener 
         this.me = me;
     }
 
-    public void onTokenResponse(Credential credential, TokenResponse tokenResponse) {
-        me.googleOAuthAccessToken = tokenResponse.getAccessToken();
-        me.save();
+    @Override
+    public void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenResponse) {
+        Logger.error("Failed to refresh token" + "\n User ID : %s" + "\n User Refresh Token : %s", this.me.id, this.me.googleOAuthRefreshToken);
     }
 
-    public void onTokenErrorResponse(Credential credential, TokenErrorResponse tokenResponse) {
-        Logger.error("Failed to refresh token" +
-                "\n User ID : %s" +
-                "\n User Refresh Token : %s", me.id, me.googleOAuthRefreshToken);
+    @Override
+    public void onTokenResponse(Credential credential, TokenResponse tokenResponse) {
+        this.me.googleOAuthAccessToken = tokenResponse.getAccessToken();
+        this.me.save();
     }
 }

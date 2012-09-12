@@ -1,9 +1,9 @@
 package services.googleoauth;
 
 public class GoogleUserInfo {
+    private String email;
     private String id;
     private String name;
-    private String email;
     private String picture;
 
     public GoogleUserInfo(String id, String name, String email, String picture) {
@@ -14,31 +14,31 @@ public class GoogleUserInfo {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getPicture() {
+        return this.picture;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPicture() {
-        return picture;
     }
 
     public void setPicture(String picture) {
@@ -46,4 +46,3 @@ public class GoogleUserInfo {
     }
 
 }
-

@@ -1,23 +1,23 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import play.data.binding.NoBinding;
+import javax.persistence.Entity;
+import javax.persistence.PreRemove;
+
 import play.data.validation.Required;
 import play.i18n.Messages;
 import play.templates.JavaExtensions;
 
-import javax.persistence.Entity;
-import javax.persistence.PreRemove;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Category extends BaseModel {
 
+    @JsonProperty
+    public int documentCount;
+
     @Required
     @JsonProperty
     public String name;
-
-    @JsonProperty
-    public int documentCount;
 
     public Category() {
         this.documentCount = 0;
@@ -28,15 +28,15 @@ public class Category extends BaseModel {
         this.documentCount = 0;
     }
 
-    public String getSlug() {
-        return JavaExtensions.slugify(this.name);
-    }
-
     @PreRemove
     protected void beforeDelete() {
         if (this.hasDocuments()) {
             throw new RuntimeException(Messages.get("category.delete.error.documents"));
         }
+    }
+
+    public String getSlug() {
+        return JavaExtensions.slugify(this.name);
     }
 
     public boolean hasDocuments() {

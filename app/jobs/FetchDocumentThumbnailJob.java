@@ -1,12 +1,10 @@
 package jobs;
 
-import com.google.gson.Gson;
+import java.io.IOException;
+
 import models.Document;
-import models.Thumbnail;
 import play.Logger;
 import play.jobs.Job;
-
-import java.io.IOException;
 
 public class FetchDocumentThumbnailJob extends Job {
 
@@ -21,7 +19,7 @@ public class FetchDocumentThumbnailJob extends Job {
         Document document = Document.find("id is ?", this.documentId).first();
         if (document != null) {
             try {
-                document.fetchThumbnailFromGoogleDrive();
+                document.fetchThumbnailFromGoogleDriveAndSave();
             } catch (IOException ex) {
                 Logger.error(ex.getMessage());
             }

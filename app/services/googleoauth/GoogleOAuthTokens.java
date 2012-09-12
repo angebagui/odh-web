@@ -1,6 +1,7 @@
 package services.googleoauth;
 
-import utils.*;
+import utils.Labels;
+
 import com.google.gson.annotations.SerializedName;
 
 public class GoogleOAuthTokens {
@@ -21,15 +22,15 @@ public class GoogleOAuthTokens {
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return this.accessToken;
+    }
+
+    public String getRefreshToken() {
+        return this.refreshToken;
     }
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
     }
 
     public void setRefreshToken(String refreshToken) {

@@ -11,16 +11,17 @@ import models.deadbolt.Role;
 
 public class UserRole implements Role {
 
-    public final static String ADMIN = "admin";
-
     public String name;
 
     public UserRole(String name) {
         this.name = name;
     }
 
+    @Override
     public String getRoleName() {
         return this.name;
     }
+
+    public final static String ADMIN = "admin";
 
 }

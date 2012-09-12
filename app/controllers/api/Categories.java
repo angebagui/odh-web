@@ -1,18 +1,14 @@
 package controllers.api;
 
-import controllers.AppController;
 import java.util.List;
-import play.data.validation.Required;
+
 import models.Category;
 import models.Document;
 import play.mvc.With;
+import controllers.AppController;
 
 @With(ApiController.class)
 public class Categories extends AppController {
-
-    public static void create(@Required Category category) {
-
-    }
 
     public static void list() {
         List<Category> categories = Category.all().fetch();

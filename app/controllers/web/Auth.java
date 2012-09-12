@@ -1,6 +1,5 @@
 package controllers.web;
 
-import controllers.AppController;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -9,8 +8,9 @@ import play.Logger;
 import play.i18n.Messages;
 import play.mvc.With;
 import services.googleoauth.GoogleOAuth;
-import services.googleoauth.GoogleUserInfo;
 import services.googleoauth.GoogleOAuthTokens;
+import services.googleoauth.GoogleUserInfo;
+import controllers.AppController;
 
 @With(WebController.class)
 public class Auth extends AppController {
@@ -46,9 +46,7 @@ public class Auth extends AppController {
                 flash.keep();
             } catch (IOException e) {
                 flash.error(Messages.get("auth.oauth.error"));
-                Logger.error(
-                        "Error during sign in with Google proccess : " +
-                        "\n Message : ", e.getMessage());
+                Logger.error("Error during sign in with Google proccess : " + "\n Message : ", e.getMessage());
                 redirect("/");
             }
             if (session.get("next") == null) {

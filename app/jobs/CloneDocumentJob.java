@@ -1,12 +1,12 @@
 package jobs;
 
+import java.io.IOException;
+
 import models.CloneDocumentJobStatus;
 import models.Document;
 import models.User;
 import play.Logger;
 import play.jobs.Job;
-
-import java.io.IOException;
 
 public class CloneDocumentJob extends Job {
 
@@ -25,14 +25,14 @@ public class CloneDocumentJob extends Job {
         CloneDocumentJobStatus cloneDocumentJobStatus = CloneDocumentJobStatus.findById(this.cloneDocumentJobStatusId);
         Document document = Document.findById(this.documentId);
         User user = User.findById(this.userId);
-        if (cloneDocumentJobStatus != null && document != null && user != null) {
+        if ((cloneDocumentJobStatus != null) && (document != null) && (user != null)) {
             try {
                 Logger.info("Starting clone");
-                Document clonedDocument = document.copyToGoogleDrive(user);
+                Document clonedDocument = document.cloneForUserAndSave(user);
                 cloneDocumentJobStatus.clonedDocumentId = clonedDocument.id;
                 cloneDocumentJobStatus.done = true;
                 cloneDocumentJobStatus.save();
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 cloneDocumentJobStatus.delete();
                 Logger.error("Error during document copy operation to Google Drive : %s", ex.getMessage());
             }

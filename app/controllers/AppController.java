@@ -1,10 +1,7 @@
 package controllers;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
+
 import models.User;
 import play.Logger;
 import play.Play;
@@ -13,19 +10,14 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Util;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 public class AppController extends Controller {
 
     protected static ObjectMapper jsonObjectMapper = null;
-
-    @Before
-    public static void setLanguage() {
-        if (session.get("lang") != null) {
-            Lang.set(session.get("lang"));
-        } else {
-            session.put("lang", "fr");
-            Lang.set("fr");
-        }
-    }
 
     @Util
     public static User getMe() {
@@ -43,7 +35,7 @@ public class AppController extends Controller {
         if (jsonObjectMapper == null) {
             jsonObjectMapper = new ObjectMapper();
             jsonObjectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-            //jsonObjectMapper.setSerializationInclusion(Include.NON_NULL);
+            // jsonObjectMapper.setSerializationInclusion(Include.NON_NULL);
         }
 
         if (Play.mode.isDev() || Play.runingInTestMode()) {
@@ -53,11 +45,7 @@ public class AppController extends Controller {
 
         try {
             String jsonString = jsonObjectMapper.writeValueAsString(object);
-            Logger.debug("Rendering JSON" +
-                    "\n --------------------------------- " +
-                    "\n %s : %s" +
-                    "\n --------------------------------- ",
-                    object.getClass().getCanonicalName(), jsonString);
+            Logger.debug("Rendering JSON" + "\n --------------------------------- " + "\n %s : %s" + "\n --------------------------------- ", object.getClass().getCanonicalName(), jsonString);
             Controller.renderJSON(jsonString);
         } catch (JsonGenerationException e) {
             throw new RuntimeException(e);
@@ -65,6 +53,16 @@ public class AppController extends Controller {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Before
+    public static void setLanguage() {
+        if (session.get("lang") != null) {
+            Lang.set(session.get("lang"));
+        } else {
+            session.put("lang", "fr");
+            Lang.set("fr");
         }
     }
 }

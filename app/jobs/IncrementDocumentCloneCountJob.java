@@ -15,7 +15,7 @@ public class IncrementDocumentCloneCountJob extends Job {
     public void doJob() {
         Document document = Document.findById(this.documentId);
         if (document != null) {
-            document.incrementCloneCount();
+            document.incrementCloneCountAndSave();
         }
     }
 }

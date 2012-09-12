@@ -1,6 +1,8 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -10,12 +12,21 @@ import play.data.validation.Email;
 import play.data.validation.Required;
 import services.googleoauth.GoogleUserInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="user_")
+@Table(name = "user_")
 public class User extends BaseModel implements RoleHolder {
+
+    @JsonProperty
+    public String bio;
+
+    @JsonProperty
+    public Integer documentCount;
+
+    @Required
+    @Email
+    public String email;
 
     @Required
     public String googleOAuthAccessToken;
@@ -31,21 +42,11 @@ public class User extends BaseModel implements RoleHolder {
     @JsonProperty
     public String name;
 
-    @Required
-    @Email
-    public String email;
-
     @JsonProperty
     public String picture;
 
     @JsonProperty
-    public String bio;
-
-    @JsonProperty
     public Integer score;
-
-    @JsonProperty
-    public Integer documentCount;
 
     public ArrayList<String> userRoles;
 
@@ -58,10 +59,11 @@ public class User extends BaseModel implements RoleHolder {
         this.documentCount = 0;
     }
 
+    @Override
     public List<? extends Role> getRoles() {
         List<Role> roles = new ArrayList<Role>();
-        if (userRoles != null) {
-            for (String role : userRoles) {
+        if (this.userRoles != null) {
+            for (String role : this.userRoles) {
                 roles.add(new UserRole(role));
             }
         }
@@ -73,17 +75,17 @@ public class User extends BaseModel implements RoleHolder {
         return this.name;
     }
 
+    public static User createFromGoogleUserInfo(GoogleUserInfo googleUserInfo) {
+        User user = new User(googleUserInfo.getId(), googleUserInfo.getName(), googleUserInfo.getEmail(), googleUserInfo.getPicture());
+        return user;
+    }
+
     public static User findByEmail(String email) {
         if (email != null) {
             return User.find("email is ?", email).first();
         } else {
             return null;
         }
-    }
-
-    public static User createFromGoogleUserInfo(GoogleUserInfo googleUserInfo) {
-        User user = new User(googleUserInfo.getId(), googleUserInfo.getName(), googleUserInfo.getEmail(), googleUserInfo.getPicture());
-        return user;
     }
 
     public static User findByGoogleUserId(String googleUserId) {
@@ -95,4 +97,3 @@ public class User extends BaseModel implements RoleHolder {
     }
 
 }
-
