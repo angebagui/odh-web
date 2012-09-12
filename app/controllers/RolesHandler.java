@@ -1,6 +1,7 @@
 package controllers;
 
 import models.deadbolt.RoleHolder;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import controllers.deadbolt.DeadboltHandler;
 import controllers.deadbolt.ExternalizedRestrictionsAccessor;
@@ -15,9 +16,10 @@ public class RolesHandler extends Controller implements DeadboltHandler {
      */
     @Override
     public void beforeRoleCheck() {
+        AppController.setLanguage();
         if (request.action.contains("admin")) {
             if (Auth.getMe() == null) {
-                flash.error("You are not authorized to access this page.");
+                flash.error(Messages.get("auth.unauthorizedAccess"));
                 redirect("/");
             }
         }
@@ -51,7 +53,7 @@ public class RolesHandler extends Controller implements DeadboltHandler {
      */
     @Override
     public void onAccessFailure(String controllerClassName) {
-        flash.error("You do not have access to that page.");
+        flash.error(Messages.get("auth.unauthorizedAccess"));
         redirect("/");
     }
 
