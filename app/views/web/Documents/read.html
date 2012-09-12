@@ -1,6 +1,6 @@
 #{extends 'web.html' /}
 #{set title : document.title /}
-#{i18n keys:['document.upload.error.notice'] /}
+#{i18n keys:['document.upload.error.notice', 'auth.login.needed'] /}
 <div class="row-fluid">
     <div class="span3">
         <div class="well well-small">
@@ -69,7 +69,7 @@
                     <h5>&{'download.document.asFormat'}</h5>
                 #{list document.exportLinks}
                     <div>
-                    #{a @download(_.id), class : 'btn btn-block'}
+                    #{a @api.Documents.download(_.id), class : 'btn btn-block'}
                         <i class="icon-download-alt"></i> ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
                     #{/a}
                     </div>
@@ -80,7 +80,7 @@
                 <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
                     <i class="icon icon-google-plus-sign"></i> Google +
                 </a>
-                <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=Je lis ${document.title} sur @civdocs - " class="share-button btn btn-block">
+                <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=&{'document.share.text', document.title} - " class="share-button btn btn-block">
                     <i class="icon icon-twitter"></i> Twitter
                 </a>
                 <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
@@ -130,28 +130,27 @@
 #{set 'moreScripts'}
 <script type="text/javascript">
     $(document).ready(function() {
+        $('button.btn').button();
         $('.share-button').click(function() {
             var width  = 575,
                 height = 400,
                 left   = ($(window).width()  - width)  / 2,
                 top    = ($(window).height() - height) / 2,
-                //url    = this.href,
-                url = this.href;
+                url = this.href,
                 opts   = '';
                 window.open(url, 'share', 'title="Share", toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + width +', height=' + height +', top='+top+', left='+left);
             return false;
-        });
-        $('button.btn').button();
+        });        
         $('.button-clone').click(function() {
             #{if me == null}
-                $('.clone-result').html('<div class="alert">Veuillez <a href="/auth/google/code">vous connecter</a> SVP :-)</div>');
+                $('.clone-result').html('<div class="alert"><a href="/auth/google/code">' + i18n('auth.login.needed') + '</a></div>');
                 return false;
             #{/if}
             $('button.btn').button('loading');
             $('.progress').show();
-            var createCloneAction = #{jsRoute @web.Documents.createClone(':id') /}
+            var createCloneAction = #{jsRoute @api.Documents.createClone(':id') /}
             $.ajax({
-                url : createCloneAction.url({id: ${document.id}}),
+                url : createCloneAction.url({id : ${document.id}}),
                 type : createCloneAction.method,
                 data : { authenticityToken : '${session.authenticityToken}'}
             }).success(function(data) {
@@ -163,15 +162,16 @@
                         function() {
                             if (trialCount < 10) {
                                 trialCount++;
-                                var checkCloneDocumentJobStatusAction = #{jsRoute @web.Documents.checkCloneDocumentJobStatus(':cloneDocumentJobStatusId') /}
+                                var checkDocumentJobStatusAction = #{jsRoute @api.DocumentJobsStatus.read(':id') /}
+                                var documentGoAction = #{jsRoute @web.Documents.go(':id') /}
                                 $.ajax({
-                                    url : checkCloneDocumentJobStatusAction.url({cloneDocumentJobStatusId: jobStatusId}),
-                                    type : checkCloneDocumentJobStatusAction.method,
+                                    url : checkDocumentJobStatusAction.url({id : jobStatusId}),
+                                    type : checkDocumentJobStatusAction.method,
                                     data : { authenticityToken : '${session.authenticityToken}'}
                                 }).success(function(data) {
-                                    if (data.done) {
+                                    if (data.status == 'SUCCESS') {
                                         $('.progress').addClass('progress-success');
-                                        window.location = 'http://${request.host}/documents/' + data.clonedDocumentId + '/go';
+                                        window.location = documentGoAction.url({id : data.resultDocumentId });
                                         clearInterval(checkInterval);
                                     } else {
                                         $('.progress').addClass('progress-warning');

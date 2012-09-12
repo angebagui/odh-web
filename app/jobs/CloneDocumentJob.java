@@ -2,7 +2,8 @@ package jobs;
 
 import java.io.IOException;
 
-import models.CloneDocumentJobStatus;
+import models.BackgroundJobStatus;
+import models.DocumentJobStatus;
 import models.Document;
 import models.User;
 import play.Logger;
@@ -10,34 +11,35 @@ import play.jobs.Job;
 
 public class CloneDocumentJob extends Job {
 
-    private long cloneDocumentJobStatusId;
+    private long documentJobStatusId;
     private long documentId;
     private long userId;
 
-    public CloneDocumentJob(long cloneDocumentJobStatusId, long documentId, long userId) {
-        this.cloneDocumentJobStatusId = cloneDocumentJobStatusId;
+    public CloneDocumentJob(long documentJobStatusId, long documentId, long userId) {
+        this.documentJobStatusId = documentJobStatusId;
         this.documentId = documentId;
         this.userId = userId;
     }
 
     @Override
     public void doJob() {
-        CloneDocumentJobStatus cloneDocumentJobStatus = CloneDocumentJobStatus.findById(this.cloneDocumentJobStatusId);
+        DocumentJobStatus documentJobStatus = DocumentJobStatus.findById(this.documentJobStatusId);
         Document document = Document.findById(this.documentId);
         User user = User.findById(this.userId);
-        if ((cloneDocumentJobStatus != null) && (document != null) && (user != null)) {
+        if ((documentJobStatus != null) && (document != null) && (user != null)) {
             try {
-                Logger.info("Starting clone");
+                Logger.info("Start : clone document job");
                 Document clonedDocument = document.cloneForUserAndSave(user);
-                cloneDocumentJobStatus.clonedDocumentId = clonedDocument.id;
-                cloneDocumentJobStatus.done = true;
-                cloneDocumentJobStatus.save();
-            } catch (IOException ex) {
-                cloneDocumentJobStatus.delete();
+                documentJobStatus.resultDocumentId = clonedDocument.id;
+                documentJobStatus.status = BackgroundJobStatus.Status.SUCCESS;
+                documentJobStatus.save();
+            } catch (IOException ex) {                
                 Logger.error("Error during document copy operation to Google Drive : %s", ex.getMessage());
+                documentJobStatus.status = BackgroundJobStatus.Status.FAIL;
+                documentJobStatus.save();
+            } finally {
+                Logger.info("End : clone document job");
             }
-        } else {
-            Logger.info("%s", cloneDocumentJobStatus != null);
         }
     }
 }

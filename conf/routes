@@ -20,12 +20,8 @@ GET     /                                                                       
 GET     /documents/{<[0-9]+>id}-{slug}                                          web.Documents.read
 GET     /documents/{<[0-9]+>id}/go                                              web.Documents.go
 GET     /documents/{<[0-9]+>id}/details/edit                                    web.Documents.editDetails
-POST    /documents/{<[0-9]+>id}/details                                         web.Documents.updateDetails
-POST    /documents/{<[0-9]+>id}/clones                                          web.Documents.createClone
 GET     /documents/{<[0-9]+>id}/clones                                          web.Documents.listClones
 POST    /documents/{<[0-9]+>id}/readCount                                       web.Documents.incrementReadCount
-POST    /documents/{<[0-9]+>id}/deletet                                         web.Documents.delete
-POST    /documents/downloads/{<[0-9]+>exportLinkId}                             web.Documents.download
 
 
 # ================== API =====================
@@ -37,6 +33,11 @@ PUT     /api/categories/{<[0-9]+>id}                                            
 DELETE  /api/categories/{<[0-9]+>id}                                            api.Categories.delete
 POST    /api/documents                                                          api.Documents.create
 GET     /api/documents/{<[0-9]+>id}/thumbnail                                   api.Documents.readThumbnail
+POST    /documents/{<[0-9]+>id}/details                                         api.Documents.updateDetails
+POST    /documents/{<[0-9]+>id}/clones                                          api.Documents.createClone
+POST    /documents/{<[0-9]+>id}/delete                                          api.Documents.delete
+POST    /documents/downloads/{<[0-9]+>exportLinkId}                             api.Documents.download
+GET     /api/documentsjobsstatus/{<[0-9]+>id}                                   api.DocumentsJobsStatus.read
 
 
 *       /api/*                                                                  404
