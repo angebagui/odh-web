@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import models.User;
 import play.Logger;
 import play.i18n.Messages;
+import play.mvc.Util;
 import play.mvc.With;
 import services.googleoauth.GoogleOAuth;
 import services.googleoauth.GoogleOAuthTokens;
@@ -15,14 +16,25 @@ import controllers.AppController;
 @With(WebController.class)
 public class Auth extends AppController {
 
+    @Util
+    public static String getOAuthRedirectUriHost() {
+        String redirectHost = request.host;
+        if (request.secure) {
+            redirectHost = "https://" + redirectHost; 
+        } else {
+            redirectHost = "http://" + redirectHost;
+        }
+        return redirectHost;
+    }
+
     public static void googleCode() {
-        redirect(GoogleOAuth.buildCodeRequestUrl());
+        redirect(GoogleOAuth.buildCodeRequestUrl(getOAuthRedirectUriHost()));
     }
 
     public static void googleToken(String code) {
         if (code != null) {
             try {
-                GoogleOAuthTokens googleOAuthTokens = GoogleOAuth.askForOAuthTokens(code);
+                GoogleOAuthTokens googleOAuthTokens = GoogleOAuth.askForOAuthTokens(code, getOAuthRedirectUriHost());
                 GoogleUserInfo googleUserInfo = GoogleOAuth.askForUserInfo(googleOAuthTokens);
 
                 User me = User.findByGoogleUserId(googleUserInfo.getId());

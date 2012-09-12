@@ -20,8 +20,8 @@ jpa.ddl=none
 
 # Google oAuth
 # ~~~~~
-google.oAuth.scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.file
 google.oAuth.redirect_uri=/auth/google/token
+google.oAuth.scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.file
 google.oAuth.accessTokenEndPoint=https://accounts.google.com/o/oauth2/token
 google.oAuth.codeEndPoint=https://accounts.google.com/o/oauth2/auth
 google.oAuth.userInfoEndPoint=https://www.googleapis.com/oauth2/v1/userinfo

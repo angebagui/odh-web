@@ -20,11 +20,11 @@ public class GoogleOAuth {
     public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     public static final JacksonFactory JSON_FACTORY = new JacksonFactory();
 
-    public static GoogleOAuthTokens askForOAuthTokens(String code) throws IOException {
+    public static GoogleOAuthTokens askForOAuthTokens(String code, String redirectHost) throws IOException {
         WSRequest tokensRequest = WS.url(GoogleOAuthConfig.getAccessTokenEndPoint());
         tokensRequest.setParameter(Labels.CLIENT_ID, GoogleOAuthConfig.getClientId());
         tokensRequest.setParameter(Labels.CLIENT_SECRET, GoogleOAuthConfig.getClientSecret());
-        tokensRequest.setParameter(Labels.REDIRECT_URI, GoogleOAuthConfig.getRedirectUri());
+        tokensRequest.setParameter(Labels.REDIRECT_URI, redirectHost + GoogleOAuthConfig.getRedirectUri());
         tokensRequest.setParameter(Labels.CODE, code).setParameter(Labels.GRANT_TYPE, Labels.AUTHORIZATION_CODE);
         WS.HttpResponse tokensResponse = tokensRequest.post();
 
@@ -47,10 +47,10 @@ public class GoogleOAuth {
         }
     }
 
-    public static String buildCodeRequestUrl() {
+    public static String buildCodeRequestUrl(String redirectHost) {
         String codeRequestUrl = GoogleOAuthConfig.getCodeEndPoint();
         codeRequestUrl = URLs.addParam(codeRequestUrl, Labels.CLIENT_ID, GoogleOAuthConfig.getClientId());
-        codeRequestUrl = URLs.addParam(codeRequestUrl, Labels.REDIRECT_URI, GoogleOAuthConfig.getRedirectUri());
+        codeRequestUrl = URLs.addParam(codeRequestUrl, Labels.REDIRECT_URI, redirectHost + GoogleOAuthConfig.getRedirectUri());
         codeRequestUrl = URLs.addParam(codeRequestUrl, Labels.SCOPE, GoogleOAuthConfig.getScopes());
         codeRequestUrl = URLs.addParam(codeRequestUrl, Labels.RESPONSE_TYPE, Labels.CODE);
         codeRequestUrl = URLs.addParam(codeRequestUrl, Labels.ACCESS_TYPE, Labels.OFFLINE);
