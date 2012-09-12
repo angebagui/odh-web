@@ -12,7 +12,17 @@ public class WebController extends AppController {
         renderArgs.put("me", getMe());
     }
 
-    @Before(unless = { "web.WebController.updateLanguage", "web.Auth.googleCode", "web.Auth.googleToken", "web.Auth.googleOAuth", "web.Documents.read", "web.Documents.readThumbnail", "web.Documents.incrementReadCount", "web.Documents.download", "web.Documents.go", "web.Documents.list", "web.Documents.listClones" })
+    @Before(unless = {        
+        "web.Auth.googleCode",
+        "web.Auth.googleToken",
+        "web.Auth.googleOAuth",
+        "web.Documents.incrementReadCount",
+        "web.Documents.go",
+        "web.Documents.list",
+        "web.Documents.listClones",
+        "web.Documents.read",
+        "web.WebController.updateLanguage",
+    })
     public static void checkAccess() {
         if (getMe() == null) {
             flash.error("auth.login.needed");
