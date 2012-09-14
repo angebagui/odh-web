@@ -148,7 +148,7 @@
             #{/if}
             $('button.btn').button('loading');
             $('.progress').show();
-            var createCloneAction = #{jsRoute @api.Documents.createClone(':id') /}
+            var createCloneAction = #{jsRoute @api.Documents.createClone(':id') /};
             $.ajax({
                 url : createCloneAction.url({id : ${document.id}}),
                 type : createCloneAction.method,
