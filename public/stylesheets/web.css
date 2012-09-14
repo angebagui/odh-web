@@ -1,9 +1,15 @@
-body {
-    background : #ffffff url('../images/square_bg.png') repeat 0 0;
+.navbar {
+    bdorder-top : 5px solid #FFCC00;
 }
 
 .navbar .brand {
     font-weight : bold;
+    padding-left : 55px;
+    background : transparent url('../images/logo_bg_light.png') no-repeat 10px 0;
+}
+
+.navbar-inverse .brand {
+    background : transparent url('../images/logo_bg_dark.png') no-repeat 10px 0;
 }
 
 .welcome-message {
