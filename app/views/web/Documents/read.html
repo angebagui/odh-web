@@ -162,8 +162,8 @@
                         function() {
                             if (trialCount < 10) {
                                 trialCount++;
-                                var checkDocumentJobStatusAction = #{jsRoute @api.DocumentJobsStatus.read(':id') /}
-                                var documentGoAction = #{jsRoute @web.Documents.go(':id') /}
+                                var checkDocumentJobStatusAction = #{jsRoute @api.DocumentJobsStatus.read(':id') /};
+                                var documentGoAction = #{jsRoute @web.Documents.go(':id') /};
                                 $.ajax({
                                     url : checkDocumentJobStatusAction.url({id : jobStatusId}),
                                     type : checkDocumentJobStatusAction.method,
@@ -196,7 +196,7 @@
         });
         setTimeout(
             function() {
-                var incrementReadCountAction = #{jsRoute @web.Documents.incrementReadCount(':id') /}
+                var incrementReadCountAction = #{jsRoute @web.Documents.incrementReadCount(':id') /};
                 $.ajax({
                     url : incrementReadCountAction.url({id: ${document.id}}),
                     type : incrementReadCountAction.method,

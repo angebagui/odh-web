@@ -35,7 +35,7 @@
          $('.btn-primary').click(function() {
             var btn = this;
             $(btn).button('loading');
-            var updateDocumentDetailsAction = #{jsRoute @api.Documents.updateDetails(':id') /}
+            var updateDocumentDetailsAction = #{jsRoute @api.Documents.updateDetails(':id') /};
             $.ajax({
                 url : updateDocumentDetailsAction.url({id : ${document.id}}),
                 type : updateDocumentDetailsAction.method,
@@ -55,7 +55,7 @@
          $('.btn-danger').click(function() {
             var btn = this;
             $(btn).button('loading');
-            var deleteDocumentAction = #{jsRoute @api.Documents.delete(':id') /}
+            var deleteDocumentAction = #{jsRoute @api.Documents.delete(':id') /};
             $.ajax({
                 url : deleteDocumentAction.url({id : ${document.id}}),
                 type : deleteDocumentAction.method,
