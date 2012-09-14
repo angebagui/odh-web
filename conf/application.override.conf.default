@@ -6,5 +6,5 @@ application.langs.default=en
 google.oAuth.client_id=YOUR GOOGLE OAUTH CLIENT ID
 google.oAuth.client_secret=YOUR GOOGLE OAUTH CLIENT SECRET
 
-%dev.db=mysql://user:password@host/database
+db=mysql://user:password@host/database
 jpa.dialect=org.hibernate.dialect.PostgreSQLDialect
