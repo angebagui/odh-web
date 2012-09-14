@@ -4,6 +4,7 @@
 application.name=OpenDocsHub
 application.fullName=Open Docs Hub
 application.secret=YOUR_APPLICATION_SECRET
+application.langs.default=en
 
 db=postgres://user:pass@host/db
 jpa.dialect=org.hibernate.dialect.PostgreSQLDialect

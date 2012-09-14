@@ -61,8 +61,12 @@ public class AppController extends Controller {
         if (session.get("lang") != null) {
             Lang.set(session.get("lang"));
         } else {
-            session.put("lang", "fr");
-            Lang.set("fr");
+            String lang = Play.configuration.getProperty("application.langs.default");
+            if (lang == null) {
+                lang = "en";
+            }
+            session.put("lang", lang);
+            Lang.set(lang);
         }
     }
 }
