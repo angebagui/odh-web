@@ -7,7 +7,7 @@
     <div class="span12">
         <div class="alert alert-error hide">
             <h3>&{'error.title'}</h3>
-            <p></p>
+            <p> </p>
         </div>
         #{form @api.Documents.create(), enctype:'multipart/form-data', class : 'form-horizontal'}
             #{field 'document.title'}
@@ -23,11 +23,11 @@
                 #{form.input field : field, label : 'Source', value : document?.source, class : 'input-xxlarge', 'help' : 'document.source.help', required  : false /}
             #{/field}
             <p class="alert">
-                &{'document.upload.notice', 'civdocs'}
+                &{'document.upload.notice'}
             </p>
             <div class="form-actions">
                 <div class="progress progress-striped active hide">
-                    <div class="bar" style="width: 0%;"></div>
+                    <div class="bar" style="width: 0%;"> </div>
                 </div>
                 <input type="submit" value="&{'document.upload.submit'}" class="btn btn-primary" data-loading-text="&{'loading'}"/>
             </div>
@@ -40,17 +40,17 @@
                 </p>
             </div>
             <div class="span2">
-                <div class="result-document-thumbnail"></div>
+                <div class="result-document-thumbnail"> </div>
             </div>
             <div class="span6">
                 <div class="result-document-info">
-                    <h3 class="result-document-title"></h3>
+                    <h3 class="result-document-title"> </h3>
                     <p class="alert alert-info">&{'document.upload.thumbnail.notice'}</p>
-                    <span class="result-document-read-link"></span>
-                    <span class="result-document-edit-link"></span>
+                    <span class="result-document-read-link"> </span>
+                    <span class="result-document-edit-link"> </span>
                     <hr />
                     <div>
-                        <a href="@{web.Documents.add()}" class="btn btn-primary"><i class="icon-upload-alt"></i> &{'upload.document'}</a>
+                        <a href="@{web.Documents.add()}" class="btn btn-primary"><i class="icon-upload-alt"> </i> &{'upload.document'}</a>
                     </div>
                 </div>
             </div>

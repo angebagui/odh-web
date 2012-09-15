@@ -1,9 +1,37 @@
 #{extends 'web.html' /}
 #{set title : document.title /}
 #{i18n keys:['document.upload.error.notice', 'auth.login.needed'] /}
-<div class="row-fluid">
-    <div class="span3">
-        <div class="well well-small">
+
+
+<div class="row-fluid">    
+    <div class="span8">
+        <div class="row-fluid">
+            <div class="span12">
+                #{if document.embedLink}
+                    <iframe src="${document.embedLink.raw()}" width="100%" height="1000" frameborder="0"></iframe>
+                #{/if}
+                #{else}
+                    <div class="alert alert-error">
+                        <h3>&{'sorry'}</h3>
+                        <p>&{'document.deleted'}</p>
+                    </div>
+                #{/else}
+                <hr />
+            </div>
+            <div class="span12">
+                <h3>&{'document.comments'}</h3>                
+                <div id="document-comments">
+                    <div class="progress progress-striped active">
+                        <div class="bar" style="width: 100%;">                            
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        </div>        
+    </div>
+    <div class="span4">
+        <div class="document-view-details">
             <div class="box">
                 <div class="clearfix user-preview">
                     <a href="#" class="pull-left">
@@ -28,29 +56,35 @@
             </div>
             <div class="box">
                     <div class="row-fluid document-view-numbers">
-                        <div class="span4">
+                        <div class="span3">
                             <div class="document-view-number">
                                 <strong>${document.readCount}</strong>
                                 <p><small>&{'reads'}</small></p>
                             </div>
                         </div>
-                        <div class="span4">
+                        <div class="span3">
                             <div class="document-view-number">
                                 <strong>${document.downloadCount}</strong>
                                 <p><small>&{'downloads'}</small></p>
                             </div>
                         </div>
-                        <div class="span4">
+                        <div class="span3">
                             <div class="document-view-number">
                                 <strong><a href="@{web.Documents.listClones(document.id)}">${document.cloneCount}</a></strong>
                                 <p><small>&{'clones'}</small></p>
+                            </div>
+                        </div>
+                        <div class="span3">
+                            <div class="document-view-number">
+                                <strong><a href="#document-comments">${document.commentCount}</a></strong>
+                                <p><small>&{'comments'}</small></p>
                             </div>
                         </div>
                     </div>
             </div>
             <div class="box">
                 #{if me?.id == document.owner?.id}
-                    <a href="@{editDetails(document.id)}"  class="btn btn-block btn-danger"><i class="icon-pencil"></i>
+                    <a href="@{editDetails(document.id)}"  class="btn btn-danger btn-block"><i class="icon-pencil"></i>
                         &{'document.editDetails'}
                     </a>
                 #{/if}
@@ -59,31 +93,33 @@
                     <div class="progress progress-striped active hide">
                         <div class="bar" style="width: 100%;"></div>
                     </div>
-                    <button type="button" class="btn btn-block btn-success button-clone" data-loading-text="&{'loading'}"><i class="icon-copy"></i>
+                    <button type="button" class="btn btn-success button-clone btn-block" data-loading-text="&{'loading'}"><i class="icon-copy"></i>
                         &{'clone.document'}
                     </button>
                 #{/else}
-                <a href="${document.alternateLink}" target="_blank" class="btn btn-block btn-primary"><i class="icon-external-link"></i> &{'open.document.googleDocs'}</a>
+                <a href="${document.alternateLink}" target="_blank" class="btn btn-primary btn-block"><i class="icon-external-link"></i> &{'open.document.googleDrive'}</a>
             </div>
             <div class="box">
-                    <h5>&{'download.document.asFormat'}</h5>
-                #{list document.exportLinks}
-                    <div>
-                    #{a @api.Documents.download(_.id), class : 'btn btn-block'}
-                        <i class="icon-download-alt"></i> ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
-                    #{/a}
-                    </div>
-                #{/list}
+                <h5>&{'download.document.asFormat'}</h5>
+                <div class="btn-toolbar">                        
+                    #{list document.exportLinks}
+                        <div class="btn-group">
+                            #{a @api.Documents.download(_.id), class : 'btn document-exportLink-btn'}
+                                <i class="icon-download-alt"></i> ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
+                            #{/a}
+                        </div>
+                    #{/list}
+                </div>                
             </div>
             <div class="box">
                 <h5>&{'share.document'}</h5>
-                <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
+                <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button btn">
                     <i class="icon icon-google-plus-sign"></i> Google +
                 </a>
-                <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=&{'document.share.text', document.title} - " class="share-button btn btn-block">
+                <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=&{'document.share.text', document.title} - " class="share-button btn">
                     <i class="icon icon-twitter"></i> Twitter
                 </a>
-                <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
+                <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button btn">
                     <i class="icon icon-facebook"></i> Facebook
                 </a>
             </div>
@@ -91,7 +127,7 @@
                 <h5>&{'document.about'}</h5>
                 <table class="table table-bordered table-striped">
                     <tr>
-                        <td>&{'document.category.id'}</td><td><a href="@{list(document.category.id, document.category.slug, null, null)}">${document.category.name}</a></td>
+                        <td>&{'document.category.id'}</td><td><a href="@{list(document.category.id, null, null)}">${document.category.name}</a></td>
                     </tr>
                     <tr>
                         <td>&{'document.mimeType'}</td>
@@ -103,7 +139,7 @@
                         <td>&{'document.fileSize'}</td><td>${document.fileSize.formatSize()}</td>
                     </tr>
                     <tr>
-                        <td>&{'document.created'}</td><td><time class="timeago" datetime="${_.created}">${document.created}</time></td>
+                        <td>&{'document.created'}</td><td><div class="timeago" title="${_.created}">${document.created}</div></td>
                     </tr>
                     <tr>
                         <td>&{'document.source'}</td>
@@ -115,20 +151,20 @@
             </div>
         </div>
     </div>
-    <div class="span9">
-        #{if document.embedLink}
-            <iframe src="${document.embedLink.raw()}" width="100%" height="1000" frameborder="0"></iframe>
-        #{/if}
-        #{else}
-            <div class="alert alert-error">
-                <h3>&{'sorry'}</h3>
-                <p>&{'document.deleted'}</p>
-            </div>
-        #{/else}
-    </div>
 </div>
 #{set 'moreScripts'}
+
 <script type="text/javascript">
+    function loadDocumentComments() {
+        var listCommentsAction = #{jsRoute @web.Documents.listComments(':id', ':page') /};
+        $.ajax({
+            url : listCommentsAction.url({id: ${document.id}, page : 1}),
+            type : listCommentsAction.method
+        }).success(function(data){
+            $('#document-comments').html(data);
+        });
+    };
+
     $(document).ready(function() {
         $('button.btn').button();
         $('.share-button').click(function() {
@@ -140,7 +176,8 @@
                 opts   = '';
                 window.open(url, 'share', 'title="Share", toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + width +', height=' + height +', top='+top+', left='+left);
             return false;
-        });        
+        });
+        
         $('.button-clone').click(function() {
             #{if me == null}
                 $('.clone-result').html('<div class="alert"><a href="/auth/google/code">' + i18n('auth.login.needed') + '</a></div>');
@@ -194,6 +231,16 @@
             });
             return false;
         });
+    
+
+
+        setTimeout(
+            function() {
+                loadDocumentComments();
+            },
+            2000
+        );
+        
         setTimeout(
             function() {
                 var incrementReadCountAction = #{jsRoute @web.Documents.incrementReadCount(':id') /};
@@ -205,6 +252,63 @@
             },
             30000
         );
+
+    });
+    
+    $('.timeago').timeago();
+    
+    $('.new-comment-form').live('submit', function() {
+        var form = this;
+        var button = $(form).find('.btn-primary');
+        var list =  $(form).parent().parent().prev(); // not really nice, but will do for now
+            
+        var alert =  $(form).find('.alert');
+        alert.hide();
+            button.button('loading');
+            var createCommentAction = #{jsRoute @api.Comments.create() /};
+            $.ajax({
+                url : createCommentAction.url(),
+                type : createCommentAction.method,
+                data : $(this).serialize()                
+            }).success(function(data) {
+                // very ugly but it works
+                var el = $(form).parent().parent().parent().prev().find('.comment-replies-link');
+                if (el.length > 0) {
+                    el.trigger('click');
+                } else {
+                    loadDocumentComments();
+                }
+            }).error(function() {
+                alert.addClass('alert-error').html('&{"error.notice"}').show();
+            }).complete(function() {
+                button.button('reset');
+            });
+            return false;
+    });
+
+    $('.comment-replies-link').live('click', function(){
+        var commentRepliesLink = $(this);
+        var commentRepliesList = $(this).parent().parent().parent().find('.comment-replies');
+        $.ajax({
+            url : commentRepliesLink.attr('href')
+        }).success(function(data) {
+            commentRepliesList.html(data);
+        });
+        return false;
+    });
+
+    $('.comment-delete').live('click', function() {
+        var link =  $(this);
+        var form = link.prev();
+        $.ajax({
+            url : form.attr('action'),
+            type : 'POST',
+            data : form.serialize()
+        }).success(function(data) {
+            link.parent().parent().parent().html("&{'your.comment.deleted'}");
+        });
+        return false;
     });
 </script>
+
 #{/set}

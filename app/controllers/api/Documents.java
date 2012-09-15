@@ -3,10 +3,12 @@ package controllers.api;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import jobs.CloneDocumentJob;
 import jobs.IncrementDocumentDownloadCountJob;
 import models.Category;
+import models.Comment;
 import models.Document;
 import models.DocumentJobStatus;
 import models.ExportLink;
@@ -113,6 +115,13 @@ public class Documents extends AppController {
             unauthorized();
             // flash.error("auth.unauthorizedAccess");
         }
+    }
+    
+    public static void listComments(long id, Integer page) {
+        Document document = Document.findById(id);
+        notFoundIfNull(document);
+        List<Comment> comments = Comment.findByDocument(document.id, page);
+        renderJSON(comments);
     }
 
 }

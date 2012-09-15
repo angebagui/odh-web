@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${play.configuration.getProperty("application.fullName")}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="${document?.title ? messages.get('read.document.on', document.title) : ''} &{'application.description'}">
+        <meta name="description" content="${document?.title ? messages.get('read.document.on', document.title) : ''} &{'application.fullName'}">
         <meta property="og:image" content="${document?.thumbnailUrl ? document.thumbnailUrl : request.host + '/public/images/logo.png'}" />
         <link rel="image_src" type="image/jpeg" href="${document?.thumbnailUrl ? document.thumbnailUrl : request.host + '/public/images/logo.png'}" />
         <link rel="icon" type="image/png" href="/public/images/favicon.png">
@@ -34,22 +34,16 @@
                         <span class="icon-bar">&nbsp;</span>
                         <span class="icon-bar">&nbsp;</span>
                     </a>
-                    <a class="brand" href="/">${play.configuration.getProperty("application.fullName")}</a>
+                    <a class="brand" href="@{web.WebController.index()}">${play.configuration.getProperty("application.fullName")}</a>
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li>
-                                <a href="@{web.Documents.list()}"><i class="icon-home">&nbsp;</i> &{'home'}</a>
+                                <a href="@{web.WebController.index()}"><i class="icon-home">&nbsp;</i> &{'home'}</a>
                             </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-list">&nbsp;</i> &{'categories'}
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    #{list categories}
-                                        <li class="${category?.id == _.id ? 'active' : ''}">#{a @web.Documents.list(_.id, _.slug, order, null)}${_.name}#{/a}</li>
-                                    #{/list}
-                                </ul>
+                            <li>
+                                <a href="@{web.Documents.list()}">
+                                    <i class="icon-file">&nbsp;</i> &{'explore'}
+                                </a>                                
                             </li>
                             <li>
                                 <a href="@{web.Documents.add}"><i class="icon-upload-alt">&nbsp;</i>&{'upload.document'}</a>
@@ -77,20 +71,12 @@
                                 </li>
                             #{/else}
                         </ul>
-                        <ul class="nav pull-right">
-                            <li>
-                                #{a @web.WebController.updateLanguage("fr", request.url)}Fran&ccedil;ais#{/a}
-                            </li>
-                            <li>
-                                #{a @web.WebController.updateLanguage("en", request.url)}English#{/a}
-                            </li>
-                        </ul>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
         </div>
 
-    <div class="container-fluid">
+    <div class="container">
         <div class="row-fluid">
             <div class="span12">
                 #{if flash?.error}
@@ -103,25 +89,30 @@
                     ${flash?.success.raw()}
                 </div>
                 #{/if}
-                #{if request.url != '/'}
-                <div class="page-header">
-                    <h1>#{get 'title' /}
-                    #{if get('subTitle')}
-                        <small>:: #{get 'subTitle' /}</small></h1>
-                    #{/if}
-                </div>
-                #{/if}
-                #{else}
-                    <p class="alert welcome-message">
-                        &{'application.welcomeMessage', play.configuration.getProperty('application.fullName')}
-                    </p>
-                #{/else}
             </div>
         </div>
-        #{doLayout /}
+        <div id="main-container">
+            #{if request.url != '/'}
+                <div class="page-header">
+                    <h1>#{get 'title' /}
+                        #{if get('subTitle')}
+                            <small>:: #{get 'subTitle' /}</small>
+                        #{/if}
+                    </h1>                        
+                </div>
+            #{/if}
+            #{doLayout /}            
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="footer">
+                    &copy; <a href="@{web.WebController.index()}">${play.configuration.getProperty("application.fullName")}</a> - Powered By 
+                    <a href="http://www.opendocshub.org"> The Open Docs Hub Project </a>
+                </div>
+            </div>
+        </div>
 
-
-    </div> <!-- /container -->
+    </div><!-- /container -->
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/js/bootstrap.min.js" type="text/javascript"></script>
@@ -131,7 +122,7 @@
     <script src="@{'/public/javascripts/json2.js'}" type="text/javascript"></script>
     <script>
         $(document).ready(function() {
-                $("time.timeago").timeago();
+                $(".timeago").timeago();
         });
     </script>
     #{get 'moreScripts' /}

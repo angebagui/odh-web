@@ -11,17 +11,30 @@ import controllers.AppController;
 import controllers.web.Auth;
 
 public class ApiController extends AppController {
-    
+
     @Before(unless = {
         "api.Categories.list",
         "api.Categories.listDocuments",
         "api.Documents.read",
         "api.Documents.readThumbnail",        
-        "api.Documents.download"
+        "api.Documents.download",
+        "api.Documents.listComments",
+        "api.Comments.listReplies"
     })
     public static void checkAccess() {
         if (getMe() == null) {
             unauthorized();
+        }
+    }
+
+    @Before
+    public static void setDefaultRequestParameters() {
+        String pageParam = request.params.get("page");
+        if (pageParam != null) {
+            int page = Integer.parseInt(pageParam);
+            if (page < 1) {
+                page = 1;
+            }
         }
     }
 

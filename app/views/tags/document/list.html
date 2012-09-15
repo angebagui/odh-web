@@ -1,0 +1,17 @@
+<div class="row-fluid">
+    %{
+        i = 1;
+        for (_ in _documents) {
+    }%
+        <div class="span${(12 / _countPerRow)}">
+            #{document.list-item document : _ /}
+        </div>
+    %{
+            if (i % _countPerRow == 0) {
+                out.println('</div>');
+                out.println('<div class="row-fluid">');
+            }
+            i++;
+        } // end for loop
+    }%
+</div>

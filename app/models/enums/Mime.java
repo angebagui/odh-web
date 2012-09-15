@@ -19,23 +19,23 @@ public enum Mime {
 
     public String getHumanFriendlyName() {
         if (this.equals(ADOBE_PDF)) {
-            return "Adobe PDF (.pdf)";
+            return ".pdf";
         } else if (this.equals(MS_DOCX)) {
-            return "Microsoft Word Document (.docx)";
+            return ".docx";
         } else if (this.equals(MS_WORD)) {
-            return "Microsoft Word Document (.doc)";
+            return ".doc";
         } else if (this.equals(MS_POWERPOINT)) {
-            return "Microsoft Powerpoint (.ppt)";
+            return ".ppt";
         } else if (this.equals(TEXT_PLAIN)) {
-            return "Text File (.txt)";
+            return ".txt";
         } else if (this.equals(TEXT_HTML)) {
-            return "Html File (.html)";
+            return ".html";
         } else if (this.equals(TEXT_RTF)) {
-            return "RTF File (.rtf)";
+            return ".rtf";
         } else if (this.equals(OPENDOCS_DOCUMENT)) {
-            return "OpenDocs Document (.ods)";
+            return ".ods";
         } else if (this.equals(OPENDOCS_PRESENTATION)) {
-            return "Microsoft Powerpoint (.pptx)";
+            return ".pptx";
         } else {
             return "Document";
         }

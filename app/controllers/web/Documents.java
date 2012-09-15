@@ -2,9 +2,12 @@ package controllers.web;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import models.Category;
+import models.Comment;
 import models.Document;
+import play.db.jpa.JPA;
 import play.i18n.Messages;
 import play.mvc.With;
 import controllers.AppController;
@@ -50,20 +53,10 @@ public class Documents extends AppController {
         ok();
     }
 
-    public static void list(long categoryId, String categorySlug, String order, Integer page) {
-        Category category = null;
-        if (categoryId > 0) {
-            category = Category.findById(categoryId);
-            if (category == null) {
-                notFound();
-            }
-            List<Document> documents = Document.findByCategory(category, order, page);
-            render(category, documents, order, page);
-        } else {
-            List<Document> documents = Document.find(order, page);
-            render(documents, order, page);
-        }
-
+    public static void list(String keyword, long categoryId, String order, Integer page) { 
+        Category category = Category.findById(categoryId); 
+    	List<Document>documents = Document.search(keyword, categoryId, order, page);
+        render(documents, category, keyword, order, page);
     }
 
     public static void listClones(long id) {
@@ -86,10 +79,13 @@ public class Documents extends AppController {
             notFound();
         }
     }
-
-    public static void search(String keyword, long categoryId, String order, Integer page) {
-        // List<Document> documents = Document.search(c, o, q, start);
-        // render(documents);
+    
+    public static void listComments(long id, Integer page) {
+        Document document = Document.findById(id);
+        notFoundIfNull(document);
+        List<Comment> comments = Comment.findByDocument(document.id, page);
+        render(comments, document);
     }
+
 
 }

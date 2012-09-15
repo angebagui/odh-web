@@ -1,1 +1,6 @@
-<img src="${_user.picture}?sz=${_size}" alt="${_user.name}" />
+#{if _user?.picture}
+    <img src="${_user.picture}?sz=${_size}" alt="${_user.name}" />
+#{/if}
+#{else}
+    <img src="/public/images/user.png" alt="${_user.name}" class="picture-small" width="${_size}" height="${_size}"/>
+#{/else}

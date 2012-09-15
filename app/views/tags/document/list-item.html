@@ -1,0 +1,25 @@
+<div class="document-list-item">
+    <a href="${_document.permalink}">
+        <img src="${_document.thumbnailUrl}" alt="${_document.title}" class="img-polaroid">
+    </a>
+    <div class="document-list-item-title">
+        <a href="${_document.permalink}"> ${_document.title} </a>
+    </div>
+    <div class="document-list-item-details">
+        <div class="document-list-item-owner">
+            <i class="icon-user"> </i><strong> <a href="#">${_document.owner}</a></strong>
+        </div>
+        <div class="document-list-item-date timeago" title="${_document.created}">
+            ${_document.created}
+        </div>
+        <div class="document-list-item-numbers">
+            <i class="icon-eye-open"> </i><strong>${_document.readCount}</strong>
+            |
+            <i class="icon-download-alt"> </i><strong>${_document.downloadCount}</strong>
+            |
+            <i class="icon-copy"> </i><strong>${_document.cloneCount}</strong>
+            |
+            <i class="icon-comment"> </i><strong>${_document.commentCount}</strong>
+        </div>
+    </div>
+</div>

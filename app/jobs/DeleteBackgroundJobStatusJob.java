@@ -11,7 +11,7 @@ public class DeleteBackgroundJobStatusJob extends Job {
 
     @Override
     public void doJob() {
-        DocumentJobStatus.delete("created < ?", new Date().getTime() - (60 * 60 * 1000));
+        DocumentJobStatus.delete("created < ?", new Date(new Date().getTime() - (60 * 60 * 1000)));
     }
 
 }

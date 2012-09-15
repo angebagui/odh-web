@@ -1,0 +1,54 @@
+<div class="clearfix">
+    <div class="comment-picture">
+        #{if !_comment.isCensored && !_comment.isDeleted}        
+            #{user.picture user : _comment.author, size : 50 /}
+        #{/if}
+    </div>
+    <div class="comment-content" id="comment-content">
+        #{if !_comment.isCensored && !_comment.isDeleted}
+            <strong>        
+                <a href="#">${_comment.author}</a>
+            </strong>
+            - <em class="small timeago" title="${_comment.created}">${_comment.created}</em>
+            <p>
+                ${_comment.content}
+            </p>
+        #{/if}
+        #{else}
+            #{if _comment.isDeleted}
+                <p>
+                    <em>&{'comment.deleted'}</em>
+                </p>
+            #{/if}
+            #{elseif _comment.isCensored}
+                <p>
+                    <em>&{'comment.censored'}</em>
+                </p>
+            #{/elseif}
+        #{/else}
+        <div class="small">
+            <a href="@{web.Comments.listReplies(_comment.id)}" class="comment-replies-link">
+                #{if _comment.repliesCount > 0}
+                    &{'comment.reply'} (${_comment.repliesCount})
+                #{/if}
+                #{else}
+                    &{'comment.reply'}
+                #{/else}
+            </a>
+            #{if !_comment.isCensored && !_comment.isDeleted}
+                #{if _me?.id == _comment.author.id}
+                    - <strong>                    
+                        #{a @api.Comments.delete(_comment.id), class : 'comment-delete'}
+                            Delete
+                        #{/a}
+                    </strong>
+                #{/if}
+            #{/if}
+        </div>
+    </div>
+    <div class="comment-replies" id="comment-${_comment.id}-replies">        
+    </div>
+</div>
+<script type="text/javascript">
+    $('.timeago').timeago();
+</script>

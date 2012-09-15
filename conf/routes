@@ -14,14 +14,15 @@ GET     /upload                                                                 
 POST    /logout                                                                 web.Auth.logout
 
 #WEB
-POST    /lang                                                                   web.WebController.updateLanguage
-GET     /categories/{<[0-9]+>categoryId}-{categorySlug}/documents               web.Documents.list
-GET     /                                                                       web.Documents.list
+GET     /comments/{<[0-9]+>id}/replies                                          web.Comments.listReplies
+GET     /documents                                                              web.Documents.list
 GET     /documents/{<[0-9]+>id}-{slug}                                          web.Documents.read
 GET     /documents/{<[0-9]+>id}/go                                              web.Documents.go
 GET     /documents/{<[0-9]+>id}/details/edit                                    web.Documents.editDetails
 GET     /documents/{<[0-9]+>id}/clones                                          web.Documents.listClones
+GET     /documents/{<[0-9]+>id}/comments                                        web.Documents.listComments
 POST    /documents/{<[0-9]+>id}/readCount                                       web.Documents.incrementReadCount
+GET     /                                                                       web.WebController.index
 
 
 # ================== API =====================
@@ -33,11 +34,13 @@ PUT     /api/categories/{<[0-9]+>id}                                            
 DELETE  /api/categories/{<[0-9]+>id}                                            api.Categories.delete
 POST    /api/documents                                                          api.Documents.create
 GET     /api/documents/{<[0-9]+>id}/thumbnail                                   api.Documents.readThumbnail
-POST    /documents/{<[0-9]+>id}/details                                         api.Documents.updateDetails
-POST    /documents/{<[0-9]+>id}/clones                                          api.Documents.createClone
-POST    /documents/{<[0-9]+>id}/delete                                          api.Documents.delete
-POST    /documents/downloads/{<[0-9]+>exportLinkId}                             api.Documents.download
+POST    /api/documents/{<[0-9]+>id}/details                                     api.Documents.updateDetails
+POST    /api/documents/{<[0-9]+>id}/clones                                      api.Documents.createClone
+POST    /api/documents/{<[0-9]+>id}/delete                                      api.Documents.delete
+POST    /api/documents/downloads/{<[0-9]+>exportLinkId}                         api.Documents.download
 GET     /api/documentsjobsstatus/{<[0-9]+>id}                                   api.DocumentsJobsStatus.read
+POST    /api/comments                                                           api.Comments.create
+DELETE  /api/comments/{<[0-9]+>id}                                              api.Comments.delete
 
 
 *       /api/*                                                                  404

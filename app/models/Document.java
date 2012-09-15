@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
 
-@Entity
+@Entity(name = "document")
 public class Document extends BaseModel {
 
     public static class MimeTypeCheck extends Check {
@@ -252,6 +253,12 @@ public class Document extends BaseModel {
     }
 
     @Transactional
+    public void incrementCommentCountAndSave() {
+        this.commentCount++;
+        this.save();
+    }
+    
+    @Transactional
     public void incrementCloneCountAndSave() {
         this.cloneCount++;
         this.save();
@@ -391,7 +398,52 @@ public class Document extends BaseModel {
 
     }
 
-    public static List<Document> search(long categoryId, String order, String keyword, int start) {
-        return null;
+    public static List<Document> search(String keyword, long categoryId, String order, Integer page) {
+    	List<Document>documents = new ArrayList<Document>();
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("originalDocument is null and isArchived is false");
+
+    	if (keyword != null) {
+    		sb.append(" and fts(:keyword) = true");
+    	}
+    	
+    	if (categoryId > 0) {
+    		sb.append(" and category.id is :categoryId");
+    	}
+    	
+    	if (order == null) {
+            order = "recent";
+        }
+
+        if (order.equals("recent")) {
+            sb.append(" order by created desc ");
+        } else if (order.equals("reads")) {
+            sb.append(" order by readCount desc ");
+        } else if (order.equals("downloads")) {
+            sb.append(" order by downloadCount desc ");
+        } else if (order.equals("clones")) {
+            sb.append(" order by cloneCount desc ");
+        }
+        
+    	
+    	if (sb.toString() != "") {
+    		JPAQuery query = Document.find(sb.toString()); 
+    	
+    		if (keyword != null) {
+    			query.setParameter("keyword", keyword);
+    		}
+
+    		if (categoryId > 0) {
+    			query.setParameter("categoryId", categoryId);
+    		}
+
+    		if ((page == null) || (page < 1)) {
+                page = 1;
+            }
+    		
+    		documents = query.fetch(page, DEFAULT_PAGINATE_COUNT);
+    	}
+    	return documents;
     }
 }
