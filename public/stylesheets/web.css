@@ -21,11 +21,7 @@
 .navbar .brand {
     font-weight : bold;
     padding-left : 55px;
-    background : transparent url('../images/logo_bg_light.png') no-repeat 10px 0;
-}
-
-.navbar-inverse .brand {
-    background : transparent url('../images/logo_bg_dark.png') no-repeat 10px 0;
+    background : transparent url('../images/logo.png') no-repeat 10px 0;
 }
 
 .welcome-message {
