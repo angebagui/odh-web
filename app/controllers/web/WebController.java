@@ -13,7 +13,8 @@ public class WebController extends AppController {
 
     @Before
     public static void addViewArgs() {
-        renderArgs.put("categories", Category.all().fetch());
+        List <Category> categories = Category.find("order by name asc").fetch();
+        renderArgs.put("categories", categories);
         renderArgs.put("me", getMe());
     }
 
