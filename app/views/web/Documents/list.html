@@ -34,80 +34,83 @@
     #{/set}
 #{/if}
 
-<div class="row-fluid">    
-    <div class="span12">
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                <button class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-folder-open"> </i> ${category ? category.name : messages.get('all.categories').raw()} <span class="caret"> </span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="${category == _null ? 'active' : ''}">#{a @web.Documents.list(keyword, null, order, null)}&{'all.categories'}#{/a}</li>
-                    #{list categories}
-                        <li class="${category?.id == _.id ? 'active' : ''}">#{a @web.Documents.list(keyword, _.id, order, null)}${_.name}#{/a}</li>
-                    #{/list}
-                </ul>
-            </div>
-            <div class="btn-group">                
-                <button class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-sort"> </i> ${order ? messages.get('order.' + order)?.raw() : messages.get('order.recent')?.raw()} <span class="caret"> </span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="${order == null || order == 'recent' ? 'active' : ''}">
-                        <a href="@{list(keyword, category?.id, 'recent', null)}">
-                            &{'order.recent'}
+<div class="row-fluid">
+    <div class="span3">
+        #{form @list(), class : 'form-search'}
+            <input type="text" class="search-query" name="keyword" value="${keyword}" placeholder="Enter a keyword & press enter">
+        #{/form}
+        <ul class="nav nav-list">
+            <li class="nav-header">
+                <i class="icon-sort"></i> Sort by </span>
+            </li>
+            <li class="${order == null || order == 'recent' ? 'active' : ''}">
+                <a href="@{list(keyword, category?.id, 'recent', null)}">
+                    &{'order.recent'}
+                </a>
+            </li>
+            <li class="${order == 'reads' ? 'active' : ''}">
+                <a href="@{list(keyword, category?.id, 'reads', null)}">
+                    &{'order.reads'}
+                </a>
+            </li>
+            <li class="${order == 'downloads' ? 'active' : ''}">
+                <a href="@{list(keyword, category?.id, 'downloads', null)}">
+                    &{'order.downloads'}
+                </a>
+            </li>
+            <li class="${order == 'clones' ? 'active' : ''}">
+                <a href="@{list(keyword, category?.id, 'clones', null)}">
+                    &{'order.clones'}
+                </a>
+            </li>
+        </ul>
+        <hr />
+        <ul class="nav nav-list">
+            <li class="nav-header">
+                <i class="icon-folder-open"></i> Category
+            </li>
+            <li class="${category == _null ? 'active' : ''}">
+                #{a @web.Documents.list(keyword, null, order, null)}&{'all.categories'}#{/a}
+            </li>
+            #{list categories}
+                <li class="${category?.id == _.id ? 'active' : ''}">
+                    #{a @web.Documents.list(keyword, _.id, order, null)}${_.name}#{/a}
+                </li>
+            #{/list}
+        </ul>
+    </div>
+    <div class="span9">
+        #{if documents}
+            <p>
+                #{paginate.summary items:paginator /}
+            </p>
+            #{document.list documents : documents /}
+            #{paginate.controls items:documents, class : 'pagination-centered' /}
+            <!--
+            <div class="row-fluid">
+                <div class="pager">
+                    <ul>
+                        <li>
+                        #{if page > 1}
+                            <a href="@{list(keyword, category?.id, order, (page != null ? page - 1 : 1))}">
+                                &larr; &{'prev'}
+                            </a>
+                        #{/if}
+                        #{else}
+                            &larr; &{'prev'}
+                        #{/else}
+                        </li>
+                        <li>
+                            <a href="@{list(keyword, category?.id, order, (page != null ? 1 + page : 2))}" class="next">
+                                &{'next'} &rarr;
                         </a>
-                    </li>
-                    <li class="${order == 'reads' ? 'active' : ''}">
-                        <a href="@{list(keyword, category?.id, 'reads', null)}">
-                            &{'order.reads'}
-                        </a>
-                    </li>
-                    <li class="${order == 'downloads' ? 'active' : ''}">
-                        <a href="@{list(keyword, category?.id, 'downloads', null)}">
-                            &{'order.downloads'}
-                        </a>
-                    </li>
-                    <li class="${order == 'clones' ? 'active' : ''}">
-                        <a href="@{list(keyword, category?.id, 'clones', null)}">
-                            &{'order.clones'}
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            #{form @list(), class : 'form-search pull-right'}
-                <div class="input-append">
-                    <input type="text" class="search-query" name="keyword" value="${keyword}">
-                    <button type="submit" class="btn btn-primary">&{'Search'}</button>
+                        </li>
+                    </ul>
                 </div>
-            #{/form}
-        </div>
+            </div>
+            -->             
     </div>
 </div>
-
-#{if documents}
-    #{document.list documents : documents, countPerRow : 4 /}
-    <div class="row-fluid">
-        <div class="pager">
-            <ul>
-                <li>
-                    #{if page > 1}
-                        <a href="@{list(keyword, category?.id, order, (page != null ? page - 1 : 1))}">
-                            &larr; &{'prev'}
-                        </a>
-                    #{/if}
-                    #{else}
-                        &larr; &{'prev'}
-                    #{/else}
-                </li>
-                <li>
-                    <a href="@{list(keyword, category?.id, order, (page != null ? 1 + page : 2))}" class="next">
-                        &{'next'} &rarr;
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
 #{/if}
 #{else}
     <div class="row-fluid">

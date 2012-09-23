@@ -1,17 +1,19 @@
-<div class="row-fluid">
-    %{
-        i = 1;
-        for (_ in _documents) {
-    }%
-        <div class="span${(12 / _countPerRow)}">
-            #{document.list-item document : _ /}
-        </div>
-    %{
-            if (i % _countPerRow == 0) {
-                out.println('</div>');
-                out.println('<div class="row-fluid">');
-            }
-            i++;
-        } // end for loop
-    }%
-</div>
+<table class="table table-stripped">
+  <thead>
+    <tr>
+      <th class="span1">&nbsp;</th>
+      <th class="span5">Document</th>
+      <th class="span1">Date</th>
+      <th class="span1">Format</th>
+      <th class="span1">Size</th>
+      <th class="span3">Stats</th>
+    </tr>
+  </thead>
+  <tbody>
+    #{list _documents}
+        <tr>        
+            #{document.list-item document : _ /}        
+        </tr>
+    #{/list}
+  </tbody>
+</table>

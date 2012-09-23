@@ -14,14 +14,25 @@
     font-weight : normal;
 }
 
-.navbar {
-    bdorder-top : 5px solid #FFCC00;
+.header {
+	padding-top : 20px;
+	margin-bottom : 20px;
+	background-color : #f7f7f7;
+	border-bottom : 1px solid #dddddd;
 }
 
-.navbar .brand {
+.logo {
+	color : #333;
+	font-size : 25px;
     font-weight : bold;
-    padding-left : 55px;
-    background : transparent url('../images/logo.png') no-repeat 10px 0;
+    padding-left : 60px;
+    line-height : 40px;
+    display : block;
+    background : transparent url('../images/logo.png') no-repeat 10px 0;    
+}
+
+.logo:hover {
+	color : #333;
 }
 
 .welcome-message {
@@ -42,10 +53,6 @@
 
 .thumbnails .span2 {
     margin-bottom : 10px;
-}
-
-.page-header {
-    margin : 10px 0 20px 0;
 }
 
 .page-header h1 {

@@ -1,0 +1,46 @@
+<ul class="nav nav-pills top-menu">
+    <li>
+        <a href="@{web.WebController.index()}">
+            <i class="icon-home"></i>
+            &{'home'}
+        </a>
+    </li>
+    <li>
+        <a href="@{web.Documents.list()}">
+            <i class="icon-file"></i>
+            &{'explore'}
+        </a>
+    </li>
+    <li>
+        <a href="@{web.Documents.add}">
+            <i class="icon-upload-alt">&nbsp;</i>
+            &{'upload.document'}
+        </a>
+    </li>
+    #{if _me}
+        <li>
+            <a href="#">
+                #{if _me?.picture}
+                    <img src="${me?.picture}?sz=25" alt="${me?.name}" class="picture-small" width="25" height="25"/>
+                #{/if}
+                #{else}
+                    <img src="/public/images/user.png" alt="${me?.name}" class="picture-small" width="25" height="25"/>
+                #{/else}
+                ${_me?.name}
+            </a>
+        </li>
+        <li>
+            #{a @web.Auth.logout()}
+                &{'auth.logout'}
+            #{/a}
+        </li>
+    #{/if}
+    #{else}
+        <li>
+            #{a @web.Auth.googleCode()}
+                <i class="icon-google-plus-sign"></i>
+                &{'auth.login'}
+            #{/a}
+        </li>
+    #{/else}
+</ul>
