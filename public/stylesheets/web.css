@@ -72,8 +72,9 @@ a.logo:hover {
     margin-bottom : 5px;
 }
 
+
 .document-view-number {
-    text-align : center;
+    text-align : center;    
 }
 
 .document-view-number strong {
@@ -130,6 +131,28 @@ a.logo:hover {
     float : left;
     margin-right : 5px;
     margin-bottom : 5px;
+}
+
+.box {
+    margin-bottom : 20px;
+    padding-bottom : 10px;
+    border-bottom : 1px solid #eee;
+}
+
+.box h3.title {
+    -webkit-border-radius : 5px;
+    -moz-border-radius : 5px;
+    border-radius : 5px;
+    background-color : #f3f3f3;
+    padding : 5px 10px;
+}
+
+.box .box-content {
+    padding : 10px;
+}
+
+.picture-small {
+    margin-right : 10px;
 }
 
 #footer {
