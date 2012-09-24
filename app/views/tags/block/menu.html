@@ -20,12 +20,7 @@
     #{if _me}
         <li>
             <a href="#">
-                #{if _me?.picture}
-                    <img src="${me?.picture}?sz=25" alt="${me?.name}" class="picture-small" width="25" height="25"/>
-                #{/if}
-                #{else}
-                    <img src="/public/images/user.png" alt="${me?.name}" class="picture-small" width="25" height="25"/>
-                #{/else}
+                #{user.picture user : _me, size : 15 /}
                 ${_me?.name}
             </a>
         </li>

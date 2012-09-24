@@ -37,7 +37,14 @@
 <div class="row-fluid">
     <div class="span3">
         #{form @list(), class : 'form-search'}
-            <input type="text" class="search-query" name="keyword" value="${keyword}" placeholder="Enter a keyword & press enter">
+            <div class="control-group">
+                <input type="text" class="search-query" name="keyword" value="${keyword}" placeholder="Enter a keyword & press enter">
+            </div>
+            <div class="control-group">
+                #{if keyword}
+                    <a href="@{web.Documents.list()}">Clear search options</a>
+                #{/if}
+            </div>
         #{/form}
         <ul class="nav nav-list">
             <li class="nav-header">
@@ -81,12 +88,7 @@
     </div>
     <div class="span9">
         #{if documents}
-            <p>
-                #{paginate.summary items:paginator /}
-            </p>
             #{document.list documents : documents /}
-            #{paginate.controls items:documents, class : 'pagination-centered' /}
-            <!--
             <div class="row-fluid">
                 <div class="pager">
                     <ul>
@@ -108,17 +110,12 @@
                     </ul>
                 </div>
             </div>
-            -->             
-    </div>
-</div>
-#{/if}
-#{else}
-    <div class="row-fluid">
-        <div class="span12">
+        #{/if}
+        #{else}   
             <div class="alert alert-warning">
                 <h3>&{'sorry'}</h3>
                 <p>&{'document.list.end'}</p>
             </div>
-        </div>
+        #{/else}
     </div>
-#{/else}
+</div>

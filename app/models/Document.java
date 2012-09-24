@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -24,6 +25,7 @@ import play.data.Upload;
 import play.data.binding.NoBinding;
 import play.data.validation.Check;
 import play.data.validation.CheckWith;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Transactional;
 import play.templates.JavaExtensions;
@@ -67,7 +69,10 @@ public class Document extends BaseModel {
     @JsonProperty
     public int commentCount;
 
+    @Lob
     @JsonProperty
+    @MaxSize(5000)
+    @Required        
     public String description;
 
     @NoBinding

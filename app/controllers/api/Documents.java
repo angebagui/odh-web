@@ -97,7 +97,7 @@ public class Documents extends AppController {
         notFound();
     }
 
-    public static void updateDetails(long id, @Required String title, @Required Category category, String source) throws IOException {
+    public static void updateDetails(long id, @Required String title, @Required Category category, String source, String description) throws IOException {
         checkAuthenticity();
         User me = Auth.getMe();
         Document document = Document.findById(id);
@@ -107,6 +107,7 @@ public class Documents extends AppController {
                 document.title = title;
                 document.category = category;
                 document.source = source;
+                document.description = description;
                 document.save();
                 renderJSON(document);
                 // flash.success(Messages.get("document.updateDetails.success"));

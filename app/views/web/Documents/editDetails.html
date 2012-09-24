@@ -17,11 +17,15 @@
             #{field 'category.id'}
                 #{form.select field : field, items : categories, valueProperty : 'id', labelProperty : 'name',  value : document?.category?.id /}
             #{/field}
+            #{field 'description'}
+                #{form.textarea field : field, value : document?.description, class : 'input-xxlarge', required  : true /}
+            #{/field}
             #{field 'source'}
                 #{form.input field : field, value : document?.source, class : 'input-xxlarge', required  : false /}
             #{/field}
             <div class="form-actions">
                 <input type="submit" value="&{'update.documentDetails'}" class="btn btn-primary" data-loading-text="&{'loading'}"/>
+                #{a @web.Documents.read(document?.id, document?.slug), class : 'btn btn-success'}Go Back#{/a}
             </div>
         #{/form}
 
@@ -42,7 +46,6 @@
                 data : $('form').serialize()
             }).success(function(data) {            
                 $('#result').addClass('alert-success').html(i18n('document.update.success.notice'));
-                console.log(data);
             }).error(function(data) {                
                 $('#result').addClass('alert-error').html(i18n('document.update.error.notice'));
             }).complete(function() {
@@ -62,8 +65,7 @@
                 data : { authenticityToken : '${session.authenticityToken}'}
             }).success(function(data) {            
                 $('#result').addClass('alert-success').html(i18n('document.update.success.notice'));
-                console.log(data);
-                windowLocation = '@@{web.Documents.list()}';
+                window.location = '@@{web.Documents.list()}';
             }).error(function(data) {                
                 $('#result').addClass('alert-error').html(i18n('document.update.error.notice'));
             }).complete(function() {

@@ -19,6 +19,9 @@
             #{field 'document.file'}
                 #{form.input field : field, type : 'file', 'help' : '.pdf, .doc, .docx, .ppt, .pptx, .txt, .rtf, .html' , required  : true /}
             #{/field}
+            #{field 'document.description'}
+                #{form.textarea field : field, value : document?.description, class : 'input-xxlarge', required  : true /}
+            #{/field}
             #{field 'document.source'}
                 #{form.input field : field, label : 'Source', value : document?.source, class : 'input-xxlarge', 'help' : 'document.source.help', required  : false /}
             #{/field}

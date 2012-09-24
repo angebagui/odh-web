@@ -18,8 +18,7 @@ public class WebController extends AppController {
         renderArgs.put("me", getMe());
     }
 
-    @Before(unless = {
-        "web.WebController.index",
+    @Before(unless = {        
         "web.Auth.googleCode",
         "web.Auth.googleToken",
         "web.Auth.googleOAuth",
@@ -30,7 +29,7 @@ public class WebController extends AppController {
         "web.Documents.listClones",
         "web.Documents.read",        
         "web.Documents.listComments",
-        "web.WebController.updateLanguage"
+        "web.WebController.index"
     })
     public static void checkAccess() {
         if (getMe() == null) {
