@@ -1,6 +1,6 @@
 <td>
     <a href="${_document.permalink}">
-        <img src="${_document.thumbnailUrl}" alt="${_document.title}" width="50">
+        <img src="${_document.thumbnailUrl}" alt="${_document.title}"  class="img-polaroid">
     </a>    
 </td>
 <td>
@@ -9,6 +9,7 @@
             ${_document.title}
         </a>
     </strong>
+    <p class="small">${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}</p>
     <p>
         <span class="small"><i class="icon-user"></i> <a href="#">${_document.owner}</a></span>
     </p>

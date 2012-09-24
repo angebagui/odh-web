@@ -22,9 +22,7 @@ public class Comment extends BaseModel {
     @JsonProperty
     public User author;
 
-    @Lob      
     @JsonProperty
-    @MaxSize(5000)
     @Required
     public String content;
     

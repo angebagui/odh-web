@@ -69,10 +69,8 @@ public class Document extends BaseModel {
     @JsonProperty
     public int commentCount;
 
-    @Lob
     @JsonProperty
-    @MaxSize(5000)
-    @Required        
+    @Required
     public String description;
 
     @NoBinding

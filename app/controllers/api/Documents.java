@@ -110,11 +110,9 @@ public class Documents extends AppController {
                 document.description = description;
                 document.save();
                 renderJSON(document);
-                // flash.success(Messages.get("document.updateDetails.success"));
             }
         } else {
             unauthorized();
-            // flash.error("auth.unauthorizedAccess");
         }
     }
     
