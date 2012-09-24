@@ -4,6 +4,7 @@
 
 GET   /admin           AdminController.index
 *     /admin           module:crud
+*     /                module:press
 
 # Home page
 
