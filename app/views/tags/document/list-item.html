@@ -1,21 +1,26 @@
 <td>
     <a href="${_document.permalink}">
-        <img src="${_document.thumbnailUrl}" alt="${_document.title}"  class="img-polaroid">
+        <img src="${_document.thumbnailUrl}" alt="${_document.title}"  class="img-polaroid" width="50">
     </a>    
 </td>
 <td>
-    <strong>
+    <div class="document-list-item-title">
         <a href="${_document.permalink}">
             ${_document.title}
         </a>
-    </strong>
-    <p class="small">${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}</p>
-    <p>
-        <span class="small"><i class="icon-user"></i> <a href="#">${_document.owner}</a></span>
-    </p>
-</td>
-<td>
-    <span class="small timeago" title="${_document.created}">${_document.created}</span>
+    </div>
+    <div class="small">
+        ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
+        &nbsp;
+    </div>
+    <div class="small">
+        <a href="#">
+            #{user.picture user : _document.owner, size : 20 /}
+        </a>
+        <a href="#">
+            ${_document.owner}
+        </a> - <span class="timeago" title="${_document.created}">${_document.created}</span>
+    </div>
 </td>
 <td>
     ${_document.mime.humanFriendlyName}
@@ -25,10 +30,13 @@
 </td>
 <td>
     <i class="icon-eye-open"></i>&nbsp;<strong>${_document.readCount}</strong>
-    |
+</td>
+<td>
     <i class="icon-download-alt"></i>&nbsp;<strong>${_document.downloadCount}</strong>
-    |
+</td>
+<td>
     <i class="icon-copy"></i>&nbsp;<strong>${_document.cloneCount}</strong>
-    |
+</td>
+<td>
     <i class="icon-comment"></i>&nbsp;<strong>${_document.commentCount}</strong>
 </td>     

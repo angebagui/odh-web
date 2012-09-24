@@ -35,17 +35,12 @@
 #{/if}
 
 <div class="row-fluid">
-    <div class="span3">
-        #{form @list(), class : 'form-search'}
-            <div class="control-group">
-                <input type="text" class="search-query" name="keyword" value="${keyword}" placeholder="Enter a keyword & press enter">
-            </div>
-            <div class="control-group">
-                #{if keyword}
-                    <a href="@{web.Documents.list()}">Clear search options</a>
-                #{/if}
-            </div>
-        #{/form}
+    <div class="span2">
+        <div class="control-group">
+            #{if keyword}
+                <a href="@{web.Documents.list()}">Clear search options</a>
+            #{/if}
+        </div>
         <ul class="nav nav-list">
             <li class="nav-header">
                 <i class="icon-sort"></i> Sort by </span>
@@ -86,7 +81,7 @@
             #{/list}
         </ul>
     </div>
-    <div class="span9">
+    <div class="span10">
         #{if documents}
             #{document.list documents : documents /}
             <div class="row-fluid">
