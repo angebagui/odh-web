@@ -4,15 +4,23 @@
     </a>    
 </td>
 <td>
-    <strong>
+    <div class="document-list-item-title">
         <a href="${_document.permalink}">
             ${_document.title}
         </a>
-    </strong>
-    <p class="small">${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}</p>
-    <p>
-        <span class="small"><i class="icon-user"></i> <a href="#">${_document.owner}</a></span>
-    </p>
+    </div>
+    <div class="small">
+        ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
+        &nbsp;
+    </div>
+    <div class="small">
+        <a href="#">
+            #{user.picture user : _document.owner, size : 20 /}
+        </a>
+        <a href="#">
+            ${_document.owner}
+        </a>
+    </div>
 </td>
 <td>
     <span class="small timeago" title="${_document.created}">${_document.created}</span>

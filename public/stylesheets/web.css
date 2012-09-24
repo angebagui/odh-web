@@ -110,49 +110,12 @@
     display : block;
 }
 
-.document-view-numbers {
-
-}
-
-.document-list-item {
-    position : relative;
-    margin-bottom : 40px;
-}
-
-.document-list-item img {
-    margin-left : auto;
-    margin-right : auto;
-    width : 100%;
-}
-
-.document-list-item-title {
-    background-color : rgba(0, 0, 0, 0.6);
+.document-list-item-title {    
     font-weight : bold;
-    padding : 3px;
-    position : absolute;
-    left : 6px;
-    top : 6px;
     font-size : 15px;
     display : block;
 }
 
-.document-list-item-details {
-    position : absolute;
-    left : 6px;
-    bottom : 6px;
-    background-color : rgba(0, 0, 0, 0.6);
-    display : block;
-    padding : 5px;
-    color : #dddddd;
-}
-
-.document-list-item-details a {
-    color : #ffffff;
-}
-
-.document-list-item-title a {
-    color : #ffffff;    
-}
 
 .document-view-details {
     border-left : 1px solid #eeeeee;
