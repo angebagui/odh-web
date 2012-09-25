@@ -1,62 +1,83 @@
 #{extends 'web.html' /}
 #{set 'title'}&{'welcome'}#{/set}
-<div class="hero-msg">
-    <div class="row-fluid">
-        <div class="span3">&nbsp;</div>
-        <div class="span6">
-            <h1 class="hero-msg-title">&{'application.welcomeTitle', play.configuration.getProperty('application.fullName')}<h1>
-            <p class="hero-msg-text">
-                &{'application.description'}
-            </p>
-            #{form @web.Documents.list(), class : 'form-inline'}
-                <input type="text" class="search-query input-xlarge" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}">
-                <button type="submit" class="btn btn-primary">&{'Search'}</button>
-            #{/form}     
-        </div>        
-    </div>
-    <div class="row-fluid">
-        <div class="span3">&nbsp;</div>
-        <div class="span6">
-            <img src="/public/images/hero-graphic.png" />
-        </div>
-    </div>
-</div>
-<hr />
 <div class="row-fluid">
-    <div class="span2">
-        <div class="fronpage-column">
-            <h4>&{'categories'}</h4>
-            <ul class="unstyled">            
-                #{list categories}
-                    <li>#{a @web.Documents.list(null, _.id, null, null)}${_.name}#{/a}</li>
-                #{/list}
-            </ul>
-        </div>        
-    </div>
-    <div class="span6">
-        <div class="fronpage-column">
-            <h4>&{'Recent Documents'}</h4>
-            <ul>            
-                #{list recentDocuments}
-                    <li>
-                        <a href="${_.permalink}"> ${_.title}</a> <span class="small">&{'shared.by'} <a href="#">${_.owner}</a></span>
-                    </li>
-                #{/list}
-            </ul>
-        </div>        
-    </div>
     <div class="span4">
-        <div class="fronpage-column">
-            <h4>&{'Newest Members'}</h4>        
-            <ul class="avatars-grid-list">
-                #{list recentUsers}
-                    <li>
-                        <a href="#">
-                            #{user.picture size : 50, user : _ /}
-                        </a>
-                    </li>
-                #{/list}
-            </ul>
+        <div class="box">
+            <h3>Sign in</h3>
+            <div class="box-content">
+                <p>Welcome to <strong>${play.configuration.getProperty('application.fullName')}</strong>, a platform where you can <a href="@{web.Documents.list()}">read</a>, <a href="@{web.Documents.add()}">share</a> & <a href="#">discuss</a> open documents and data.</p>
+                <p><a href="@{web.Auth.googleCode()}">Sign in</a> with your Google account to get started.</p>
+            </div>
+        </div>
+        <div class="box">
+            <h3>Search documents</h3>
+            <div class="box-content">
+                #{form @web.Documents.list(), class : 'form'}
+                    <div class="control-group">
+                        <input type="text" class="search-query input-large" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
+                    </div>
+                    <div class="control-group">
+                        <button type="submit" class="btn btn-primary">&{'Search'}</button>
+                    </div>
+                #{/form}
+            </div>   
+        </div>
+        <div class="box">
+            <h3>Search discussions</h3>
+            <div class="box-content">
+                #{form @web.WebController.index(), class : 'form'}
+                    <div class="control-group">
+                        <input type="text" class="search-query input-large" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
+                    </div>
+                    <div class="control-group">
+                        <button type="submit" class="btn btn-primary">&{'Search'}</button>
+                    </div>
+                #{/form}
+            </div>   
         </div>        
+    </div>
+    <div class="span8">
+        <div class="box">
+            <h3>&{'Recent Documents'}</h3>
+            <div class="row-fluid main-section-box-content">
+                #{list recentDocuments}
+                    <div class="span3">
+                        <div class="document-preview thumbnail">
+                            <a href="${_.permalink}">
+                                <img src="${_.thumbnailUrl}"/>
+                            </a>
+                            <div class="document-preview-title">
+                                <a href="${_.permalink}">
+                                    ${_.title}
+                                </a>
+                            </div>
+                            <div class="document-preview-owner">
+                                #{user.name user : _.owner /}
+                            </div>
+                        </div>
+                    </div>                
+                #{/list}
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    #{a @web.Documents.list()}<strong>Explore all documents &raquo;</strong>#{/a}
+                    #{list categories}
+                        - #{a @web.Documents.list(null, _.id, null, null)}${_.name}#{/a}
+                    #{/list}
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <h3>&{'Newest Members'}</h3>
+            <div class="row-fluid main-section-box-content">
+                <ul class="unstyled">
+                    #{list recentUsers}
+                        <li class="span1">
+                            #{user.picture user : _, size : 50 /}
+                        </li>
+                    #{/list}
+                </ul>
+            </div>
+        </div>
     </div>
 </div>

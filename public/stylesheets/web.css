@@ -1,3 +1,18 @@
+.header {
+    margin-top : 20px;
+}
+
+.navigation {
+    margin-top : 20px;   
+}
+
+.navigation ul {
+    background-color : #f7f7f7;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
 .hero-msg {   
     text-align : center;        
 }
@@ -14,21 +29,16 @@
     font-weight : normal;
 }
 
-.header {
-	padding-top : 20px;
-	margin-bottom : 20px;
-	background-color : #f7f7f7;
-	border-bottom : 1px solid #dddddd;
-}
-
 a.logo {
 	color : #333;
 	font-size : 18px;
     font-weight : bold;
-    padding-left : 60px;
-    line-height : 40px;
+    padding : 5px;
+    padding-left : 40px;    
     display : block;
-    background : transparent url('/public/images/logo.png') no-repeat 10px 0;
+    float : left;
+    margin-right : 30px;    
+    background : transparent url('/public/images/logo.png') no-repeat left center;
 }
 
 a.logo:hover {
@@ -40,20 +50,9 @@ a.logo:hover {
     text-align : center; color : #333; font-size : 20px; padding : 20px;
 }
 
-.thumbnail {
-    background-color : #ffffff;
-    text-align : center;
-}
-.thumbnail img {
-    border : 1px solid #eee;
-}
-.thumbnail .caption {
-    background-color : #f7f7f7;
-    margin-top : 5px;
-}
-
-.thumbnails .span2 {
-    margin-bottom : 10px;
+.page-header {
+    margin-top : 0px;
+    margin-bottom : 10px;    
 }
 
 .page-header h1 {
@@ -121,11 +120,6 @@ a.logo:hover {
     font-size : 12px;
 }
 
-.fronpage-column h4 {
-    border-bottom : 1px solid #eeeeee;
-    padding-bottom : 5px;
-}
-
 .avatars-grid-list li {
     list-style : none;
     float : left;
@@ -133,26 +127,75 @@ a.logo:hover {
     margin-bottom : 5px;
 }
 
-.box {
+.box {      
+    font-size : 12px;
     margin-bottom : 20px;
-    padding-bottom : 10px;
-    border-bottom : 1px solid #eee;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
-.box h3.title {
-    -webkit-border-radius : 5px;
-    -moz-border-radius : 5px;
-    border-radius : 5px;
-    background-color : #f3f3f3;
-    padding : 5px 10px;
+.box h3 {
+    background-color : #eeeeee;
+    font-size : 14px;
+    font-weight : bold;
+    padding-left: 10px;
+    margin-top : 0px;
+    margin-bottom : 0px;
+    text-shadow : 1px 1px 1px #ffffff;
+    border-bottom : 1px solid #dddddd;
+    -webkit-border-top-left-radius: 4px;
+    -moz-border-top-left-radius: 4px;
+    border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-top-right-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 .box .box-content {
+    background-color : #f7f7f7;
     padding : 10px;
 }
 
 .picture-small {
     margin-right : 10px;
+}
+
+.document-preview {
+    margin-right : 10px;
+    text-align : center;
+    position : relative;
+    margin-bottom : 20px;
+}
+
+.document-preview-title, .document-preview-owner {    
+    background-color : rgba(0, 0, 0, 0.3);
+    font-size : 12px;
+    font-weight : bold;
+    position : absolute;
+    display : block;
+    padding : 5px;
+    height : 20px;
+    overflow : hidden;
+    margin-right : 5px; 
+}
+
+.document-preview-title a, .document-preview-owner a {
+    color : #ffffff;
+}
+
+.document-preview-title {
+    top : 5px;
+    left : 5px;
+}
+
+.document-preview-owner {
+    bottom : 5px;
+    left : 5px;
+}
+
+.main-section-box-content {
+    margin-top : 20px;
 }
 
 #footer {

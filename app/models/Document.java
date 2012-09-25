@@ -407,7 +407,7 @@ public class Document extends BaseModel {
     	
     	sb.append("originalDocument is null and isArchived is false");
 
-    	if (keyword != null) {
+    	if (keyword != null && keyword.length() > 3) {
     		sb.append(" and fts(:keyword) = true");
     	}
     	
@@ -433,7 +433,7 @@ public class Document extends BaseModel {
     	if (sb.toString() != "") {
     		JPAQuery query = Document.find(sb.toString()); 
     	
-    		if (keyword != null) {
+    		if (keyword != null && keyword.length() > 3) {
     			query.setParameter("keyword", keyword);
     		}
 

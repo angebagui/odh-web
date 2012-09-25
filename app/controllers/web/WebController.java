@@ -67,7 +67,7 @@ public class WebController extends AppController {
     }
     
     public static void index() {
-        List<Document> recentDocuments = Document.find("originalDocument is null and isArchived is false order by created desc").fetch(10);
+        List<Document> recentDocuments = Document.find("originalDocument is null and isArchived is false order by created desc").fetch(4);
         List<User> recentUsers = User.find("order by created desc").fetch(12);
         render(recentDocuments, recentUsers);
     }

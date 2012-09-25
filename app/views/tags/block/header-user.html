@@ -1,0 +1,15 @@
+    #{if _user}
+            #{user.picture user : _user, size : 30, showName : true /}
+            | 
+            #{a @web.Auth.logout()}
+                &{'auth.logout'}
+            #{/a}
+    #{/if}
+    #{else}
+        <strong>
+            #{a @web.Auth.googleCode(), class : 'btn btn-danger'}
+                <i class="icon-google-plus-sign"></i>
+                &{'auth.login'}
+            #{/a}
+        </strong>
+    #{/else}

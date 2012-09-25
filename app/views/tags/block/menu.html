@@ -1,4 +1,4 @@
-<ul class="nav nav-pills top-menu">
+<ul class="nav nav-pills">
     <li>
         <a href="@{web.WebController.index()}">
             <i class="icon-home"></i>
@@ -17,25 +17,4 @@
             &{'upload.document'}
         </a>
     </li>
-    #{if _me}
-        <li>
-            <a href="#">
-                #{user.picture user : _me, size : 15 /}
-                ${_me?.name}
-            </a>
-        </li>
-        <li>
-            #{a @web.Auth.logout()}
-                &{'auth.logout'}
-            #{/a}
-        </li>
-    #{/if}
-    #{else}
-        <li>
-            #{a @web.Auth.googleCode()}
-                <i class="icon-google-plus-sign"></i>
-                &{'auth.login'}
-            #{/a}
-        </li>
-    #{/else}
 </ul>
