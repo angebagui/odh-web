@@ -34,18 +34,9 @@
         <div class="document-view-details">
             <div class="box">
                 <div class="clearfix user-preview">
-                    <a href="#" class="pull-left">
-                        #{if document.owner?.picture}
-                            <img src="${document.owner?.picture}?sz=50" alt="${document.owner?.name}" class="picture-small" width="50" height="50"/>
-                        #{/if}
-                        #{else}
-                            <img src="/public/images/user.png" alt="${document.owner?.name}" class="picture-small" width="50" height="50"/>
-                        #{/else}
-                    </a>
+                    #{user.picture user : document.owner, size : 60 /}
                     &{'sharedBy'}
-                        <a href="#" class="user-preview-name">
-                            <strong>${document.owner.name}</strong>
-                        </a>
+                        #{user.name user : document.owner /}
                     #{if document.originalDocument}
                         <small>via
                         <a href="@{read(document.originalDocument.id, document.originalDocument.slug)}" class="user-preview-name">

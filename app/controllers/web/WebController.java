@@ -29,6 +29,7 @@ public class WebController extends AppController {
         "web.Documents.listClones",
         "web.Documents.read",        
         "web.Documents.listComments",
+        "web.Users.read",
         "web.WebController.index"
     })
     public static void checkAccess() {

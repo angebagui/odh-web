@@ -23,6 +23,7 @@ GET     /documents/{<[0-9]+>id}/details/edit                                    
 GET     /documents/{<[0-9]+>id}/clones                                          web.Documents.listClones
 GET     /documents/{<[0-9]+>id}/comments                                        web.Documents.listComments
 POST    /documents/{<[0-9]+>id}/readCount                                       web.Documents.incrementReadCount
+GET     /users/{<[0-9]+>id}                                                     web.Users.read
 GET     /                                                                       web.WebController.index
 
 
