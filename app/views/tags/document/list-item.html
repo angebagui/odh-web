@@ -1,6 +1,6 @@
 <td>
     <a href="${_document.permalink}">
-        <img src="${_document.thumbnailUrl}" alt="${_document.title}"  class="img-polaroid" width="50">
+        <img src="${_document.thumbnailUrl}" alt="${_document.title}"  style="border : 1px solid #dddddd" width="50">
     </a>    
 </td>
 <td>
@@ -9,24 +9,20 @@
             ${_document.title}
         </a>
     </div>
-    <div class="small">
+    <p>
         ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
         &nbsp;
-    </div>
-    <div class="small">
-        <a href="#">
-            #{user.picture user : _document.owner, size : 20 /}
-        </a>
-        <a href="#">
-            ${_document.owner}
-        </a> - <span class="timeago" title="${_document.created}">${_document.created}</span>
-    </div>
+    </p>
+    #{user.picture user : _document.owner, size : 20, showName : true /}
+   - <span class="timeago" title="${_document.created}">${_document.created}</span>
 </td>
 <td>
-    ${_document.mime.humanFriendlyName}
-</td>
-<td>
-    ${_document.fileSize.formatSize()}
+    <p>
+        Format : <strong>${_document.mime.humanFriendlyName}</strong>
+    </p>
+    <p>
+        Size : <strong>${_document.fileSize.formatSize()}</strong>
+    </p>    
 </td>
 <td>
     ${_document.readCount} views
@@ -39,4 +35,4 @@
 </td>
 <td>
     ${_document.commentCount} comments
-</td>     
+</td>
