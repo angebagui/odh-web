@@ -207,3 +207,7 @@ a.logo:hover {
 .documents-list {
     font-size : 12px;
 }
+
+.header-search label, .header-search input {
+    font-size : 12px;
+}

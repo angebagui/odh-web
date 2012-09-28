@@ -8,7 +8,7 @@
         <div class="row-fluid">
             <div class="span12">
                 #{if document.embedLink}
-                    <iframe src="${document.embedLink.raw()}" width="100%" height="1000" frameborder="0"></iframe>
+                    <iframe src="${document.embedLink.raw()}" width="100%" height="800" frameborder="0"></iframe>
                 #{/if}
                 #{else}
                     <div class="alert alert-error">
@@ -19,10 +19,14 @@
                 <hr />
             </div>
             <div class="span12">
-                <h3>&{'document.comments'}</h3>                
-                <div id="document-comments">
-                    <div class="progress progress-striped active">
-                        <div class="bar" style="width: 100%;">                            
+                <div class="box">
+                    <h3>&{'document.comments'}</h3>
+                    <div class="box-content-white">
+                        <div id="document-comments">
+                            <div class="progress progress-striped active">
+                                <div class="bar" style="width: 100%;">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -46,34 +50,6 @@
                 </div>
             </div>
             <div class="box">
-                    <div class="row-fluid document-view-numbers">
-                        <div class="span3">
-                            <div class="document-view-number">
-                                <strong>${document.readCount}</strong>
-                                <p><small>&{'reads'}</small></p>
-                            </div>
-                        </div>
-                        <div class="span3">
-                            <div class="document-view-number">
-                                <strong>${document.downloadCount}</strong>
-                                <p><small>&{'downloads'}</small></p>
-                            </div>
-                        </div>
-                        <div class="span3">
-                            <div class="document-view-number">
-                                <strong><a href="@{web.Documents.listClones(document.id)}">${document.cloneCount}</a></strong>
-                                <p><small>&{'clones'}</small></p>
-                            </div>
-                        </div>
-                        <div class="span3">
-                            <div class="document-view-number">
-                                <strong><a href="#document-comments">${document.commentCount}</a></strong>
-                                <p><small>&{'comments'}</small></p>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="box">
                 #{if me?.id == document.owner?.id}
                     <a href="@{editDetails(document.id)}"  class="btn btn-danger btn-block"><i class="icon-pencil"></i>
                         &{'document.editDetails'}
@@ -91,62 +67,97 @@
                 <a href="${document.alternateLink}" target="_blank" class="btn btn-primary btn-block"><i class="icon-external-link"></i> &{'open.document.googleDrive'}</a>
             </div>
             <div class="box">
-                <h5>&{'download.document.asFormat'}</h5>
-                <div class="btn-toolbar">                        
-                    #{list document.exportLinks}
-                        <div class="btn-group">
-                            <div class="btn-block">
-                                #{a @api.Documents.download(_.id), class : 'btn document-exportLink-btn'}
-                                    <i class="icon-download-alt"></i> ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
-                                #{/a}
+                <h3>Stats</h3>
+                <div class="box-content">
+                    <table class="row-fluid">
+                        <tr>
+                            <td class="span3">
+                                <div class="document-view-number">
+                                    <strong>${document.readCount}</strong>
+                                    <p><small>&{'reads'}</small></p>
+                                </div>
+                            </td>
+                            <td class="span3">
+                                <div class="document-view-number">
+                                <strong>${document.downloadCount}</strong>
+                                <p><small>&{'downloads'}</small></p>
                             </div>
+                            </td>
+                            <td class="span3">
+                                <div class="document-view-number">
+                                <strong><a href="@{web.Documents.listClones(document.id)}">${document.cloneCount}</a></strong>
+                                <p><small>&{'clones'}</small></p>
+                            </div>
+                            </td>
+                            <td class="span3">
+                                 <div class="document-view-number">
+                                <strong><a href="#document-comments">${document.commentCount}</a></strong>
+                                <p><small>&{'comments'}</small></p>
+                            </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="box">
+                <h3>&{'download.document.asFormat'}</h3>
+                <div class="box-content-white">
+                    #{list document.exportLinks}
+                        <div class="control-group">
+                            #{a @api.Documents.download(_.id), class : 'btn btn-block'}
+                                <i class="icon-download-alt"></i> ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
+                            #{/a}
                         </div>
                     #{/list}
-                </div>                
+                </div>
             </div>
             <div class="box">
-                <h5>&{'share.document'}</h5>
-                <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button btn">
-                    <i class="icon icon-google-plus-sign"></i> Google +
-                </a>
-                <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=&{'document.share.text', document.title} - " class="share-button btn">
-                    <i class="icon icon-twitter"></i> Twitter
-                </a>
-                <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button btn">
-                    <i class="icon icon-facebook"></i> Facebook
-                </a>
+                <h3>&{'share.document'}</h3>
+                <div class="box-content-white">
+                    <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
+                        <i class="icon icon-google-plus-sign"></i> Google +
+                    </a>
+                    <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=&{'document.share.text', document.title} - " class="share-button btn btn-block">
+                        <i class="icon icon-twitter"></i> Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
+                        <i class="icon icon-facebook"></i> Facebook
+                    </a>
+                </div>
             </div>
             <div class="box">
-                <h5>&{'document.about'}</h5>
-                <table class="table table-bordered table-striped">
-                    <tr>
-                        <td>&{'document.category.id'}</td><td><a href="@{list(document.category.id, null, null)}">${document.category.name}</a></td>
-                    </tr>
-                    <tr>
-                        <td>&{'document.mimeType'}</td>
-                        <td>
-                            ${document.mime.humanFriendlyName}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&{'document.fileSize'}</td><td>${document.fileSize.formatSize()}</td>
-                    </tr>
-                    <tr>
-                        <td>&{'document.created'}</td><td><div class="timeago" title="${_.created}">${document.created}</div></td>
-                    </tr>
-                      <tr>
-                        <td>&{'document.description'}</td>
-                        <td>
-                            ${document.description}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&{'document.source'}</td>
-                        <td>
-                            ${document.source}
-                        </td>
-                    </tr>
-                </table>
+                <h3>&{'document.about'}</h3>
+                <div class="box-content-white">
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <td>&{'document.category.id'}</td><td><a href="@{list(null, document.category.id, null, null)}">${document.category.name}</a></td>
+                        </tr>
+                        <tr>
+                            <td>&{'document.mimeType'}</td>
+                            <td>
+                                ${document.mime.humanFriendlyName}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&{'document.fileSize'}</td><td>${document.fileSize.formatSize()}</td>
+                        </tr>
+                        <tr>
+                            <td>&{'document.created'}</td><td><div class="timeago" title="${_.created}">${document.created}</div></td>
+                        </tr>
+                        <tr>
+                            <td>&{'document.description'}</td>
+                            <td>
+                                ${document.description}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&{'document.source'}</td>
+                            <td>
+                                ${document.source}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

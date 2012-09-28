@@ -84,4 +84,4 @@ comment.auth.login.needed = Please sign in to post a comment.
 comment.deleted = This comment has been deleted by its author.
 comment.censored = This comment has been removed by the moderators.
 your.comment.deleted = Your comment has been deleted.
-enter.keyword = Search documents...
+enter.keyword = Enter a keyword
