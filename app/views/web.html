@@ -30,15 +30,13 @@
                                 </a>
                             </div>
                             <div class="span6">
-                                #{form @web.Documents.list(), class : 'form-search header-search pull-right'}
+                                #{form @web.WebController.search(), class : 'form-search header-search pull-right'}
                                     <input type="text" class="search-query input-medium" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
-                                    <label class="radio" for="searchType-documents">
-                                        <input type="radio" name="searchType" id="searchType-documents" value="documents" checked> Documents                                        
-                                    </label>
-                                    <label class="radio" for="searchType-discussions">
-                                        <input type="radio" name="searchType" id="searchType-discussions" value="discussions" checked> Discussions
-                                    </label>
-                                    <button type="submit" class="btn btn-primary btn-mini">&{'Search'}</button>
+                                    <select name="searchType" class="input-medium">
+                                        <option value="documents">Documents</option>
+                                        <option value="discussions">Discussions</option>
+                                    </select>                                    
+                                    <button type="submit" class="btn btn-primary btn-small">&{'Search'}</button>
                                 #{/form}
                             </div>
                             <div class="span3">

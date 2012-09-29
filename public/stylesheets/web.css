@@ -208,6 +208,9 @@ a.logo:hover {
     font-size : 12px;
 }
 
-.header-search label, .header-search input {
+.header-search {
+    margin-bottom : 0px;
+}
+.header-search label, .header-search input, .header-search select {
     font-size : 12px;
 }

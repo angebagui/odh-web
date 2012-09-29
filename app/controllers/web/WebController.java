@@ -71,5 +71,14 @@ public class WebController extends AppController {
         List<User> recentUsers = User.find("order by created desc").fetch(12);
         render(recentDocuments, recentUsers);
     }
+    
+    public static void search(String keyword, String searchType) {
+        if (searchType != null) {
+            if (searchType.equals("documents")) {
+                Documents.list(keyword, 0, null, null);
+            }
+        }
+        index();
+    }
 
 }
