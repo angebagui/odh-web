@@ -168,7 +168,7 @@ a.logo:hover {
     margin-bottom : 20px;
 }
 
-.document-preview-title, .document-preview-owner {    
+.document-preview-title {
     background-color : rgba(0, 0, 0, 0.3);
     font-size : 12px;
     font-weight : bold;
@@ -180,16 +180,11 @@ a.logo:hover {
     margin-right : 5px; 
 }
 
-.document-preview-title a, .document-preview-owner a {
+.document-preview-title a {
     color : #ffffff;
 }
 
 .document-preview-title {
-    top : 5px;
-    left : 5px;
-}
-
-.document-preview-owner {
     bottom : 5px;
     left : 5px;
 }

@@ -40,15 +40,15 @@
         <div class="document-view-details">
             <div class="box">
                 <div class="clearfix user-preview">
-                    #{user.picture user : document.owner, size : 60 /}
-                    &{'sharedBy'}
-                        #{user.name user : document.owner /}
-                    #{if document.originalDocument}
-                        <small>via
-                        <a href="@{read(document.originalDocument.id, document.originalDocument.slug)}" class="user-preview-name">
-                            <strong>${document.originalDocument.owner.name}</strong>
-                        </a></small>
-                    #{/if}
+                        #{user.picture user : document.owner, size : 60 /}
+                        &{'sharedBy'}
+                            #{user.name user : document.owner /}
+                        #{if document.originalDocument}
+                            <small>via
+                            <a href="@{read(document.originalDocument.id, document.originalDocument.slug)}" class="user-preview-name">
+                                <strong>${document.originalDocument.owner.name}</strong>
+                            </a></small>
+                        #{/if}
                 </div>
             </div>
             <div class="box">
@@ -220,7 +220,7 @@
                                 }).success(function(data) {
                                     if (data.status == 'SUCCESS') {
                                         $('.progress').addClass('progress-success');
-                                        window.location = documentGoAction.url({id : data.resultDocumentId });
+                                        window.location = data.result;
                                         clearInterval(checkInterval);
                                     } else {
                                         $('.progress').addClass('progress-warning');

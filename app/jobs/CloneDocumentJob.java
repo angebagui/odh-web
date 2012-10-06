@@ -2,6 +2,8 @@ package jobs;
 
 import java.io.IOException;
 
+import com.google.api.services.drive.model.File;
+
 import models.BackgroundJobStatus;
 import models.DocumentJobStatus;
 import models.Document;
@@ -29,11 +31,13 @@ public class CloneDocumentJob extends Job {
         if ((documentJobStatus != null) && (document != null) && (user != null)) {
             try {
                 Logger.info("Start : clone document job");
-                Document clonedDocument = document.cloneForUserAndSave(user);
-                documentJobStatus.resultDocumentId = clonedDocument.id;
-                documentJobStatus.status = BackgroundJobStatus.Status.SUCCESS;
-                documentJobStatus.save();
-            } catch (IOException ex) {                
+                File copiedFile = document.cloneForUser(user);
+                if (copiedFile != null) {
+                    documentJobStatus.result = copiedFile.getAlternateLink();
+                    documentJobStatus.status = BackgroundJobStatus.Status.SUCCESS;
+                    documentJobStatus.save();
+                }
+            } catch (IOException ex) {
                 Logger.error("Error during document copy operation to Google Drive : %s", ex.getMessage());
                 documentJobStatus.status = BackgroundJobStatus.Status.FAIL;
                 documentJobStatus.save();

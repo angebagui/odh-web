@@ -16,8 +16,7 @@
     <p>
         <a href="@{list(null, _document.category.id, null, null)}">${_document.category.name}</a>
     </p>
-    #{user.picture user : _document.owner, size : 20, showName : true /}
-   - <span class="timeago" title="${_document.created}">${_document.created}</span>
+    <div class="timeago" title="${_document.created}">${_document.created}</div>
 </td>
 <td>
     <p>

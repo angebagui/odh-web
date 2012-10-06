@@ -130,58 +130,50 @@ public class Document extends BaseModel {
     @JsonProperty
     public String title;
 
-    public Document cloneForUserAndSave(User user) throws IOException {
+    public File cloneForUser(User user) throws IOException {
+
         if (this.owner != user) {
             Drive driveService = GoogleOAuth.buildDriveServiceForUser(user);
 
             File copiedFile = new File();
             copiedFile.setTitle(this.title);
             copiedFile = driveService.files().copy(this.googleDriveFileId, copiedFile).setConvert(true).execute();
-            Permission permission = new Permission();
-            permission.setType("anyone");
-            permission.setRole("reader");
-            driveService.permissions().insert(copiedFile.getId(), permission).execute();
-            Document copiedDocument = new Document();
-            copiedDocument.title = copiedFile.getTitle();
-            copiedDocument.category = this.category;
-            copiedDocument.originalDocument = this;
-            copiedDocument.owner = user;
-            copiedDocument.alternateLink = copiedFile.getAlternateLink();
-            copiedDocument.embedLink = copiedFile.getEmbedLink();
-            copiedDocument.googleDriveFileId = copiedFile.getId();
-            copiedDocument.modifiedDate = copiedFile.getModifiedDate().toString();
-            copiedDocument.fileSize = this.fileSize;
-            copiedDocument.mimeType = this.mimeType;
-            if (copiedFile.getEmbedLink() != null) {
-                copiedDocument.embedLink = copiedFile.getEmbedLink();
-            } else {
-                copiedDocument.embedLink = "https://docs.google.com/file/d/" + copiedDocument.googleDriveFileId + "/preview";
-            }
 
-            copiedDocument.save();
-
-            if (copiedFile.getExportLinks() != null) {
-                for (Map.Entry<String, String> link : copiedFile.getExportLinks().entrySet()) {
-                    new ExportLink(copiedDocument, link.getKey(), link.getValue()).save();
-                }
-            } else {
-                ExportLink exportLink = new ExportLink(copiedDocument, copiedFile.getMimeType(), "https://docs.google.com/uc?id=" + copiedFile.getId() + "&export=download");
-                exportLink.save();
-            }
-
-            if (this.thumbnail != null) {
-                Thumbnail copiedDocumentThumbnail = new Thumbnail();
-                copiedDocumentThumbnail.image = this.thumbnail.image;
-                copiedDocumentThumbnail.mimeType = this.thumbnail.mimeType;
-                copiedDocumentThumbnail.save();
-                copiedDocument.thumbnail = copiedDocumentThumbnail;
-                copiedDocument.save();
-            } else {
-                new FetchDocumentThumbnailJob(copiedDocument.id).in(30);
-            }
-
+            /**
+             * copiedDocument.title = copiedFile.getTitle();
+             * copiedDocument.category = this.category;
+             * copiedDocument.originalDocument = this; copiedDocument.owner =
+             * user; copiedDocument.alternateLink =
+             * copiedFile.getAlternateLink(); copiedDocument.embedLink =
+             * copiedFile.getEmbedLink(); copiedDocument.googleDriveFileId =
+             * copiedFile.getId(); copiedDocument.modifiedDate =
+             * copiedFile.getModifiedDate().toString(); copiedDocument.fileSize
+             * = this.fileSize; copiedDocument.mimeType = this.mimeType; if
+             * (copiedFile.getEmbedLink() != null) { copiedDocument.embedLink =
+             * copiedFile.getEmbedLink(); } else { copiedDocument.embedLink =
+             * "https://docs.google.com/file/d/" +
+             * copiedDocument.googleDriveFileId + "/preview"; }
+             * 
+             * copiedDocument.save();
+             * 
+             * if (copiedFile.getExportLinks() != null) { for (Map.Entry<String,
+             * String> link : copiedFile.getExportLinks().entrySet()) { new
+             * ExportLink(copiedDocument, link.getKey(),
+             * link.getValue()).save(); } } else { ExportLink exportLink = new
+             * ExportLink(copiedDocument, copiedFile.getMimeType(),
+             * "https://docs.google.com/uc?id=" + copiedFile.getId() +
+             * "&export=download"); exportLink.save(); }
+             * 
+             * if (this.thumbnail != null) { Thumbnail copiedDocumentThumbnail =
+             * new Thumbnail(); copiedDocumentThumbnail.image =
+             * this.thumbnail.image; copiedDocumentThumbnail.mimeType =
+             * this.thumbnail.mimeType; copiedDocumentThumbnail.save();
+             * copiedDocument.thumbnail = copiedDocumentThumbnail;
+             * copiedDocument.save(); } else { new
+             * FetchDocumentThumbnailJob(copiedDocument.id).in(30); }
+             */
             new IncrementDocumentCloneCountJob(this.id).in(30);
-            return copiedDocument;
+            return copiedFile;
         }
         return null;
     }
@@ -260,7 +252,7 @@ public class Document extends BaseModel {
         this.commentCount++;
         this.save();
     }
-    
+
     @Transactional
     public void incrementCloneCountAndSave() {
         this.cloneCount++;
@@ -402,20 +394,20 @@ public class Document extends BaseModel {
     }
 
     public static List<Document> search(String keyword, long categoryId, String order, Integer page) {
-    	List<Document>documents = new ArrayList<Document>();
-    	StringBuilder sb = new StringBuilder();
-    	
-    	sb.append("originalDocument is null and isArchived is false");
+        List<Document> documents = new ArrayList<Document>();
+        StringBuilder sb = new StringBuilder();
 
-    	if (keyword != null && keyword.length() > 3) {
-    		sb.append(" and fts(:keyword) = true");
-    	}
-    	
-    	if (categoryId > 0) {
-    		sb.append(" and category.id is :categoryId");
-    	}
-    	
-    	if (order == null) {
+        sb.append("originalDocument is null and isArchived is false");
+
+        if (keyword != null && keyword.length() > 3) {
+            sb.append(" and fts(:keyword) = true");
+        }
+
+        if (categoryId > 0) {
+            sb.append(" and category.id is :categoryId");
+        }
+
+        if (order == null) {
             order = "recent";
         }
 
@@ -428,25 +420,24 @@ public class Document extends BaseModel {
         } else if (order.equals("clones")) {
             sb.append(" order by cloneCount desc ");
         }
-        
-    	
-    	if (sb.toString() != "") {
-    		JPAQuery query = Document.find(sb.toString()); 
-    	
-    		if (keyword != null && keyword.length() > 3) {
-    			query.setParameter("keyword", keyword);
-    		}
 
-    		if (categoryId > 0) {
-    			query.setParameter("categoryId", categoryId);
-    		}
+        if (sb.toString() != "") {
+            JPAQuery query = Document.find(sb.toString());
 
-    		if ((page == null) || (page < 1)) {
+            if (keyword != null && keyword.length() > 3) {
+                query.setParameter("keyword", keyword);
+            }
+
+            if (categoryId > 0) {
+                query.setParameter("categoryId", categoryId);
+            }
+
+            if ((page == null) || (page < 1)) {
                 page = 1;
             }
-    		
-    		documents = query.fetch(page, DEFAULT_PAGINATE_COUNT);
-    	}
-    	return documents;
+
+            documents = query.fetch(page, DEFAULT_PAGINATE_COUNT);
+        }
+        return documents;
     }
 }
