@@ -1,7 +1,7 @@
 <td>
     <a href="${_document.permalink}">
         <img src="${_document.thumbnailUrl}" alt="${_document.title}"  style="border : 1px solid #dddddd" width="50">
-    </a>    
+    </a>
 </td>
 <td>
     <div class="document-list-item-title">
@@ -13,28 +13,25 @@
         ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
         &nbsp;
     </p>
-    <p>
-        <a href="@{list(null, _document.category.id, null, null)}">${_document.category.name}</a>
-    </p>
+</td>
+<td>
+    <a href="@{list(null, _document.category.id, null, null)}">${_document.category.name}</a>
+</td>
+<td>
     <div class="timeago" title="${_document.created}">${_document.created}</div>
 </td>
 <td>
-    <p>
-        Format : <strong>${_document.mime.humanFriendlyName}</strong>
-    </p>
-    <p>
-        Size : <strong>${_document.fileSize.formatSize()}</strong>
-    </p>    
+    ${_document.fileSize.formatSize()}
 </td>
 <td>
-    ${_document.readCount} views
+    ${_document.readCount} times
 </td>
 <td>
-    ${_document.downloadCount} downloads
+    ${_document.downloadCount} times
 </td>
 <td>
-    ${_document.cloneCount} clones
+    ${_document.cloneCount} times
 </td>
 <td>
-    ${_document.commentCount} comments
+    ${_document.commentCount} times
 </td>

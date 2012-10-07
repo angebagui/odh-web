@@ -2,15 +2,20 @@
   <thead>
     <tr>
       <th class="span1">&nbsp;</th>
-      <th class="span6">Title</th>
-      <th class="span2">Details</th>
-      <th class="span3" colspan="4">Stats</th>
+      <th class="span4">Title</th>
+      <th class="span1">Category</th>
+      <th class="span1">Upload Date</th>
+      <th class="span1">Size</th>
+      <th class="span1">Viewed</th>
+      <th class="span1">Downloaded</th>
+        <th class="span1">Copied</th>
+        <th class="span1">Comments</th>
     </tr>
   </thead>
   <tbody>
     #{list _documents}
-        <tr>        
-            #{document.list-item document : _ /}        
+        <tr>
+            #{document.list-item document : _ /}
         </tr>
     #{/list}
   </tbody>
