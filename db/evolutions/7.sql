@@ -1,4 +1,5 @@
 # --- !Ups
+ALTER TABLE thumbnail ADD COLUMN document_id bigint;
 ALTER TABLE thumbnail ALTER COLUMN document_id SET NOT NULL;
 
 ALTER TABLE thumbnail
