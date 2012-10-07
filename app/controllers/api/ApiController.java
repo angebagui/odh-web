@@ -16,10 +16,9 @@ public class ApiController extends AppController {
         "api.Categories.list",
         "api.Categories.listDocuments",
         "api.Documents.read",
-        "api.Documents.readThumbnail",        
+        "api.Documents.readThumbnail",
         "api.Documents.download",
-        "api.Documents.listComments",
-        "api.Comments.listReplies"
+        "api.Documents.listComments"
     })
     public static void checkAccess() {
         if (getMe() == null) {

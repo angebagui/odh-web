@@ -1,26 +1,26 @@
-.header {
-    margin-top : 20px;
-}
-
-.navigation {
-    margin-top : 20px;   
-}
-
-.navigation ul {
+body {
     background-color : #f7f7f7;
+}
+
+#main-container {
+    margin-top: 60px;
+    margin-bottom : 20px;
+    background-color : #ffffff;
+    padding : 20px;
+    border : 1px solid #eeeeee;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
 
-.hero-msg {   
-    text-align : center;        
+.hero-msg {
+    text-align : center;
 }
 
 .hero-msg-title {
     font-size : 40px;
     font-weight : bold;
-    margin-bottom : 20px;    
+    margin-bottom : 20px;
 }
 
 .hero-msg-text {
@@ -29,15 +29,9 @@
     font-weight : normal;
 }
 
-a.logo {
-	color : #333;
-	font-size : 18px;
+.navbar a.logo {
     font-weight : bold;
-    padding : 5px;
-    padding-left : 40px;    
-    display : block;
-    float : left;
-    margin-right : 30px;    
+    padding-left : 40px;
     background : transparent url('/public/images/logo.png') no-repeat left center;
 }
 
@@ -52,7 +46,7 @@ a.logo:hover {
 
 .page-header {
     margin-top : 0px;
-    margin-bottom : 10px;    
+    margin-bottom : 10px;
 }
 
 .page-header h1 {
@@ -73,7 +67,7 @@ a.logo:hover {
 
 
 .document-view-number {
-    text-align : center;    
+    text-align : center;
 }
 
 .document-view-number strong {
@@ -81,7 +75,7 @@ a.logo:hover {
     display : block;
 }
 
-.document-list-item-title {    
+.document-list-item-title {
     font-weight : bold;
     font-size : 15px;
     display : block;
@@ -95,25 +89,21 @@ a.logo:hover {
 
 .comment-picture {
     float : left;
-    margin-right : 10px;
+    margin-right : 5px;
     display : block;
 }
 
 .comment-content, .comment-form {
-    margin-left : 60px;
-    margin-bottom : 20px;
+    margin-left : 35px;
+    margin-bottom : 10px;
     border : 1px solid #dddddd;
     border-left : 3px solid #dddddd;
-    padding : 10px;
-    background-color : #f7f7f7;    
+    padding : 5px;
+    background-color : #f7f7f7;
 }
 
-.comment-form textarea{ 
-    width : 80%;    
-}
-
-.comment-replies {
-    margin-left : 60px;    
+.comment-form textarea{
+    width : 95%;
 }
 
 .small {
@@ -127,7 +117,7 @@ a.logo:hover {
     margin-bottom : 5px;
 }
 
-.box {      
+.box {
     font-size : 12px;
     margin-bottom : 20px;
     -webkit-border-radius: 4px;
@@ -177,7 +167,7 @@ a.logo:hover {
     padding : 5px;
     height : 20px;
     overflow : hidden;
-    margin-right : 5px; 
+    margin-right : 5px;
 }
 
 .document-preview-title a {
@@ -196,7 +186,8 @@ a.logo:hover {
 #footer {
     border-top : 1px solid #eeeeee;
     padding-top : 10px;
-    margin-top : 60px;
+    margin-top : 40px;
+    margin-bottom : 20px;
 }
 
 .documents-list {
@@ -206,6 +197,8 @@ a.logo:hover {
 .header-search {
     margin-bottom : 0px;
 }
-.header-search label, .header-search input, .header-search select {
-    font-size : 12px;
+
+.header-search input {
+    margin-top : 5px;
 }
+

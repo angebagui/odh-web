@@ -3,8 +3,8 @@
 #{i18n keys:['document.upload.error.notice', 'auth.login.needed'] /}
 
 
-<div class="row-fluid">    
-    <div class="span8">
+<div class="row-fluid">
+    <div class="span6">
         <div class="row-fluid">
             <div class="span12">
                 #{if document.embedLink}
@@ -19,10 +19,12 @@
                 <hr />
             </div>
         </div>
+    </div>
+    <div class="span3">
         <div class="row-fluid">
             <div class="span12">
                 <div class="box">
-                    <h3>&{'document.comments'}</h3>
+                    <h3>Discussion</h3>
                     <div class="box-content-white">
                         <div id="document-comments">
                             <div class="progress progress-striped active">
@@ -34,21 +36,15 @@
                 </div>
                 <hr />
             </div>
-        </div>        
+        </div>
     </div>
-    <div class="span4">
+    <div class="span3">
         <div class="document-view-details">
             <div class="box">
                 <div class="clearfix user-preview">
-                        #{user.picture user : document.owner, size : 60 /}
-                        &{'sharedBy'}
-                            #{user.name user : document.owner /}
-                        #{if document.originalDocument}
-                            <small>via
-                            <a href="@{read(document.originalDocument.id, document.originalDocument.slug)}" class="user-preview-name">
-                                <strong>${document.originalDocument.owner.name}</strong>
-                            </a></small>
-                        #{/if}
+                    #{user.picture user : document.owner, size : 60 /}
+                    &{'sharedBy'}
+                    #{user.name user : document.owner /}
                 </div>
             </div>
             <div class="box">
@@ -71,31 +67,31 @@
             <div class="box">
                 <h3>Stats</h3>
                 <div class="box-content">
-                    <table class="row-fluid">
+                    <table style="width : 100%">
                         <tr>
-                            <td class="span3">
+                            <td>
                                 <div class="document-view-number">
                                     <strong>${document.readCount}</strong>
                                     <p><small>&{'reads'}</small></p>
                                 </div>
                             </td>
-                            <td class="span3">
+                            <td>
                                 <div class="document-view-number">
-                                <strong>${document.downloadCount}</strong>
-                                <p><small>&{'downloads'}</small></p>
-                            </div>
+                                    <strong>${document.downloadCount}</strong>
+                                    <p><small>&{'downloads'}</small></p>
+                                </div>
                             </td>
-                            <td class="span3">
+                            <td>
                                 <div class="document-view-number">
-                                <strong><a href="@{web.Documents.listClones(document.id)}">${document.cloneCount}</a></strong>
+                                <strong>${document.cloneCount}</strong>
                                 <p><small>&{'clones'}</small></p>
                             </div>
                             </td>
-                            <td class="span3">
+                            <td>
                                  <div class="document-view-number">
-                                <strong><a href="#document-comments">${document.commentCount}</a></strong>
-                                <p><small>&{'comments'}</small></p>
-                            </div>
+                                    <strong>${document.commentCount}</strong>
+                                    <p><small>&{'comments'}</small></p>
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -243,7 +239,7 @@
             });
             return false;
         });
-    
+
 
 
         setTimeout(
@@ -252,7 +248,7 @@
             },
             2000
         );
-        
+
         setTimeout(
             function() {
                 var incrementReadCountAction = #{jsRoute @web.Documents.incrementReadCount(':id') /};
@@ -266,14 +262,14 @@
         );
 
     });
-    
+
     $('.timeago').timeago();
-    
+
     $('.new-comment-form').live('submit', function() {
         var form = this;
         var button = $(form).find('.btn-primary');
         var list =  $(form).parent().parent().prev(); // not really nice, but will do for now
-            
+
         var alert =  $(form).find('.alert');
         alert.hide();
             button.button('loading');
@@ -281,32 +277,15 @@
             $.ajax({
                 url : createCommentAction.url(),
                 type : createCommentAction.method,
-                data : $(this).serialize()                
+                data : $(this).serialize()
             }).success(function(data) {
-                // very ugly but it works
-                var el = $(form).parent().parent().parent().prev().find('.comment-replies-link');
-                if (el.length > 0) {
-                    el.trigger('click');
-                } else {
-                    loadDocumentComments();
-                }
+                loadDocumentComments();
             }).error(function() {
                 alert.addClass('alert-error').html('&{"error.notice"}').show();
             }).complete(function() {
                 button.button('reset');
             });
             return false;
-    });
-
-    $('.comment-replies-link').live('click', function(){
-        var commentRepliesLink = $(this);
-        var commentRepliesList = $(this).parent().parent().parent().find('.comment-replies');
-        $.ajax({
-            url : commentRepliesLink.attr('href')
-        }).success(function(data) {
-            commentRepliesList.html(data);
-        });
-        return false;
     });
 
     $('.comment-delete').live('click', function() {

@@ -1,16 +1,16 @@
 <div class="comment-list">
-#{if comments}    
+#{if comments}
         #{list comments}
             #{comment.list-item comment : _, me : me /}
-        #{/list}       
+        #{/list}
 #{/if}
 </div>
 #{if me}
         <div class="clearfix">
             <div class="comment-picture">
-                #{user.picture user : me, size : 50 /}
+                #{user.picture user : me, size : 30 /}
             </div>
-            <div class="comment-form">                
+            <div class="comment-form">
                 #{form @api.Comments.create(), class : 'new-comment-form'}
                     <div class="alert hide">
                     </div>
@@ -22,10 +22,10 @@
                         <input type="hidden" name="comment.document.id" value="${document.id}" />
                     #{/else}
                     <div class="control-group">
-                        <textarea name="comment.content" rows="4"> </textarea>
+                        <textarea name="comment.content" rows="4"></textarea>
                     </div>
                     <div class="control-group">
-                        <input type="submit" class="btn btn-primary" value="&{'post.comment'}"/>
+                        <input type="submit" class="btn btn-primary btn-small" value="&{'post.comment'}"/>
                     </div>
                 #{/form}
             </div>
