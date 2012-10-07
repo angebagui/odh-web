@@ -10,17 +10,14 @@ GET   /admin           AdminController.index
 
 GET     /auth/google/code                                                       web.Auth.googleCode
 GET     /auth/google/token                                                      web.Auth.googleToken
-GET     /google/drive/files                                                     web.GoogleDrive.listFiles
 GET     /upload                                                                 web.Documents.add
 POST    /logout                                                                 web.Auth.logout
 
 #WEB
-GET     /comments/{<[0-9]+>id}/replies                                          web.Comments.listReplies
 GET     /documents                                                              web.Documents.list
 GET     /documents/{<[0-9]+>id}-{slug}                                          web.Documents.read
 GET     /documents/{<[0-9]+>id}/go                                              web.Documents.go
 GET     /documents/{<[0-9]+>id}/details/edit                                    web.Documents.editDetails
-GET     /documents/{<[0-9]+>id}/clones                                          web.Documents.listClones
 GET     /documents/{<[0-9]+>id}/comments                                        web.Documents.listComments
 POST    /documents/{<[0-9]+>id}/readCount                                       web.Documents.incrementReadCount
 GET     /users/{<[0-9]+>id}                                                     web.Users.read

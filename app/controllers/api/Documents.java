@@ -24,7 +24,6 @@ import controllers.web.Auth;
 public class Documents extends AppController {
 
     public static void create(@Required Document document) {
-        // Logger.info(document.file.getContentType());
         User me = Auth.getMe();
         document.setMime(Mime.parseName(document.file.getContentType()));
         if (validation.valid(document).ok) {
@@ -62,11 +61,7 @@ public class Documents extends AppController {
         Document document = Document.findById(id);
         notFoundIfNull(document);
         if (document.owner.id == me.id) {
-            document.isArchived = true;
-            document.save();
-            if (document.originalDocument != null) {
-                document.originalDocument.decreaseCloneCountAndSave();
-            }
+            document.delete();
             renderJSON(true);
         } else {
             unauthorized();
@@ -115,7 +110,7 @@ public class Documents extends AppController {
             unauthorized();
         }
     }
-    
+
     public static void listComments(long id, Integer page) {
         Document document = Document.findById(id);
         notFoundIfNull(document);

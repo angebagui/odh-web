@@ -11,12 +11,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 
 import jobs.FetchDocumentThumbnailJob;
 import jobs.IncrementDocumentCloneCountJob;
@@ -93,8 +88,6 @@ public class Document extends BaseModel {
     @JsonProperty
     public String googleDriveFileId;
 
-    public boolean isArchived;
-
     @CheckWith(MimeTypeCheck.class)
     @NoBinding
     @JsonProperty
@@ -103,9 +96,6 @@ public class Document extends BaseModel {
     @NoBinding
     @JsonProperty
     public String modifiedDate;
-
-    @ManyToOne
-    public Document originalDocument;
 
     @ManyToOne
     @NoBinding
@@ -122,7 +112,7 @@ public class Document extends BaseModel {
     @JsonProperty
     public String source;
 
-    @OneToOne
+    @OneToOne (cascade = CascadeType.REMOVE)
     @NoBinding
     public Thumbnail thumbnail;
 
@@ -138,40 +128,6 @@ public class Document extends BaseModel {
             File copiedFile = new File();
             copiedFile.setTitle(this.title);
             copiedFile = driveService.files().copy(this.googleDriveFileId, copiedFile).setConvert(true).execute();
-
-            /**
-             * copiedDocument.title = copiedFile.getTitle();
-             * copiedDocument.category = this.category;
-             * copiedDocument.originalDocument = this; copiedDocument.owner =
-             * user; copiedDocument.alternateLink =
-             * copiedFile.getAlternateLink(); copiedDocument.embedLink =
-             * copiedFile.getEmbedLink(); copiedDocument.googleDriveFileId =
-             * copiedFile.getId(); copiedDocument.modifiedDate =
-             * copiedFile.getModifiedDate().toString(); copiedDocument.fileSize
-             * = this.fileSize; copiedDocument.mimeType = this.mimeType; if
-             * (copiedFile.getEmbedLink() != null) { copiedDocument.embedLink =
-             * copiedFile.getEmbedLink(); } else { copiedDocument.embedLink =
-             * "https://docs.google.com/file/d/" +
-             * copiedDocument.googleDriveFileId + "/preview"; }
-             * 
-             * copiedDocument.save();
-             * 
-             * if (copiedFile.getExportLinks() != null) { for (Map.Entry<String,
-             * String> link : copiedFile.getExportLinks().entrySet()) { new
-             * ExportLink(copiedDocument, link.getKey(),
-             * link.getValue()).save(); } } else { ExportLink exportLink = new
-             * ExportLink(copiedDocument, copiedFile.getMimeType(),
-             * "https://docs.google.com/uc?id=" + copiedFile.getId() +
-             * "&export=download"); exportLink.save(); }
-             * 
-             * if (this.thumbnail != null) { Thumbnail copiedDocumentThumbnail =
-             * new Thumbnail(); copiedDocumentThumbnail.image =
-             * this.thumbnail.image; copiedDocumentThumbnail.mimeType =
-             * this.thumbnail.mimeType; copiedDocumentThumbnail.save();
-             * copiedDocument.thumbnail = copiedDocumentThumbnail;
-             * copiedDocument.save(); } else { new
-             * FetchDocumentThumbnailJob(copiedDocument.id).in(30); }
-             */
             new IncrementDocumentCloneCountJob(this.id).in(30);
             return copiedFile;
         }
@@ -248,8 +204,12 @@ public class Document extends BaseModel {
     }
 
     @Transactional
-    public void incrementCommentCountAndSave() {
-        this.commentCount++;
+    public void updateCommentCountAndSave(boolean increment) {
+        if (increment) {
+            this.commentCount++;
+        } else {
+            this.commentCount--;
+        }
         this.save();
     }
 
@@ -310,7 +270,6 @@ public class Document extends BaseModel {
         this.googleDriveFileId = insertedDriveFile.getId();
         this.modifiedDate = insertedDriveFile.getModifiedDate().toString();
         this.fileSize = this.file.getSize();
-        this.isArchived = false;
 
         // For some reasons the embedLink property for PDFs is null
         if (insertedDriveFile.getEmbedLink() != null) {
@@ -333,73 +292,19 @@ public class Document extends BaseModel {
         // We can fetch the thumbnail later on
         new FetchDocumentThumbnailJob(this.id).in(30);
 
-        // this.category.documentCount = this.category.documentCount + 1;
-        // this.category.save();
-
-    }
-
-    public static List<Document> find(String order, Integer page) {
-        String queryString = "originalDocument.id is null and isArchived is ?";
-
-        if (order == null) {
-            order = "recent";
-        }
-
-        if (order.equals("recent")) {
-            queryString += " order by created desc ";
-        } else if (order.equals("reads")) {
-            queryString += " order by readCount desc ";
-        } else if (order.equals("downloads")) {
-            queryString += " order by downloadCount desc ";
-        } else if (order.equals("clones")) {
-            queryString += " order by cloneCount desc ";
-        }
-
-        if ((page == null) || (page < 1)) {
-            page = 1;
-        }
-
-        JPAQuery query = Document.find(queryString, false);
-
-        return query.fetch(page, DEFAULT_PAGINATE_COUNT);
     }
 
     public static List<Document> findByCategory(Category category, String order, Integer page) {
-        if (category != null) {
-            String queryString = "originalDocument.id is null and category is ? and isArchived is ?";
-
-            if (order == null) {
-                order = "recent";
-            }
-
-            if (order.equals("recent")) {
-                queryString += " order by created desc ";
-            } else if (order.equals("reads")) {
-                queryString += " order by readCount desc ";
-            } else if (order.equals("downloads")) {
-                queryString += " order by downloadCount desc ";
-            } else if (order.equals("clones")) {
-                queryString += " order by cloneCount desc ";
-            }
-
-            if ((page == null) || (page < 1)) {
-                page = 1;
-            }
-
-            return Document.find(queryString, category, false).fetch(page, DEFAULT_PAGINATE_COUNT);
-        } else {
-            return null;
-        }
-
+        return search(null, category.id, order, page);
     }
 
     public static List<Document> search(String keyword, long categoryId, String order, Integer page) {
         List<Document> documents = new ArrayList<Document>();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("originalDocument is null and isArchived is false");
+        sb.append("googleDriveFileId != null");
 
-        if (keyword != null && keyword.length() > 3) {
+        if (keyword != null && keyword.length() > 0) {
             sb.append(" and fts(:keyword) = true");
         }
 
@@ -424,7 +329,7 @@ public class Document extends BaseModel {
         if (sb.toString() != "") {
             JPAQuery query = Document.find(sb.toString());
 
-            if (keyword != null && keyword.length() > 3) {
+            if (keyword != null && keyword.length() > 0) {
                 query.setParameter("keyword", keyword);
             }
 

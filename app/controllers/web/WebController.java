@@ -18,16 +18,15 @@ public class WebController extends AppController {
         renderArgs.put("me", getMe());
     }
 
-    @Before(unless = {        
+    @Before(unless = {
         "web.Auth.googleCode",
         "web.Auth.googleToken",
         "web.Auth.googleOAuth",
-        "web.Comments.listReplies",
         "web.Documents.incrementReadCount",
         "web.Documents.go",
         "web.Documents.list",
         "web.Documents.listClones",
-        "web.Documents.read",        
+        "web.Documents.read",
         "web.Documents.listComments",
         "web.Users.read",
         "web.WebController.index"
@@ -39,7 +38,7 @@ public class WebController extends AppController {
             Auth.googleCode();
         }
     }
-    
+
     @Before
     public static void setDefaultRequestParameters() {
         String pageParam = request.params.get("page");
@@ -65,13 +64,13 @@ public class WebController extends AppController {
         }
         redirect(nextUrl);
     }
-    
+
     public static void index() {
-        List<Document> recentDocuments = Document.find("originalDocument is null and isArchived is false order by created desc").fetch(4);
+        List<Document> recentDocuments = Document.find("order by created desc").fetch(4);
         List<User> recentUsers = User.find("order by created desc").fetch(12);
         render(recentDocuments, recentUsers);
     }
-    
+
     public static void search(String keyword, String searchType) {
         if (searchType != null) {
             if (searchType.equals("documents")) {

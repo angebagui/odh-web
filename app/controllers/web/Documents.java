@@ -53,33 +53,21 @@ public class Documents extends AppController {
         ok();
     }
 
-    public static void list(String keyword, long categoryId, String order, Integer page) { 
-        Category category = Category.findById(categoryId); 
+    public static void list(String keyword, long categoryId, String order, Integer page) {
+        Category category = Category.findById(categoryId);
     	List<Document>documents = Document.search(keyword, categoryId, order, page);
         render(documents, category, keyword, order, page);
-    }
-
-    public static void listClones(long id) {
-        Document document = Document.findById(id);
-        notFoundIfNull(document);
-        List<Document> clones = Document.find("originalDocument is ? and isArchived is false", document).fetch();
-        render(document, clones);
     }
 
     public static void read(long id, String slug) {
         Document document = Document.findById(id);
         if (document != null) {
-            if (document.isArchived) {
-                flash.error(Messages.get("document.read.error"));
-                redirect("/");
-            } else {
-                render(document);
-            }
+            render(document);
         } else {
             notFound();
         }
     }
-    
+
     public static void listComments(long id, Integer page) {
         Document document = Document.findById(id);
         notFoundIfNull(document);
