@@ -1,15 +1,20 @@
+<ul class="nav">
     #{if _user}
-            #{user.picture user : _user, size : 30, showName : true /}
-            | 
+        <li>
+            #{user.picture user : _user, size : 20, showName : true /}
+        </li>
+        <li>
             #{a @web.Auth.logout()}
                 &{'auth.logout'}
             #{/a}
+        </li>
     #{/if}
     #{else}
-        <strong>
-            #{a @web.Auth.googleCode(), class : 'btn btn-danger'}
+        <li>
+            #{a @web.Auth.googleCode()}
                 <i class="icon-google-plus-sign"></i>
                 &{'auth.login'}
             #{/a}
-        </strong>
+        </li>
     #{/else}
+</ul>

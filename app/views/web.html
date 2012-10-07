@@ -8,53 +8,39 @@
         <link rel="image_src" type="image/jpeg" href="${document?.thumbnailUrl ? document.thumbnailUrl : request.host + '/public/images/logo.png'}" />
         <link rel="icon" type="image/png" href="/public/images/favicon.png">
 
-        #{press.stylesheet 'bootstrap.min.css' /}        
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap.no-icons.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" type="text/css">
         #{press.stylesheet 'web.css' /}
         #{press.compressed-stylesheet /}
-        <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" type="text/css">
         <!--[if lt IE 9]>
             <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome-ie7.css" type="text/css">
         <![endif]-->
-
     </head>
 
     <body>
-        <div class="container">
-             <div class="row">                
-                <div class="span12">
-                    <div class="header">
-                        <div class="row-fluid">
-                            <div class="span3">
-                                <a class="logo" href="@{web.WebController.index()}">
-                                    ${play.configuration.getProperty("application.fullName")}
-                                </a>
-                            </div>
-                            <div class="span6">
-                                #{form @web.WebController.search(), class : 'form-search header-search pull-right'}
-                                    <input type="text" class="search-query input-medium" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
-                                    <select name="searchType" class="input-medium">
-                                        <option value="documents">Documents</option>
-                                        <option value="discussions">Discussions</option>
-                                    </select>                                    
-                                    <button type="submit" class="btn btn-primary btn-small">&{'Search'}</button>
-                                #{/form}
-                            </div>
-                            <div class="span3">
-                                <div class="pull-right">
-                                    #{block.header-user user : me /}
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand logo" href="@{web.WebController.index()}">
+                        ${play.configuration.getProperty("application.fullName")}
+                    </a>
+                    <div class="nav-collapse collapse">
+                        #{block.menu /}
+                        #{block.header-user user : me /}
+                        #{form @web.Documents.list(), class : 'form-search header-search pull-right'}
+                            <input type="text" class="search-query input-large" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
+                            <button type="submit" class="btn btn-primary">&{'Search'}</button>
+                        #{/form}
+                    </div><!--/.nav-collapse -->
                 </div>
             </div>
-            <div class="row">
-                <div class="span12">
-                    <div class="navigation">
-                        #{block.menu /}
-                    </div>
-                </div>                    
-            </div>      
+        </div>
+        <div class="container" id="main-container">
             #{if flash?.error || flash?.success}
                 <div class="row-fluid">
                     <div class="span12">
@@ -71,27 +57,25 @@
                     </div>
                 </div>
             #{/if}
-            <div id="main-container">
-                #{if request.url != '/'}
-                    <div class="page-header">
-                        <h1>#{get 'title' /}
-                            #{if get('subTitle')}
-                                <small>:: #{get 'subTitle' /}</small>
-                            #{/if}
-                        </h1>                        
-                    </div>
-                #{/if}
-                #{doLayout /}            
-            </div>
+            #{if request.url != '/'}
+                <div class="page-header">
+                    <h1>#{get 'title' /}
+                        #{if get('subTitle')}
+                            <small>:: #{get 'subTitle' /}</small>
+                        #{/if}
+                    </h1>
+                </div>
+            #{/if}
+            #{doLayout /}
+        </div><!-- /container -->
+        <div class="container" id="footer">
             <div class="row-fluid">
                 <div class="span12">
-                    <div id="footer">
-                        &copy; <a href="@{web.WebController.index()}">${play.configuration.getProperty("application.fullName")}</a> - Powered By 
-                        <a href="http://www.opendocshub.org"> The Open Docs Hub Project </a>
-                    </div>
+                    &copy; <a href="@{web.WebController.index()}">${play.configuration.getProperty("application.fullName")}</a> - Powered By
+                    <a href="http://www.opendocshub.org"> The Open Docs Hub Project </a>
                 </div>
-            </div>    
-        </div><!-- /container -->
+            </div>
+        </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/js/bootstrap.min.js" type="text/javascript"></script>

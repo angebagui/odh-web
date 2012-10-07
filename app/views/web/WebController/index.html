@@ -1,42 +1,29 @@
 #{extends 'web.html' /}
 #{set 'title'}&{'welcome'}#{/set}
 <div class="row-fluid">
-    <div class="span4">
-        <div class="box">
-            <h3>Sign in</h3>
-            <div class="box-content">
-                <p>Welcome to <strong>${play.configuration.getProperty('application.fullName')}</strong>, a platform where you can <a href="@{web.Documents.list()}">read</a>, <a href="@{web.Documents.add()}">share</a> & <a href="#">discuss</a> open documents and data.</p>
-                <p><a href="@{web.Auth.googleCode()}">Sign in</a> with your Google account to get started.</p>
-            </div>
-        </div>
-        <div class="box">
-            <h3>Search documents</h3>
-            <div class="box-content">
-                #{form @web.Documents.list(), class : 'form'}
-                    <div class="control-group">
-                        <input type="text" class="search-query input-large" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
-                    </div>
-                    <div class="control-group">
-                        <button type="submit" class="btn btn-primary">&{'Search'}</button>
-                    </div>
-                #{/form}
-            </div>   
-        </div>
-        <div class="box">
-            <h3>Search discussions</h3>
-            <div class="box-content">
-                #{form @web.WebController.index(), class : 'form'}
-                    <div class="control-group">
-                        <input type="text" class="search-query input-large" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
-                    </div>
-                    <div class="control-group">
-                        <button type="submit" class="btn btn-primary">&{'Search'}</button>
-                    </div>
-                #{/form}
-            </div>   
-        </div>        
-    </div>
     <div class="span8">
+        <div class="well well-small">
+            <h2>Welcome to ${play.configuration.getProperty('application.fullName')}</h2>
+            <p>Your description goes here.</p>
+            <p></p>
+        </div>
+    </div>
+    <div class="span4">
+        <p>
+            <a href="@{web.Documents.list()}">Explore</a> open documents and data. Discuss and copy them to your Google Drive account.
+            You can also <a href="@{web.Documents.add()}">share documents</a> with the rest of the community.
+        </p>
+        #{ifnot me}
+            <p>
+                <a href="@{web.Auth.googleCode()}" class="btn btn-danger">Sign in with your Google account</a>
+            </p>
+        #{/ifnot}
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span8">
+        <div class="box">
+        </div>
         <div class="box">
             <h3>&{'Recent Documents'}</h3>
             <div class="row-fluid box-content-white">
@@ -52,26 +39,28 @@
                                 </a>
                             </div>
                         </div>
-                    </div>                
+                    </div>
                 #{/list}
             </div>
             <div class="row-fluid">
                 <div class="span12">
-                    #{a @web.Documents.list()}<strong>Explore all documents &raquo;</strong>#{/a}
+                    #{a @web.Documents.list()}<strong>Explore all documents</strong>#{/a}
                     #{list categories}
-                        - #{a @web.Documents.list(null, _.id, null, null)}${_.name}#{/a}
+                    - #{a @web.Documents.list(null, _.id, null, null)}${_.name}#{/a}
                     #{/list}
                 </div>
             </div>
         </div>
+    </div>
+    <div class="span4">
         <div class="box">
             <h3>&{'Newest Members'}</h3>
             <div class="row-fluid box-content-white">
                 <ul class="unstyled">
                     #{list recentUsers}
-                        <li class="span1">
-                            #{user.picture user : _, size : 50 /}
-                        </li>
+                    <li class="span2">
+                        #{user.picture user : _, size : 50 /}
+                    </li>
                     #{/list}
                 </ul>
             </div>
