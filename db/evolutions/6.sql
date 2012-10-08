@@ -21,7 +21,6 @@ ALTER TABLE exportlink ADD CONSTRAINT fk834619eeed0b1afe FOREIGN KEY (document_i
 # --- !Downs
 ALTER TABLE documentjobstatus DROP COLUMN result;
 ALTER TABLE documentjobstatus ADD COLUMN resultdocumentid bigint;
-ALTER TABLE documentjobstatus ALTER COLUMN resultdocumentid SET NOT NULL;
 ALTER TABLE "comment" ADD COLUMN isdeleted boolean;
 ALTER TABLE "comment" ALTER COLUMN isdeleted SET NOT NULL;
 ALTER TABLE "comment" ADD COLUMN iscensored boolean;
