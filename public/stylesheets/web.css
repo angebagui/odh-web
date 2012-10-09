@@ -1,139 +1,142 @@
 body {
-    background-color : #f7f7f7;
+    background-color: #f7f7f7;
 }
 
 #main-container {
     margin-top: 60px;
-    margin-bottom : 20px;
-    background-color : #ffffff;
-    padding : 20px;
-    border : 1px solid #eeeeee;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #eeeeee;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
 
 .hero-msg {
-    text-align : center;
+    text-align: center;
 }
 
 .hero-msg-title {
-    font-size : 40px;
-    font-weight : bold;
-    margin-bottom : 20px;
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 50px;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .hero-msg-text {
-    font-size : 25px;
-    color : #666666;
-    font-weight : normal;
+    font-size: 25px;
+    color: #666666;
+    font-weight: normal;
 }
 
 .navbar a.logo {
-    font-weight : bold;
-    padding-left : 40px;
-    background : transparent url('/public/images/logo.png') no-repeat left center;
+    font-weight: bold;
+    padding-left: 40px;
+    background: transparent url('/public/images/logo.png') no-repeat left center;
 }
 
 a.logo:hover {
-	color : #333;
-	text-decoration : none;
+    color: #333;
+    text-decoration: none;
 }
 
 .welcome-message {
-    text-align : center; color : #333; font-size : 20px; padding : 20px;
+    text-align: center;
+    color: #333;
+    font-size: 20px;
+    padding: 20px;
 }
 
 .page-header {
-    margin-top : 0px;
-    margin-bottom : 10px;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .page-header h1 {
-    font-size : 20px;
-    padding : 0px;
-    margin : 0px;
-    line-height : 20px;
+    font-size: 20px;
+    padding: 0px;
+    margin: 0px;
+    line-height: 20px;
 }
 
 .page-header h1 small {
-    font-size : 15px;
-    font-weight : bold;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .btn-group .btn {
-    margin-bottom : 5px;
+    margin-bottom: 5px;
 }
 
-
 .document-view-number {
-    text-align : center;
+    text-align: center;
 }
 
 .document-view-number strong {
-    font-size : 40px;
-    display : block;
+    font-size: 40px;
+    display: block;
 }
 
 .document-list-item-title {
-    font-weight : bold;
-    font-size : 15px;
-    display : block;
+    font-weight: bold;
+    font-size: 15px;
+    display: block;
 }
 
-
 .document-view-details {
-    border-left : 1px solid #eeeeee;
-    padding : 10px;
+    border-left: 1px solid #eeeeee;
+    padding: 10px;
 }
 
 .comment-picture {
-    float : left;
-    margin-right : 5px;
-    display : block;
+    float: left;
+    margin-right: 5px;
+    display: block;
 }
 
 .comment-content, .comment-form {
-    margin-left : 35px;
-    margin-bottom : 10px;
-    border : 1px solid #dddddd;
-    border-left : 3px solid #dddddd;
-    padding : 5px;
-    background-color : #f7f7f7;
+    margin-left: 35px;
+    margin-bottom: 10px;
+    border: 1px solid #dddddd;
+    border-left: 3px solid #dddddd;
+    padding: 5px;
+    background-color: #f7f7f7;
 }
 
-.comment-form textarea{
-    width : 95%;
+.comment-form textarea {
+    width: 95%;
 }
 
 .small {
-    font-size : 12px;
+    font-size: 12px;
 }
 
 .avatars-grid-list li {
-    list-style : none;
-    float : left;
-    margin-right : 5px;
-    margin-bottom : 5px;
+    list-style: none;
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 .box {
-    font-size : 12px;
-    margin-bottom : 20px;
+    font-size: 12px;
+    margin-bottom: 20px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
 
 .box h3 {
-    background-color : #eeeeee;
-    font-size : 14px;
-    font-weight : bold;
+    background-color: #eeeeee;
+    font-size: 14px;
+    font-weight: bold;
     padding-left: 10px;
-    margin-top : 0px;
-    margin-bottom : 0px;
-    text-shadow : 1px 1px 1px #ffffff;
-    border-bottom : 1px solid #dddddd;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-shadow: 1px 1px 1px #ffffff;
+    border-bottom: 1px solid #dddddd;
     -webkit-border-top-left-radius: 4px;
     -moz-border-top-left-radius: 4px;
     border-top-left-radius: 4px;
@@ -143,62 +146,69 @@ a.logo:hover {
 }
 
 .box .box-content {
-    background-color : #f7f7f7;
-    padding : 10px;
+    background-color: #f7f7f7;
+    padding: 10px;
 }
 
 .picture-small {
-    margin-right : 10px;
+    margin-right: 10px;
 }
 
 .document-preview {
-    margin-right : 10px;
-    text-align : center;
-    position : relative;
-    margin-bottom : 20px;
+    margin-right: 10px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .document-preview-title {
-    background-color : rgba(0, 0, 0, 0.3);
-    font-size : 12px;
-    font-weight : bold;
-    position : absolute;
-    display : block;
-    padding : 5px;
-    height : 20px;
-    overflow : hidden;
-    margin-right : 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    display: block;
+    padding: 5px;
+    height: 20px;
+    overflow: hidden;
+    margin-right: 5px;
 }
 
 .document-preview-title a {
-    color : #ffffff;
+    color: #ffffff;
 }
 
 .document-preview-title {
-    bottom : 5px;
-    left : 5px;
+    bottom: 5px;
+    left: 5px;
 }
 
 .box-content-white {
-    margin-top : 20px;
+    margin-top: 20px;
 }
 
 #footer {
-    border-top : 1px solid #eeeeee;
-    padding-top : 10px;
-    margin-top : 40px;
-    margin-bottom : 20px;
+    border-top: 1px solid #eeeeee;
+    padding-top: 10px;
+    margin-top: 40px;
+    margin-bottom: 20px;
 }
 
 .documents-list {
-    font-size : 12px;
+    font-size: 12px;
 }
 
 .header-search {
-    margin-bottom : 0px;
+    margin-bottom: 0px;
 }
 
 .header-search input {
-    margin-top : 5px;
+    margin-top: 5px;
 }
 
+.icon-big {
+    font-size: 70px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: block;
+    float: left;
+}
