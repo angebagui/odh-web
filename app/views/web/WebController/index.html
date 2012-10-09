@@ -11,12 +11,12 @@
 <div class="row-fluid">
     <div class="span3"></div>
     <div class="span6">
-        <form class="form-search well well-small hero-msg">
-            <input type="text" class="span10 search-query" placeholder="&{'enter.keyword'}">
+        #{form @web.Documents.list(), class : 'form-search well well-small hero-msg'}
+            <input type="text" name="keyword" class="span10 search-query" placeholder="&{'enter.keyword'}">
             <button type="submit" class="btn btn-primary">
                 Search
             </button>
-        </form>
+        #{/form}
         <hr />
     </div>
 </div>
