@@ -2,9 +2,42 @@
 #{set title : user /}
 
 <div class="row-fluid">    
-    <div class="span4">
+    <div class="span3">
         <div class="box">
-            #{user.picture user : user, size : 200 /}
+            #{user.picture user : user, size : 300 /}
+        </div>
+        <p>
+            <strong>Joined : </strong> <span class="timeago" title="${user.created}">${user.created}</span></p>
+        <p>
+            <strong>Bio : </strong>
+            ${user.bio}
+        </p>
+        <p>
+            <strong>Google+ Profile : </strong>
+            <a href="https://plus.google.com/${user.googleUserId}" target="_blank">${("https://plus.google.com/" + user.googleUserId).substring(0, 30)}...</a>
+        </p>
+        <p>
+            <strong>Number of Documents : </strong>
+            <span class="label label-info">${user.documentCount}</span>
+        </p>
+    </div>
+    <div class="span9">
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#documents" data-toggle="tab">Recent Documents</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="documents">
+                    #{if documents}
+                        #{document.list documents : documents /}
+                    #{/if}
+                    #{else}
+                        <p class="alert alert-info">
+                            ${user} has not uploaded any documents yet.
+                        </p>
+                    #{/else}
+                </div>
+            </div>
         </div>
     </div>
 </div>

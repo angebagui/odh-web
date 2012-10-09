@@ -1,12 +1,21 @@
 <ul class="nav">
     #{if _user}
-        <li>
-            #{user.picture user : _user, size : 20, showName : true /}
-        </li>
-        <li>
-            #{a @web.Auth.logout()}
-                &{'auth.logout'}
-            #{/a}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-user"></i> Account
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    #{user.picture user : _user, size : 20, showName : true /}
+                </li>
+                 <li class="divider"></li>
+                <li>
+                    #{a @web.Auth.logout()}
+                        &{'auth.logout'}
+                    #{/a}
+                </li>
+            </ul>
         </li>
     #{/if}
     #{else}

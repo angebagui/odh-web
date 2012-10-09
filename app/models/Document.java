@@ -112,7 +112,7 @@ public class Document extends BaseModel {
     @JsonProperty
     public String source;
 
-    @OneToOne (cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @NoBinding
     public Thumbnail thumbnail;
 
@@ -342,6 +342,14 @@ public class Document extends BaseModel {
             }
 
             documents = query.fetch(page, DEFAULT_PAGINATE_COUNT);
+        }
+        return documents;
+    }
+
+    public static List<Document> findByUser(User user) {
+        List<Document> documents = new ArrayList<Document>();
+        if (user != null) {
+            documents = Document.find("owner is ? order by created desc", user).fetch(DEFAULT_PAGINATE_COUNT);
         }
         return documents;
     }

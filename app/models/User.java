@@ -59,6 +59,14 @@ public class User extends BaseModel implements RoleHolder {
         this.documentCount = 0;
     }
 
+    public long getDocumentCount() {
+        if (this.id != null) {
+            return Document.count("owner is ?", this);
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public List<? extends Role> getRoles() {
         List<Role> roles = new ArrayList<Role>();
