@@ -39,29 +39,6 @@
                     #{/list}
                 </ul>
             </div>
-            <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-share"></i> &{'share.document'}
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button">
-                            <i class="icon icon-google-plus-sign"></i> Google +
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=&{'document.share.text', document.title} - " class="share-button">
-                            <i class="icon icon-twitter"></i> Twitter
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button">
-                            <i class="icon icon-facebook"></i> Facebook
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>
@@ -95,6 +72,13 @@
     </div>
     <div class="span4">
         <div class="document-view-infos">
+            <div class="box">
+                <span class='st_googleplus_vcount' displayText='Google +' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+                <span class='st_twitter_vcount' displayText='Twedsdset' st_url="@@{web.Documents.read(document.id, document.slug)}" st_via="opendocshub"></span>
+                <span class='st_facebook_vcount' displayText='Facebook' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+                <span class='st_linkedin_vcount' displayText='LinkedIn' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+                <span class='st_email_vcount' displayText='Email'></span>
+            </div>
             <div class="box">
                 <h3>Stats</h3>
                 <div class="box-content">
@@ -201,17 +185,6 @@
 
     $(document).ready(function() {
         $('button.btn').button();
-        $('.share-button').click(function() {
-            var width  = 575,
-                height = 400,
-                left   = ($(window).width()  - width)  / 2,
-                top    = ($(window).height() - height) / 2,
-                url = this.href,
-                opts   = '';
-                window.open(url, 'share', 'title="Share", toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + width +', height=' + height +', top='+top+', left='+left);
-            return false;
-        });
-
         $('.button-clone').click(function() {
             #{if me == null}
                 $('.clone-result').html('<div class="alert"><a href="/auth/google/code">' + i18n('auth.login.needed') + '</a></div>');
@@ -329,4 +302,7 @@
 
 </script>
 
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "ur-d12e6cdb-43db-6330-be48-9b189264bb72"});</script>
 #{/set}
