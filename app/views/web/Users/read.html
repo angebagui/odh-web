@@ -1,11 +1,13 @@
 #{extends 'web.html' /}
 #{set title : user /}
 
-<div class="row-fluid">    
+<div class="row-fluid">
     <div class="span9">
         <div class="tabbable">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#documents" data-toggle="tab">Recent Documents</a></li>
+                <li class="active">
+                    <a href="#documents" data-toggle="tab">Recent Documents</a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="documents">
@@ -25,19 +27,29 @@
         <div class="box">
             #{user.picture user : user, size : 300 /}
         </div>
-        <p>
-            <strong>Joined : </strong> <span class="timeago" title="${user.created}">${user.created}</span></p>
-        <p>
-            <strong>Bio : </strong>
-            ${user.bio}
-        </p>
-        <p>
-            <strong>Google+ Profile : </strong>
-            <a href="https://plus.google.com/${user.googleUserId}" target="_blank">${("https://plus.google.com/" + user.googleUserId).substring(0, 30)}...</a>
-        </p>
-        <p>
-            <strong>Number of Documents : </strong>
-            <span class="label label-info">${user.documentCount}</span>
-        </p>
+        <table class="table">
+            <tr>
+                <td class="table-label">Joined</td>
+                <td><span class="timeago" title="${user.created}">${user.created}</span></td>
+            </tr>
+            <tr>
+                <td class="table-label">Bio</td>
+                <td>${user.bio}</td>
+            </tr>
+            <tr>
+                <td class="table-label">Links</td>
+                <td>
+                    <ul class="unstyled">
+                        <li>
+                            <a href="https://plus.google.com/${user.googleUserId}" target="_blank">Google +</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="table-label">Documents</td>
+                <td><span class="label label-info">${user.documentCount}</span></td>
+            </tr>
+        </table>
     </div>
 </div>

@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="${appLanguage}">
     <head>
+        <title>#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${play.configuration.getProperty('application.fullName')}</title>
+
         <meta charset="utf-8">
-        <title>#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${play.configuration.getProperty("application.fullName")}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="${document?.title ? messages.get('read.document.on', document.title) : ''} &{'application.fullName'}">
-        <link rel="image_src" type="image/jpeg" href="${document?.thumbnailUrl ? document.thumbnailUrl : request.host + '/public/images/logo.png'}" />
-        <link rel="icon" type="image/png" href="/public/images/favicon.png">
+        <meta name="description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${play.configuration.getProperty('application.fullName')}">
+
+        <meta property="og:title" content="#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${play.configuration.getProperty('application.fullName')}" />
+        <meta property="og:url" content="${request.secure ? 'https' : 'http' }://${request.host + request.url}" />
+        <meta property="og:image" content="${request.secure ? 'https' : 'http' }://${request.host + (document?.thumbnailUrl ? document.thumbnailUrl : '/public/images/logo.png')}" />
+        <meta property="og:description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${play.configuration.getProperty('application.fullName')}" />
+        <meta property="og:site_name" content="${play.configuration.getProperty('application.fullName')}" />
+
+        <link rel="image_src" type="image/jpeg" href="${request.secure ? 'https' : 'http' }://${request.host + (document?.thumbnailUrl ? document.thumbnailUrl : '/public/images/logo.png')}" />
+        <link rel="icon" type="image/png" href="@@{'/public/images/favicon.png'}">
 
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap.no-icons.min.css" rel="stylesheet">
         <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" type="text/css">
+
         #{press.stylesheet 'web.css' /}
         #{press.compressed-stylesheet /}
         <!--[if lt IE 9]>

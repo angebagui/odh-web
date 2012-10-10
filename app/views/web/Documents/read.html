@@ -2,9 +2,48 @@
 #{set title : document.title /}
 #{i18n keys:['document.upload.error.notice', 'auth.login.needed'] /}
 
-
+<div class="clone-result"></div>
+<div class="progress progress-striped active hide">
+    <div class="bar" style="width: 100%;">
+    </div>
+</div>
 <div class="row-fluid">
-    <div class="span6">
+    <div class="span12">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                 #{if me?.id == document.owner?.id}
+                    <a href="@{editDetails(document.id)}"  class="btn btn-primary"><i class="icon-pencil"></i>
+                        &{'document.editDetails'}
+                    </a>
+                #{/if}
+            </div>
+            <div class="btn-group">
+                #{else}
+                    <button type="button" class="btn btn-success button-clone" data-loading-text="&{'loading'}"><i class="icon-copy"></i>
+                        &{'clone.document'}
+                    </button>
+                #{/else}
+            </div>
+            <div class="btn-group">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="icon-download-alt"></i> Download as
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    #{list document.exportLinks}
+                        <li>
+                            #{a @api.Documents.download(_.id)}
+                                ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
+                            #{/a}
+                        </li>
+                    #{/list}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span8">
         <div class="row-fluid">
             <div class="span12">
                 #{if document.embedLink}
@@ -16,21 +55,14 @@
                         <p>&{'document.deleted'}</p>
                     </div>
                 #{/else}
-                <hr />
             </div>
         </div>
-    </div>
-    <div class="span3">
         <div class="row-fluid">
             <div class="span12">
-                <div class="box">
-                    <h3>Discussion</h3>
-                    <div class="box-content-white">
-                        <div id="document-comments">
-                            <div class="progress progress-striped active">
-                                <div class="bar" style="width: 100%;">
-                                </div>
-                            </div>
+                <h3>Comments</h3>
+                <div id="document-comments">
+                    <div class="progress progress-striped active">
+                        <div class="bar" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -38,59 +70,46 @@
             </div>
         </div>
     </div>
-    <div class="span3">
-        <div class="document-view-details">
+    <div class="span4">
+        <div class="document-view-infos">
             <div class="box">
-                <div class="clearfix user-preview">
-                    #{user.picture user : document.owner, size : 60 /}
-                    &{'sharedBy'}
-                    #{user.name user : document.owner /}
-                </div>
-            </div>
-            <div class="box">
-                #{if me?.id == document.owner?.id}
-                    <a href="@{editDetails(document.id)}"  class="btn btn-danger btn-block"><i class="icon-pencil"></i>
-                        &{'document.editDetails'}
-                    </a>
-                #{/if}
-                #{else}
-                    <div class="clone-result"></div>
-                    <div class="progress progress-striped active hide">
-                        <div class="bar" style="width: 100%;"></div>
-                    </div>
-                    <button type="button" class="btn btn-success button-clone btn-block" data-loading-text="&{'loading'}"><i class="icon-copy"></i>
-                        &{'clone.document'}
-                    </button>
-                #{/else}
-                <a href="${document.alternateLink}" target="_blank" class="btn btn-primary btn-block"><i class="icon-external-link"></i> &{'open.document.googleDrive'}</a>
+                <span class='st_googleplus_vcount' displayText='Google +' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+                <span class='st_twitter_vcount' displayText='Twedsdset' st_url="@@{web.Documents.read(document.id, document.slug)}" st_via="opendocshub"></span>
+                <span class='st_facebook_vcount' displayText='Facebook' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+                <span class='st_linkedin_vcount' displayText='LinkedIn' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+                <span class='st_email_vcount' displayText='Email'></span>
             </div>
             <div class="box">
                 <h3>Stats</h3>
                 <div class="box-content">
-                    <table style="width : 100%">
+                    <table class="document-view-stats">
                         <tr>
                             <td>
-                                <div class="document-view-number">
-                                    <strong>${document.readCount}</strong>
-                                    <p><small>&{'reads'}</small></p>
+                                <div class="document-view-stat">
+                                    <i class="document-view-stat-icon icon-eye-open"></i>
+                                    <strong class="document-view-stat-number">${document.readCount}</strong>
+                                    &{'reads'}
                                 </div>
                             </td>
                             <td>
-                                <div class="document-view-number">
-                                    <strong>${document.downloadCount}</strong>
-                                    <p><small>&{'downloads'}</small></p>
+                                <div class="document-view-stat">
+                                    <i class="document-view-stat-icon icon-download-alt"></i>
+                                    <strong class="document-view-stat-number">${document.downloadCount}</strong>
+                                    &{'downloads'}
                                 </div>
                             </td>
                             <td>
-                                <div class="document-view-number">
-                                <strong>${document.cloneCount}</strong>
-                                <p><small>&{'clones'}</small></p>
-                            </div>
+                                <div class="document-view-stat">
+                                    <i class="document-view-stat-icon icon-copy"></i>
+                                    <strong class="document-view-stat-number">${document.cloneCount}</strong>
+                                    &{'clones'}
+                                </div>
                             </td>
                             <td>
-                                 <div class="document-view-number">
-                                    <strong>${document.commentCount}</strong>
-                                    <p><small>&{'comments'}</small></p>
+                                 <div class="document-view-stat">
+                                    <i class="document-view-stat-icon icon-comments"></i>
+                                    <strong class="document-view-stat-number">${document.commentCount}</strong>
+                                    &{'comments'}
                                 </div>
                             </td>
                         </tr>
@@ -98,60 +117,51 @@
                 </div>
             </div>
             <div class="box">
-                <h3>&{'download.document.asFormat'}</h3>
-                <div class="box-content-white">
-                    #{list document.exportLinks}
-                        <div class="control-group">
-                            #{a @api.Documents.download(_.id), class : 'btn btn-block'}
-                                <i class="icon-download-alt"></i> ${models.enums.Mime.parseName(_.mimeType)?.humanFriendlyName}
-                            #{/a}
-                        </div>
-                    #{/list}
-                </div>
-            </div>
-            <div class="box">
-                <h3>&{'share.document'}</h3>
-                <div class="box-content-white">
-                    <a href="https://plusone.google.com/_/+1/confirm?hl=en&url=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
-                        <i class="icon icon-google-plus-sign"></i> Google +
-                    </a>
-                    <a href="https://twitter.com/share?url=@@{read(document.id, document.slug)}&text=&{'document.share.text', document.title} - " class="share-button btn btn-block">
-                        <i class="icon icon-twitter"></i> Twitter
-                    </a>
-                    <a href="https://www.facebook.com/sharer.php?u=@@{read(document.id, document.slug)}" class="share-button btn btn-block">
-                        <i class="icon icon-facebook"></i> Facebook
-                    </a>
-                </div>
-            </div>
-            <div class="box">
                 <h3>&{'document.about'}</h3>
-                <div class="box-content-white">
-                    <table class="table table-bordered table-striped">
+                <div class="box-content">
+                    <table class="table">
                         <tr>
-                            <td>&{'document.category.id'}</td><td><a href="@{list(null, document.category.id, null, null)}">${document.category.name}</a></td>
+                            <td class="table-label">&{'sharedBy'}</td>
+                            <td>
+                                #{user.picture user : document.owner, size : 30, showName : true /}
+                            </td>
                         </tr>
                         <tr>
-                            <td>&{'document.mimeType'}</td>
+                            <td class="table-label">&{'document.category.id'}</td>
+                            <td><a href="@{list(null, document.category.id, null, null)}">${document.category.name}</a></td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">&{'document.mimeType'}</td>
                             <td>
                                 ${document.mime.humanFriendlyName}
                             </td>
                         </tr>
                         <tr>
-                            <td>&{'document.fileSize'}</td><td>${document.fileSize.formatSize()}</td>
+                            <td class="table-label">&{'document.fileSize'}</td>
+                            <td>${document.fileSize.formatSize()}</td>
                         </tr>
                         <tr>
-                            <td>&{'document.created'}</td><td><div class="timeago" title="${_.created}">${document.created}</div></td>
+                            <td class="table-label">&{'document.created'}</td>
+                            <td><div class="timeago" title="${_.created}">${document.created}</div></td>
                         </tr>
                         <tr>
-                            <td>&{'document.description'}</td>
+                            <td class="table-label">&{'document.description'}</td>
                             <td>
                                 ${document.description}
                             </td>
                         </tr>
                         <tr>
-                            <td>&{'document.source'}</td>
+                            <td class="table-label">&{'document.source'}</td>
                             <td>
                                 ${document.source}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Original</td>
+                            <td>
+                                <a href="${document.alternateLink}" target="_blank">
+                                    <i class="icon-external-link"></i> &{'open.document.googleDrive'}
+                                </a>
                             </td>
                         </tr>
                     </table>
@@ -175,17 +185,6 @@
 
     $(document).ready(function() {
         $('button.btn').button();
-        $('.share-button').click(function() {
-            var width  = 575,
-                height = 400,
-                left   = ($(window).width()  - width)  / 2,
-                top    = ($(window).height() - height) / 2,
-                url = this.href,
-                opts   = '';
-                window.open(url, 'share', 'title="Share", toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + width +', height=' + height +', top='+top+', left='+left);
-            return false;
-        });
-
         $('.button-clone').click(function() {
             #{if me == null}
                 $('.clone-result').html('<div class="alert"><a href="/auth/google/code">' + i18n('auth.login.needed') + '</a></div>');
@@ -265,7 +264,7 @@
 
     $('.timeago').timeago();
 
-    $('.new-comment-form').live('submit', function() {
+    $('.comment-new-form').live('submit', function() {
         var form = this;
         var button = $(form).find('.btn-primary');
         var list =  $(form).parent().parent().prev(); // not really nice, but will do for now
@@ -303,4 +302,7 @@
 
 </script>
 
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "ur-d12e6cdb-43db-6330-be48-9b189264bb72"});</script>
 #{/set}

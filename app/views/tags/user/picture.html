@@ -1,9 +1,9 @@
 <a href="@{web.Users.read(_user?.id)}">
     #{if _user?.picture}
-        <img src="${_user.picture}?sz=${_size}" alt="${_user.name}" />
+        <img src="${_user.picture}?sz=${_size}" alt="${_user.name}" class="img-rounded ${_class}" />
     #{/if}
     #{else}
-        <img src="/public/images/user.png" alt="${_user.name}" class="picture-small" width="${_size}" height="${_size}"/>
+        <img src="/public/images/user.png" alt="${_user.name}" class="img-rounded ${_class}" width="${_size}" height="${_size}"/>
     #{/else}
 #{if _showName}
     ${_user}    

@@ -1,38 +1,37 @@
 <div class="comment-list">
-#{if comments}
+    #{if comments}
         #{list comments}
             #{comment.list-item comment : _, me : me /}
         #{/list}
-#{/if}
-</div>
-#{if me}
-        <div class="clearfix">
-            <div class="comment-picture">
-                #{user.picture user : me, size : 30 /}
-            </div>
-            <div class="comment-form">
-                #{form @api.Comments.create(), class : 'new-comment-form'}
-                    <div class="alert hide">
-                    </div>
-                    #{if parent}
-                        <input type="hidden" name="comment.document.id" value="${parent.document.id}" />
-                        <input type="hidden" name="comment.parent.id" value="${parent.id}" />
-                    #{/if}
-                    #{else}
-                        <input type="hidden" name="comment.document.id" value="${document.id}" />
-                    #{/else}
-                    <div class="control-group">
-                        <textarea name="comment.content" rows="4"></textarea>
-                    </div>
-                    <div class="control-group">
-                        <input type="submit" class="btn btn-primary btn-small" value="&{'post.comment'}"/>
-                    </div>
-                #{/form}
-            </div>
-        </div>
     #{/if}
     #{else}
-        <p class="alert">
-            <a href="/auth/google/code"> &{'comment.auth.login.needed'} </a>
+        <p class="alert alert-info">
+            There are no comments on this document yet.
         </p>
     #{/else}
+</div>
+#{if me}
+    <div class="comment-new clearfix">
+        <div class="comment-picture">
+            #{user.picture user : me, size : 60 /}
+        </div>
+        <div class="comment-new-body">
+            #{form @api.Comments.create(), class : 'comment-new-form'}
+                <div class="alert hide">
+                </div>
+                <input type="hidden" name="comment.document.id" value="${document.id}" />
+                <div class="control-group">
+                    <textarea name="comment.content" rows="4"></textarea>
+                </div>
+                <div class="control-group">
+                    <input type="submit" class="btn btn-primary btn-small" value="&{'post.comment'}"/>
+                </div>
+            #{/form}
+        </div>
+    </div>
+#{/if}
+#{else}
+    <p class="alert">
+        <a href="/auth/google/code"> &{'comment.auth.login.needed'} </a>
+    </p>
+#{/else}
