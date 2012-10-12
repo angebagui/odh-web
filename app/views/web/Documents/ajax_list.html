@@ -1,0 +1,28 @@
+<div class="row-fluid">    
+    <div class="span12">
+        #{if documents}
+            #{document.list documents : documents /}
+            <div class="row-fluid">    
+                <div class="span4">
+                </div>
+                <div class="span4">
+                    <p>
+                        <a href="@{list(keyword, category?.id, order, (page != null ? 1 + page : 2))}" class="btn btn-block btn-more" data-loading-text="&{'_.loading'}">
+                            &{'_.showMore'}
+                        </a>
+                    </p>
+                </div>
+            </div>                        
+        #{/if}
+        #{else}
+            <div class="alert alert-warning">
+                <h3>
+                    &{'_.sorry'}
+                </h3>
+                <p>
+                    &{'document.list.end'}
+                </p>
+            </div>
+        #{/else}
+    </div>
+</div>

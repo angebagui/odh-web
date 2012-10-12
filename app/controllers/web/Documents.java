@@ -40,7 +40,11 @@ public class Documents extends AppController {
     public static void list(String keyword, long categoryId, String order, Integer page) {
         Category category = Category.findById(categoryId);
         List<Document> documents = Document.search(keyword, categoryId, order, page);
-        render(documents, category, keyword, order, page);
+        if (request.isAjax()) {
+        	renderTemplate("web/Documents/ajax_list.html", documents, category, keyword, order, page);
+        } else {
+        	render(documents, category, keyword, order, page);
+        }
     }
 
     public static void read(long id, String slug) {

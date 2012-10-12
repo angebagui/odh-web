@@ -82,7 +82,7 @@
                 <i class="icon-folder-open"></i> Category
             </li>
             <li class="${category == _null ? 'active' : ''}">
-                #{a @web.Documents.list(keyword, null, order, null)}&{'all.categories'}#{/a}
+                #{a @web.Documents.list(keyword, null, order, null)}&{'_.allCategories'}#{/a}
             </li>
             #{list categories}
                 <li class="${category?.id == _.id ? 'active' : ''}">
@@ -92,35 +92,31 @@
         </ul>
     </div>
     <div class="span10">
-        #{if documents}
-            #{document.list documents : documents /}
-            <div class="row-fluid">
-                <div class="pager">
-                    <ul>
-                        <li>
-                        #{if page > 1}
-                            <a href="@{list(keyword, category?.id, order, (page != null ? page - 1 : 1))}">
-                                &larr; &{'_.prev'}
-                            </a>
-                        #{/if}
-                        #{else}
-                            &larr; &{'_.prev'}
-                        #{/else}
-                        </li>
-                        <li>
-                            <a href="@{list(keyword, category?.id, order, (page != null ? 1 + page : 2))}" class="next">
-                                &{'_.next'} &rarr;
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        #{/if}
-        #{else}   
-            <div class="alert alert-warning">
-                <h3>&{'_.sorry'}</h3>
-                <p>&{'document.list.end'}</p>
-            </div>
-        #{/else}
+        <div id="document-list">
+            #{include 'web/Documents/ajax_list.html' /}            
+        </div>
     </div>
 </div>
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.btn-more').button();
+        $('.btn-more').live('click', function() {
+            var button = $(this);
+            var list = $('#document-list');
+            button.button('loading');
+            $.ajax({
+                url : button.attr('href'),
+                type : 'GET'
+            }).success(function(html) {
+                list.append(html);
+                button.remove();
+            }).error(function(data) {
+                button.button('reset');
+            });
+            return false;
+        });
+    });
+</script>
+#{/set}

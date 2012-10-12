@@ -25,6 +25,7 @@ _.save = Save
 _.search = Search
 _.share = Share
 _.share.expand = Upload a document and share it with the community.
+_.showMore = Show More
 _.sorry = Sorry!
 _.success.title = Success!
 _.uploadDocument = Share a document

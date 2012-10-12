@@ -158,6 +158,7 @@ public class Document extends BaseModel {
                     ImageIO.write(thumbnailImage, "png", outputStream);
 
                     Thumbnail documentThumbnail = new Thumbnail();
+                    documentThumbnail.document = this;
                     documentThumbnail.image = outputStream.toByteArray();
                     documentThumbnail.mimeType = "image/png";
                     documentThumbnail.save();
