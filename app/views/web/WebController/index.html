@@ -4,7 +4,7 @@
     <div class="span2"></div>
     <div class="span8">
         <div class="hero-msg hero-msg-title">
-            Explore, share and discuss documents.
+            &{'_.welcomeMessage'}
         </div>
     </div>
 </div>
@@ -12,9 +12,9 @@
     <div class="span3"></div>
     <div class="span6">
         #{form @web.Documents.list(), class : 'form-search well well-small hero-msg'}
-            <input type="text" name="keyword" class="span10 search-query" placeholder="&{'enter.keyword'}">
+            <input type="text" name="keyword" class="span10 search-query" placeholder="&{'_.enterSearchKeyword'}">
             <button type="submit" class="btn btn-primary">
-                Search
+                &{'_.search'}
             </button>
         #{/form}
         <hr />
@@ -25,23 +25,23 @@
     <div class="span10">
         <div class="row-fluid">
             <div class="span4">
-                <h3>Explore</h3>
+                <h3>&{'_.explore'}</h3>
                 <p>
-                    <i class="icon-big icon-copy"></i> Browse our collection of documents & data by category or keyword.
+                    <i class="icon-big icon-copy"></i> &{'_.explore.expand'}
                 </p>
                 <hr />
             </div>
             <div class="span4">
-                <h3>Share</h3>
+                <h3>&{'_.share'}</h3>
                 <p>
-                    <i class="icon-big icon-upload"></i> Upload a document and share it with the community.
+                    <i class="icon-big icon-upload"></i> &{'_.share.expand'}
                 </p>
                 <hr />
             </div>
             <div class="span4">
-                <h3>Discuss</h3>
+                <h3>&{'_.discuss'}</h3>
                 <p>
-                    <i class="icon-big icon-comments"></i> Give feedback, ask questions, leave a comment.
+                    <i class="icon-big icon-comments"></i> &{'_.discuss.expand'}
                 </p>
                 <hr />
             </div>
@@ -53,7 +53,7 @@
     <div class="span10">
         <div class="row-fluid">
             <div class="span4">
-                <h4 class="well well-small">Recent Documents</h4>
+                <h4 class="well well-small">&{'_.recentDocuments'}</h4>
                 <table class="table table-striped">
                     #{list recentDocuments}
                     <tr>
@@ -62,7 +62,7 @@
                             <strong> <a href="${_.permalink}"> ${_.title} </a> </strong>
                         </div>
                         <div class="small">
-                            &{'sharedBy'}
+                            &{'document.sharedBy'}
                             #{user.name user : _.owner /}
                         </div></td>
                     </tr>
@@ -76,12 +76,10 @@
                 </p>
             </div>
             <div class="span4">
-                <h4 class="well well-small">Newest members</h4>
-                <div class="row-fluid">
+                <h4 class="well well-small">&{'_.newestMembers'}</h4>
+                <div class="home-users-list clearfix">
                     #{list recentUsers}
-                        <div class="span2">
-                            #{user.picture user : _, size : 50 /}
-                        </div>
+                        #{user.picture user : _, size : 50 /}
                     #{/list}
                 </div>
             </div>

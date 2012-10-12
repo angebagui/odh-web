@@ -74,8 +74,14 @@ a.logo:hover {
     width: 100%;
 }
 
+.document-view-stats td {
+    width: 20%;
+}
+
 .document-view-stat {
     text-align: center;
+    font-size: 12px;
+    margin-bottom : 10px;
 }
 
 .document-view-stat-icon {
@@ -236,3 +242,15 @@ td.table-label {
     display: block;
     float: left;
 }
+
+.home-users-list a {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display : block;
+    float : left;
+}
+
+i.document-view-stat-icon {
+    color : #666666;
+}
+

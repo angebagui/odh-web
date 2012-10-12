@@ -3,9 +3,10 @@ package controllers.api;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
-import jobs.CloneDocumentJob;
+import jobs.CopyDocumentJob;
 import jobs.IncrementDocumentDownloadCountJob;
 import models.Category;
 import models.Comment;
@@ -15,7 +16,9 @@ import models.ExportLink;
 import models.User;
 import models.enums.Mime;
 import play.Logger;
+import play.data.Upload;
 import play.data.validation.Required;
+import play.data.validation.Valid;
 import play.mvc.With;
 import controllers.AppController;
 import controllers.web.Auth;
@@ -23,16 +26,18 @@ import controllers.web.Auth;
 @With(ApiController.class)
 public class Documents extends AppController {
 
-    public static void create(@Required Document document) {
+    public static void create(@Required Document document, @Required Upload file) {
         User me = Auth.getMe();
-        document.setMime(Mime.parseName(document.file.getContentType()));
-        if (validation.valid(document).ok) {
+        if (!validation.hasErrors()) {
+            document.setMime(Mime.parseName(file.getContentType()));
             try {
                 document.owner = me;
-                document.uploadToGoogleDriveAndSave();
+                if (validation.valid(document).ok) {
+                    document.uploadToGoogleDriveAndSave(file);
+                }
                 renderJSON(document);
             } catch (IOException e) {
-                Logger.error("Could not insert file on Google Drive :" + "\n\t File Name : %s" + "\n\t File Size : %s" + "\n\t File Owner ID : %s" + "\n\t Exception Message : %s", document.file.getFileName(), document.file.getSize(), me.id, e.getMessage());
+                Logger.error("Could not insert file on Google Drive :" + "\n\t File Name : %s" + "\n\t File Size : %s" + "\n\t File Owner ID : %s" + "\n\t Exception Message : %s", file.getFileName(), file.getSize(), me.id, e.getMessage());
                 response.status = 500;
                 renderJSON(e.getMessage());
             }
@@ -40,7 +45,7 @@ public class Documents extends AppController {
         }
     }
 
-    public static void createClone(long id) {
+    public static void createCopy(long id) {
         checkAuthenticity();
         User me = Auth.getMe();
         Document document = Document.findById(id);
@@ -48,7 +53,7 @@ public class Documents extends AppController {
         if (me != document.owner) {
             DocumentJobStatus documentJobStatus = new DocumentJobStatus();
             documentJobStatus.save();
-            new CloneDocumentJob(documentJobStatus.id, document.id, me.id).in(1);
+            new CopyDocumentJob(documentJobStatus.id, document.id, me.id).in(1);
             renderJSON(documentJobStatus);
         } else {
             error();
@@ -76,6 +81,27 @@ public class Documents extends AppController {
         redirect(exportLink.link);
     }
 
+    public static void markAsViewed(long id) {
+        checkAuthenticity();
+        Document document = Document.findById(id);
+        if (document != null) {
+            String sessionKey = String.format("lastViewedId", id);
+
+            if (session.get(sessionKey) != null) {
+                if (session.get(sessionKey) != document.id.toString()) {
+                    document.incrementViewCountAndSave();
+                    session.put(sessionKey, document.id);
+                }
+            } else {
+                document.incrementViewCountAndSave();
+                session.put(sessionKey, new Date().getTime());
+            }
+        } else {
+            notFound();
+        }
+        ok();
+    }
+
     public static void readThumbnail(long id) {
         Document document = Document.findById(id);
         if (document != null) {
@@ -92,19 +118,21 @@ public class Documents extends AppController {
         notFound();
     }
 
-    public static void updateDetails(long id, @Required String title, @Required Category category, String source, String description) throws IOException {
+    public static void update(long id, @Required Document document) {
         checkAuthenticity();
         User me = Auth.getMe();
-        Document document = Document.findById(id);
-        notFoundIfNull(document);
-        if (document.owner.id == me.id) {
+        Document check = Document.findById(id);
+        notFoundIfNull(check);
+        if (check.owner.id == me.id) {
             if (!validation.hasErrors()) {
-                document.title = title;
-                document.category = category;
-                document.source = source;
-                document.description = description;
-                document.save();
-                renderJSON(document);
+                check.title = document.title;
+                check.category = document.category;
+                check.source = document.source;
+                check.description = document.description;
+                document = check;
+                if (document.validateAndSave()) {
+                    renderJSON(document);
+                }
             }
         } else {
             unauthorized();

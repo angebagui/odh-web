@@ -6,7 +6,7 @@
         <div class="tabbable">
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a href="#documents" data-toggle="tab">Recent Documents</a>
+                    <a href="#documents" data-toggle="tab">&{'_.recentDocuments'}</a>
                 </li>
             </ul>
             <div class="tab-content">
@@ -16,7 +16,7 @@
                     #{/if}
                     #{else}
                         <p class="alert alert-info">
-                            ${user} has not uploaded any documents yet.
+                            &{'document.list.end'}
                         </p>
                     #{/else}
                 </div>

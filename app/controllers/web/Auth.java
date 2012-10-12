@@ -27,7 +27,10 @@ public class Auth extends AppController {
         return redirectHost;
     }
 
-    public static void googleCode() {
+    public static void googleCode(String next) {
+        if (next != null) {
+            session.put("next", next);
+        }
         redirect(GoogleOAuth.buildCodeRequestUrl(getOAuthRedirectUriHost()));
     }
 

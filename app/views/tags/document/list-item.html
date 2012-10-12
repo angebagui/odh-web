@@ -5,33 +5,48 @@
 </td>
 <td>
     <div class="document-list-item-title">
-        <a href="${_document.permalink}">
-            ${_document.title}
-        </a>
+        <a href="${_document.permalink}"> ${_document.title} </a>
     </div>
     <p>
         ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
         &nbsp;
     </p>
+    <div class="timeago" title="${_document.created}">
+        ${_document.created}
+    </div>
 </td>
 <td>
     <a href="@{web.Documents.list(null, _document.category.id, null, null)}">${_document.category.name}</a>
 </td>
 <td>
-    <div class="timeago" title="${_document.created}">${_document.created}</div>
+    <div class="document-view-stat">
+        <i class="document-view-stat-icon icon-eye-open"></i>
+        <span class="document-view-stat-number">${_document.viewCount}</span>
+    </div>
 </td>
 <td>
-    ${_document.fileSize.formatSize()}
+    <div class="document-view-stat">
+        <i class="document-view-stat-icon icon-thumbs-up"></i>
+        <span class="document-view-stat-number">${_document.likeCount}</span>
+    </div>
 </td>
 <td>
-    ${_document.readCount} views
-</td>
-<td>
-    ${_document.downloadCount} downloads
-</td>
-<td>
-    ${_document.cloneCount} copies
-</td>
-<td>
-    ${_document.commentCount} comments
-</td>
+<div class="document-view-stat">
+    <i class="document-view-stat-icon icon-download-alt"></i>
+    <span class="document-view-stat-number">${_document.downloadCount}</span>
+</div></td>
+    <td>
+    <div class="document-view-stat">
+        <i class="document-view-stat-icon icon-copy"></i>
+        <span class="document-view-stat-number">${_document.copyCount}</span>
+    </div></td>
+    <td>
+    <div class="document-view-stat">
+        <i class="document-view-stat-icon icon-comments"></i>
+        <span class="document-view-stat-number">${_document.commentCount}</span>
+    </div></td>
+    <td>
+    <div class="document-view-stat">
+        <i class="document-view-stat-icon icon-th-list"></i>
+        <span class="document-view-stat-number">${_document.commentCount}</span>
+    </div></td>    

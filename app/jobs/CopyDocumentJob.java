@@ -11,13 +11,13 @@ import models.User;
 import play.Logger;
 import play.jobs.Job;
 
-public class CloneDocumentJob extends Job {
+public class CopyDocumentJob extends Job {
 
     private long documentJobStatusId;
     private long documentId;
     private long userId;
 
-    public CloneDocumentJob(long documentJobStatusId, long documentId, long userId) {
+    public CopyDocumentJob(long documentJobStatusId, long documentId, long userId) {
         this.documentJobStatusId = documentJobStatusId;
         this.documentId = documentId;
         this.userId = userId;
@@ -31,7 +31,7 @@ public class CloneDocumentJob extends Job {
         if ((documentJobStatus != null) && (document != null) && (user != null)) {
             try {
                 Logger.info("Start : clone document job");
-                File copiedFile = document.cloneForUser(user);
+                File copiedFile = document.copyForUser(user);
                 if (copiedFile != null) {
                     documentJobStatus.result = copiedFile.getAlternateLink();
                     documentJobStatus.status = BackgroundJobStatus.Status.SUCCESS;
