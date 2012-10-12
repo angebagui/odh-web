@@ -17,6 +17,7 @@ public class ApiController extends AppController {
         "api.Categories.listDocuments",
         "api.Documents.read",
         "api.Documents.readThumbnail",
+        "api.Documents.markAsViewed",
         "api.Documents.download",
         "api.Documents.listComments"
     })

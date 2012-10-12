@@ -3,11 +3,11 @@ package jobs;
 import models.Document;
 import play.jobs.Job;
 
-public class IncrementDocumentCloneCountJob extends Job {
+public class IncrementDocumentCopyCountJob extends Job {
 
     private long documentId;
 
-    public IncrementDocumentCloneCountJob(long documentId) {
+    public IncrementDocumentCopyCountJob(long documentId) {
         this.documentId = documentId;
     }
 
@@ -15,7 +15,7 @@ public class IncrementDocumentCloneCountJob extends Job {
     public void doJob() {
         Document document = Document.findById(this.documentId);
         if (document != null) {
-            document.incrementCloneCountAndSave();
+            document.incrementCopyCountAndSave();
         }
     }
 }

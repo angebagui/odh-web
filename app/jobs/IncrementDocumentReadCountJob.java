@@ -15,7 +15,7 @@ public class IncrementDocumentReadCountJob extends Job {
     public void doJob() {
         Document document = Document.findById(this.documentId);
         if (document != null) {
-            document.incrementReadCountAndSave();
+            document.incrementViewCountAndSave();
         }
     }
 }

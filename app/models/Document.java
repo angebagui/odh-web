@@ -11,16 +11,20 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 import jobs.FetchDocumentThumbnailJob;
-import jobs.IncrementDocumentCloneCountJob;
+import jobs.IncrementDocumentCopyCountJob;
 import models.enums.Mime;
 import play.data.Upload;
 import play.data.binding.NoBinding;
 import play.data.validation.Check;
 import play.data.validation.CheckWith;
-import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Transactional;
 import play.templates.JavaExtensions;
@@ -36,17 +40,6 @@ import com.google.api.services.drive.model.Permission;
 @Entity(name = "document")
 public class Document extends BaseModel {
 
-    public static class MimeTypeCheck extends Check {
-
-        @Override
-        public boolean isSatisfied(Object document, Object mimeTypeName) {
-            this.setMessage("validation.mimetype.invalid", (String) mimeTypeName);
-            Mime mimeType = Mime.parseName((String) mimeTypeName);
-            return (mimeType != null);
-        }
-
-    }
-
     @NoBinding
     @JsonProperty
     public String alternateLink;
@@ -58,7 +51,7 @@ public class Document extends BaseModel {
 
     @NoBinding
     @JsonProperty
-    public int cloneCount;
+    public int copyCount;
 
     @NoBinding
     @JsonProperty
@@ -77,9 +70,6 @@ public class Document extends BaseModel {
     public String embedLink;
 
     @Required
-    public transient Upload file;
-
-    @Required
     @NoBinding
     @JsonProperty
     public long fileSize;
@@ -87,6 +77,10 @@ public class Document extends BaseModel {
     @NoBinding
     @JsonProperty
     public String googleDriveFileId;
+
+    @NoBinding
+    @JsonProperty
+    public int likeCount;
 
     @CheckWith(MimeTypeCheck.class)
     @NoBinding
@@ -104,7 +98,7 @@ public class Document extends BaseModel {
 
     @NoBinding
     @JsonProperty
-    public int readCount;
+    public int viewCount;
 
     @NoBinding
     public String slug;
@@ -120,7 +114,18 @@ public class Document extends BaseModel {
     @JsonProperty
     public String title;
 
-    public File cloneForUser(User user) throws IOException {
+    public boolean belongsToUser(User user) {
+        if (user != null) {
+            if (this.owner != null) {
+                if (this.owner.id == user.id) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public File copyForUser(User user) throws IOException {
 
         if (this.owner != user) {
             Drive driveService = GoogleOAuth.buildDriveServiceForUser(user);
@@ -128,16 +133,10 @@ public class Document extends BaseModel {
             File copiedFile = new File();
             copiedFile.setTitle(this.title);
             copiedFile = driveService.files().copy(this.googleDriveFileId, copiedFile).setConvert(true).execute();
-            new IncrementDocumentCloneCountJob(this.id).in(30);
+            new IncrementDocumentCopyCountJob(this.id).in(30);
             return copiedFile;
         }
         return null;
-    }
-
-    @Transactional
-    public void decreaseCloneCountAndSave() {
-        this.cloneCount--;
-        this.save();
     }
 
     public File fetchFileFromGoogleDrive() throws IOException {
@@ -214,8 +213,8 @@ public class Document extends BaseModel {
     }
 
     @Transactional
-    public void incrementCloneCountAndSave() {
-        this.cloneCount++;
+    public void incrementCopyCountAndSave() {
+        this.copyCount++;
         this.save();
     }
 
@@ -226,8 +225,8 @@ public class Document extends BaseModel {
     }
 
     @Transactional
-    public void incrementReadCountAndSave() {
-        this.readCount++;
+    public void incrementViewCountAndSave() {
+        this.viewCount++;
         this.save();
     }
 
@@ -250,47 +249,51 @@ public class Document extends BaseModel {
         driveService.files().update(this.googleDriveFileId, driveFile);
     }
 
-    public void uploadToGoogleDriveAndSave() throws IOException {
-        File driveFile = new File();
-        driveFile.setTitle(this.title);
-        driveFile.setIndexableText(new File.IndexableText().setText(this.description));
-        driveFile.setMimeType(this.file.getContentType());
-        FileContent driveFileContent = new FileContent(this.file.getContentType(), this.file.asFile());
-        Drive driveService = GoogleOAuth.buildDriveServiceForUser(this.owner);
+    public void uploadToGoogleDriveAndSave(Upload file) throws IOException {
+        if (file != null) {
+            File driveFile = new File();
+            driveFile.setTitle(this.title);
+            driveFile.setIndexableText(new File.IndexableText().setText(this.description));
+            driveFile.setMimeType(file.getContentType());
+            FileContent driveFileContent = new FileContent(file.getContentType(), file.asFile());
+            Drive driveService = GoogleOAuth.buildDriveServiceForUser(this.owner);
 
-        File insertedDriveFile = driveService.files().insert(driveFile, driveFileContent).setConvert(true).execute();
+            File insertedDriveFile = driveService.files().insert(driveFile, driveFileContent).setConvert(true).execute();
 
-        Permission permission = new Permission();
-        permission.setType("anyone");
-        permission.setRole("reader");
-        driveService.permissions().insert(insertedDriveFile.getId(), permission).execute();
+            Permission permission = new Permission();
+            permission.setType("anyone");
+            permission.setRole("reader");
+            driveService.permissions().insert(insertedDriveFile.getId(), permission).execute();
 
-        this.alternateLink = insertedDriveFile.getAlternateLink();
+            this.alternateLink = insertedDriveFile.getAlternateLink();
 
-        this.googleDriveFileId = insertedDriveFile.getId();
-        this.modifiedDate = insertedDriveFile.getModifiedDate().toString();
-        this.fileSize = this.file.getSize();
+            this.googleDriveFileId = insertedDriveFile.getId();
+            this.modifiedDate = insertedDriveFile.getModifiedDate().toString();
+            this.fileSize = file.getSize();
 
-        // For some reasons the embedLink property for PDFs is null
-        if (insertedDriveFile.getEmbedLink() != null) {
-            this.embedLink = insertedDriveFile.getEmbedLink();
-        } else {
-            this.embedLink = "https://docs.google.com/file/d/" + this.googleDriveFileId + "/preview";
-        }
-
-        this.save();
-
-        if (insertedDriveFile.getExportLinks() != null) {
-            for (Map.Entry<String, String> link : insertedDriveFile.getExportLinks().entrySet()) {
-                new ExportLink(this, link.getKey(), link.getValue()).save();
+            // For some reasons the embedLink property for PDFs is null
+            if (insertedDriveFile.getEmbedLink() != null) {
+                this.embedLink = insertedDriveFile.getEmbedLink();
+            } else {
+                this.embedLink = "https://docs.google.com/file/d/" + this.googleDriveFileId + "/preview";
             }
-        } else {
-            ExportLink exportLink = new ExportLink(this, insertedDriveFile.getMimeType(), "https://docs.google.com/uc?id=" + insertedDriveFile.getId() + "&export=download");
-            exportLink.save();
-        }
 
-        // We can fetch the thumbnail later on
-        new FetchDocumentThumbnailJob(this.id).in(30);
+            this.save();
+
+            if (insertedDriveFile.getExportLinks() != null) {
+                for (Map.Entry<String, String> link : insertedDriveFile.getExportLinks().entrySet()) {
+                    new ExportLink(this, link.getKey(), link.getValue()).save();
+                }
+            } else {
+                ExportLink exportLink = new ExportLink(this, insertedDriveFile.getMimeType(), "https://docs.google.com/uc?id=" + insertedDriveFile.getId() + "&export=download");
+                exportLink.save();
+            }
+
+            // We can fetch the thumbnail later on
+            new FetchDocumentThumbnailJob(this.id).in(30);
+        } else {
+            throw new RuntimeException("File is null.");
+        }
 
     }
 
@@ -304,7 +307,7 @@ public class Document extends BaseModel {
 
         sb.append("googleDriveFileId != null");
 
-        if (keyword != null && keyword.length() > 0) {
+        if ((keyword != null) && (keyword.length() > 0)) {
             sb.append(" and fts(:keyword) = true");
         }
 
@@ -318,18 +321,24 @@ public class Document extends BaseModel {
 
         if (order.equals("recent")) {
             sb.append(" order by created desc ");
-        } else if (order.equals("reads")) {
-            sb.append(" order by readCount desc ");
+        } else if (order.equals("views")) {
+            sb.append(" order by viewCount desc ");
         } else if (order.equals("downloads")) {
             sb.append(" order by downloadCount desc ");
-        } else if (order.equals("clones")) {
-            sb.append(" order by cloneCount desc ");
+        } else if (order.equals("copies")) {
+            sb.append(" order by copyCount desc ");
+        } else if (order.equals("comments")) {
+            sb.append(" order by commentCount desc ");
+        } else if (order.equals("likes")) {
+            sb.append(" order by likeCount desc ");
+        } else {
+            throw new RuntimeException("Invalid Sort Order");
         }
 
         if (sb.toString() != "") {
             JPAQuery query = Document.find(sb.toString());
 
-            if (keyword != null && keyword.length() > 0) {
+            if ((keyword != null) && (keyword.length() > 0)) {
                 query.setParameter("keyword", keyword);
             }
 
@@ -352,5 +361,16 @@ public class Document extends BaseModel {
             documents = Document.find("owner is ? order by created desc", user).fetch(DEFAULT_PAGINATE_COUNT);
         }
         return documents;
+    }
+
+    public static class MimeTypeCheck extends Check {
+
+        @Override
+        public boolean isSatisfied(Object document, Object mimeTypeName) {
+            this.setMessage("validation.mimetype.invalid", (String) mimeTypeName);
+            Mime mimeType = Mime.parseName((String) mimeTypeName);
+            return (mimeType != null);
+        }
+
     }
 }

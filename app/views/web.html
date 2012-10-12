@@ -42,7 +42,7 @@
                         #{block.menu /}
                         #{block.header-user user : me /}
                         #{form @web.Documents.list(), class : 'navbar-search pull-right'}
-                            <input type="text" class="search-query input-xlarge" name="keyword" value="${keyword}" placeholder="&{'enter.keyword'}" />
+                            <input type="text" class="search-query input-xlarge" name="keyword" value="${keyword}" placeholder="&{'_.enterSearchKeyword'}" />
                         #{/form}
                     </div><!--/.nav-collapse -->
                 </div>
@@ -80,7 +80,7 @@
             <div class="row-fluid">
                 <div class="span12">
                     &copy; <a href="@{web.WebController.index()}">${play.configuration.getProperty("application.fullName")}</a> - Powered By
-                    <a href="http://www.opendocshub.org"> The Open Docs Hub Project </a>
+                    <a href="http://www.opendocshub.org">&{'_.openDocsHubProject'}</a>
                 </div>
             </div>
         </div>

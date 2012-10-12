@@ -34,8 +34,7 @@ public class WebController extends AppController {
     public static void checkAccess() {
         if (getMe() == null) {
             flash.error("auth.login.needed");
-            session.put("next", request.url);
-            Auth.googleCode();
+            Auth.googleCode(request.url);
         }
     }
 

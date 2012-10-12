@@ -17,9 +17,8 @@ POST    /logout                                                                 
 GET     /documents                                                              web.Documents.list
 GET     /documents/{<[0-9]+>id}-{slug}                                          web.Documents.read
 GET     /documents/{<[0-9]+>id}/go                                              web.Documents.go
-GET     /documents/{<[0-9]+>id}/details/edit                                    web.Documents.editDetails
+GET     /documents/{<[0-9]+>id}/edit                                            web.Documents.edit
 GET     /documents/{<[0-9]+>id}/comments                                        web.Documents.listComments
-POST    /documents/{<[0-9]+>id}/readCount                                       web.Documents.incrementReadCount
 GET     /users/{<[0-9]+>id}                                                     web.Users.read
 GET     /                                                                       web.WebController.index
 
@@ -33,8 +32,9 @@ PUT     /api/categories/{<[0-9]+>id}                                            
 DELETE  /api/categories/{<[0-9]+>id}                                            api.Categories.delete
 POST    /api/documents                                                          api.Documents.create
 GET     /api/documents/{<[0-9]+>id}/thumbnail                                   api.Documents.readThumbnail
-POST    /api/documents/{<[0-9]+>id}/details                                     api.Documents.updateDetails
-POST    /api/documents/{<[0-9]+>id}/clones                                      api.Documents.createClone
+PUT     /api/documents/{<[0-9]+>id}/update                                      api.Documents.update
+POST    /api/documents/{<[0-9]+>id}/copy                                        api.Documents.createCopy
+POST    /api/documents/{<[0-9]+>id}/viewed                                      api.Documents.markAsViewed
 POST    /api/documents/{<[0-9]+>id}/delete                                      api.Documents.delete
 POST    /api/documents/downloads/{<[0-9]+>exportLinkId}                         api.Documents.download
 GET     /api/documentsjobsstatus/{<[0-9]+>id}                                   api.DocumentsJobsStatus.read
