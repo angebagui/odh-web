@@ -246,6 +246,8 @@ td.table-label {
 .home-users-list a {
     margin-right: 10px;
     margin-bottom: 10px;
+    display : block;
+    float : left;
 }
 
 i.document-view-stat-icon {
