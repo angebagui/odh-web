@@ -25,6 +25,22 @@
                 #{/else}
             </div>
             <div class="btn-group">
+                 #{if me}
+                    #{if me.getLikeForObject('document', document.id)}
+                        <a href="#" class="btn btn-unlike" data-id="${me.getLikeForObject('document', document.id).id}"  data-object-id="${document.id}" data-object-type="document" data-loading-text="&{'_.loading'}">
+                            <i class="icon-thumbs-up"></i>
+                            <span class="label-text">&{'_.unlike'}</span>
+                        </a>
+                   #{/if}
+                   #{else}
+                        <a href="#" class="btn btn-like" data-object-id="${document.id}" data-object-type="document" data-loading-text="&{'_.loading'}">
+                           <i class="icon-thumbs-up"></i>
+                            <span class="label-text">&{'_.like'}</span>
+                        </a>
+                  #{/else}
+                #{/if}
+            </div>
+            <div class="btn-group">
                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="icon-download-alt"></i> &{'document.downloadAs'}
                     <span class="caret"></span>
@@ -85,18 +101,18 @@
                     <table class="document-view-stats">
                         <tr>
                             <td>
-                                <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-eye-open"></i>
-                                    <span class="document-view-stat-number">${document.viewCount}</span>
-                                    &{'_.views'}
-                                </div>
-                            </td>
-                            <td>
                                  <div class="document-view-stat">
                                     <i class="document-view-stat-icon icon-thumbs-up"></i>
                                     <span class="document-view-stat-number">${document.likeCount}</span>
                                     &{'_.likes'}
                                  </div>
+                            </td>
+                            <td>
+                                <div class="document-view-stat">
+                                    <i class="document-view-stat-icon icon-copy"></i>
+                                    <span class="document-view-stat-number">${document.copyCount}</span>
+                                    &{'_.copies'}
+                                </div>
                             </td>
                             <td>
                                 <div class="document-view-stat">
@@ -109,9 +125,9 @@
                         <tr>
                             <td>
                                 <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-copy"></i>
-                                    <span class="document-view-stat-number">${document.copyCount}</span>
-                                    &{'_.copies'}
+                                    <i class="document-view-stat-icon icon-eye-open"></i>
+                                    <span class="document-view-stat-number">${document.viewCount}</span>
+                                    &{'_.views'}
                                 </div>
                             </td>
                             <td>
@@ -201,7 +217,7 @@
 
     $(document).ready(function() {
         $('button.btn').button();
-        $('.button-copy').click(function() {            
+        $('.button-copy').click(function() {
             #{if me == null}
                 $('.copy-result').html('<div class="alert"><a href="/auth/google/code?next=${request.url}">' + i18n('auth.login.needed') + '</a></div>');
                 return false;
@@ -230,7 +246,7 @@
                                     data : { authenticityToken : '${session.authenticityToken}'}
                                 }).success(function(data) {
                                     $('.progress').removeClass('progress-warning');
-                                    if (data.status == 'SUCCESS') {                                        
+                                    if (data.status == 'SUCCESS') {
                                         $('.progress').addClass('progress-success');
                                         $('.copy-result').html('<div class="alert alert-success">' + i18n('document.copy.success') + ' <a href="' + data.result + '" target="_blank"><strong><i class="icon-external-link"></i> ' + i18n('document.openOnGoogleDrive') + '</strong></a></div>');
                                         $('.button-copy').button('reset');
@@ -320,6 +336,54 @@
         }).success(function(data) {
             link.parent().parent().parent().html("&{'comment.deleted'}");
         });
+        return false;
+    });
+
+    $('.btn-like').live('click', function() {
+        var _this = $(this);
+        var objectType = _this.data('objectType');
+        var objectId = _this.data('objectId');
+        var createLikeAction = #{jsRoute @api.Likes.create() /};
+        _this.button('loading');
+        $.ajax({
+            url : createLikeAction.url(),
+            type : createLikeAction.method,
+            data : {
+                authenticityToken : '${session.authenticityToken}',
+                'like.objectType' : objectType,
+                'like.objectId' : objectId
+            }
+         }).success(function(data) {
+            _this.button('reset');
+            _this.removeClass('btn-like');
+            _this.addClass('btn-unlike');
+            _this.find('.label-text').html('&{'_.unlike'}');
+            _this.data('id', data.id);
+         }).error(function() {
+            _this.button('reset');
+         });
+        return false;
+    });
+
+    $('.btn-unlike').live('click', function() {
+        var _this = $(this);
+        var id = _this.data('id');
+        var deleteLikeAction = #{jsRoute @api.Likes.delete(':id') /};
+        _this.button('loading');
+        $.ajax({
+            url : deleteLikeAction.url({id : id}),
+            type : deleteLikeAction.method,
+            data : {
+                authenticityToken : '${session.authenticityToken}',
+            }
+         }).success(function(data) {
+            _this.button('reset');
+            _this.removeClass('btn-unlike');
+            _this.addClass('btn-like');
+            _this.find('.label-text').html('&{'_.like'}');
+         }).error(function() {
+            _this.button('reset');
+         });
         return false;
     });
 

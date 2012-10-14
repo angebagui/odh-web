@@ -158,7 +158,6 @@ public class Document extends BaseModel {
                     ImageIO.write(thumbnailImage, "png", outputStream);
 
                     Thumbnail documentThumbnail = new Thumbnail();
-                    documentThumbnail.document = this;
                     documentThumbnail.image = outputStream.toByteArray();
                     documentThumbnail.mimeType = "image/png";
                     documentThumbnail.save();
@@ -209,6 +208,16 @@ public class Document extends BaseModel {
             this.commentCount++;
         } else {
             this.commentCount--;
+        }
+        this.save();
+    }
+
+    @Transactional
+    public void updateLikeCountAndSave(boolean increment) {
+        if (increment) {
+            this.likeCount++;
+        } else {
+            this.likeCount--;
         }
         this.save();
     }

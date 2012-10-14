@@ -50,24 +50,24 @@
                     &{'document.list.order.recent'}
                 </a>
             </li>
-            <li class="${order == 'views' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'views', null)}">
-                    &{'document.list.order.views'}
-                </a>
-            </li>
             <li class="${order == 'likes' ? 'active' : ''}">
                 <a href="@{list(keyword, category?.id, 'likes', null)}">
                     &{'document.list.order.likes'}
-                </a>
-            </li>            
-            <li class="${order == 'downloads' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'downloads', null)}">
-                    &{'document.list.order.downloads'}
                 </a>
             </li>
             <li class="${order == 'copies' ? 'active' : ''}">
                 <a href="@{list(keyword, category?.id, 'copies', null)}">
                     &{'document.list.order.copies'}
+                </a>
+            </li>
+            <li class="${order == 'downloads' ? 'active' : ''}">
+                <a href="@{list(keyword, category?.id, 'downloads', null)}">
+                    &{'document.list.order.downloads'}
+                </a>
+            </li>
+            <li class="${order == 'views' ? 'active' : ''}">
+                <a href="@{list(keyword, category?.id, 'views', null)}">
+                    &{'document.list.order.views'}
                 </a>
             </li>
             <li class="${order == 'comments' ? 'active' : ''}">

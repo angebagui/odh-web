@@ -18,7 +18,4 @@ public class Thumbnail extends Model {
     @Required
     public String mimeType;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    public Document document;
-
 }

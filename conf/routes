@@ -40,6 +40,9 @@ POST    /api/documents/downloads/{<[0-9]+>exportLinkId}                         
 GET     /api/documentsjobsstatus/{<[0-9]+>id}                                   api.DocumentsJobsStatus.read
 POST    /api/comments                                                           api.Comments.create
 DELETE  /api/comments/{<[0-9]+>id}                                              api.Comments.delete
+POST    /api/likes                                                              api.Likes.create
+DELETE  /api/likes/{<[0-9]+>id}                                                 api.Likes.delete
+GET     /api/likes                                                              api.Likes.read
 
 
 *       /api/*                                                                  404

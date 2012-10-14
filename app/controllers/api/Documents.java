@@ -13,6 +13,7 @@ import models.Comment;
 import models.Document;
 import models.DocumentJobStatus;
 import models.ExportLink;
+import models.Like;
 import models.User;
 import models.enums.Mime;
 import play.Logger;
@@ -66,6 +67,7 @@ public class Documents extends AppController {
         Document document = Document.findById(id);
         notFoundIfNull(document);
         if (document.owner.id == me.id) {
+            Like.deleteAllForDocument(document.id);
             document.delete();
             renderJSON(true);
         } else {
