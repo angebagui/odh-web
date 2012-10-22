@@ -1,0 +1,18 @@
+<div class="document-preview">
+    <a class="document-button-preview button tiny success right" data-document-id="${_document.id}">Preview</a>
+</div>
+#{set 'modalDialogs'}
+    #{if get('modalDialogs')}
+        #{get 'modalDialogs' /}
+    #{/if}
+    <div class="document-preview-modal document-preview-modal-${_document.id} reveal-modal medium">
+        #{document.title document : _document /}
+        #{document.description document : _document /}
+        <div class="document-preview-image">
+            <a href="${_document.permalink}" class="document-list-item-image">
+                <img src="${_document.thumbnailUrl}" alt="${_document.title}" />
+            </a>
+        </div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+#{/set}

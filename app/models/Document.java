@@ -61,6 +61,9 @@ public class Document extends BaseModel {
     @Required
     public String description;
 
+    @JsonProperty
+    public int discussionCount;
+
     @NoBinding
     @JsonProperty
     public int downloadCount;
@@ -80,7 +83,7 @@ public class Document extends BaseModel {
 
     @NoBinding
     @JsonProperty
-    public int likeCount;
+    public int voteCount;
 
     @CheckWith(MimeTypeCheck.class)
     @NoBinding
@@ -105,6 +108,9 @@ public class Document extends BaseModel {
 
     @JsonProperty
     public String source;
+
+    @Required
+    public String tags;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @NoBinding
@@ -193,6 +199,18 @@ public class Document extends BaseModel {
         return String.format("/documents/%s-%s", this.id, this.slug);
     }
 
+    @JsonGetter(value="tags")
+    public String[] getTagsAsList() {
+        String[] tagList = {}; 
+        if (this.tags != null) {
+            tagList = tags.split(",");
+            for (int i = 0; i < tagList.length; i++) {
+                tagList[i] = tagList[i].trim();
+            }
+        }
+        return tagList;
+    }
+
     @JsonGetter
     public String getThumbnailUrl() {
         if (this.id != null) {
@@ -203,23 +221,36 @@ public class Document extends BaseModel {
     }
 
     @Transactional
-    public void updateCommentCountAndSave(boolean increment) {
-        if (increment) {
+    public int updateCommentCountAndSave(boolean increase) {
+        if (increase) {
             this.commentCount++;
         } else {
             this.commentCount--;
         }
         this.save();
+        return this.commentCount;
     }
 
     @Transactional
-    public void updateLikeCountAndSave(boolean increment) {
-        if (increment) {
-            this.likeCount++;
+    public int updateDiscussionCountAndSave(boolean increase) {
+        if (increase) {
+            this.discussionCount++;
         } else {
-            this.likeCount--;
+            this.discussionCount--;
         }
         this.save();
+        return this.discussionCount;
+    }
+
+    @Transactional
+    public int updateVoteCountAndSave(boolean increment) {
+        if (increment) {
+            this.voteCount++;
+        } else {
+            this.voteCount--;
+        }
+        this.save();
+        return this.voteCount;
     }
 
     @Transactional
@@ -339,8 +370,10 @@ public class Document extends BaseModel {
             sb.append(" order by copyCount desc ");
         } else if (order.equals("comments")) {
             sb.append(" order by commentCount desc ");
-        } else if (order.equals("likes")) {
-            sb.append(" order by likeCount desc ");
+        } else if (order.equals("votes")) {
+            sb.append(" order by voteCount desc ");
+        } else if (order.equals("discussions")){
+            sb.append(" order by discussionCount desc ");
         } else {
             throw new RuntimeException("Invalid Sort Order");
         }

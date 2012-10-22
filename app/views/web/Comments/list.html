@@ -12,26 +12,29 @@
 </div>
 #{if me}
     <div class="comment-new clearfix">
-        <div class="comment-picture">
+        <div class="comment-new-picture">
             #{user.picture user : me, size : 60 /}
         </div>
-        <div class="comment-new-body">
-            #{form @api.Comments.create(), class : 'comment-new-form'}
-                <div class="alert hide">
+        <div class="comment-new-content">
+            #{form @api.Comments.create(), class : 'comment-new-form', id : 'new-comment'}
+                <div class="alert-box hide">
                 </div>
-                <input type="hidden" name="comment.document.id" value="${document.id}" />
+                <input type="hidden" name="comment.objectId" value="${objectId}" />
+                <input type="hidden" name="comment.objectType" value="${objectType}" />
                 <div class="control-group">
                     <textarea name="comment.content" rows="4"></textarea>
                 </div>
                 <div class="control-group">
-                    <input type="submit" class="btn btn-primary btn-small" value="&{'comment.post'}"/>
+                    <input type="submit" class="button small button-comment-create" value="&{'comment.post'}"/>
                 </div>
             #{/form}
         </div>
     </div>
 #{/if}
 #{else}
-    <p class="alert">
-        <a href="/auth/google/code?next=@{web.Documents.read(document.id, document.slug)}#document-comments">&{'comment.auth.login.needed'} </a>
+    <p class="alert-box">
+        #{if objectType == 'document'}
+            <a href="/auth/google/code?next=@{web.Documents.go(objectId)}">&{'comment.auth.login.needed'} </a>
+        #{/if}
     </p>
 #{/else}

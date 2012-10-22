@@ -13,7 +13,7 @@ import models.Comment;
 import models.Document;
 import models.DocumentJobStatus;
 import models.ExportLink;
-import models.Like;
+import models.Vote;
 import models.User;
 import models.enums.Mime;
 import play.Logger;
@@ -67,7 +67,7 @@ public class Documents extends AppController {
         Document document = Document.findById(id);
         notFoundIfNull(document);
         if (document.owner.id == me.id) {
-            Like.deleteAllForDocument(document.id);
+            Vote.deleteAllForDocument(document.id);
             document.delete();
             renderJSON(true);
         } else {
@@ -103,6 +103,12 @@ public class Documents extends AppController {
         }
         ok();
     }
+    
+    public static void read(long id) {
+        Document document = Document.findById(id);
+        notFoundIfNull(document);
+        renderJSON(document);
+    }
 
     public static void readThumbnail(long id) {
         Document document = Document.findById(id);
@@ -131,6 +137,7 @@ public class Documents extends AppController {
                 check.category = document.category;
                 check.source = document.source;
                 check.description = document.description;
+                check.tags = document.tags;
                 document = check;
                 if (document.validateAndSave()) {
                     renderJSON(document);
@@ -139,13 +146,6 @@ public class Documents extends AppController {
         } else {
             unauthorized();
         }
-    }
-
-    public static void listComments(long id, Integer page) {
-        Document document = Document.findById(id);
-        notFoundIfNull(document);
-        List<Comment> comments = Comment.findByDocument(document.id, page);
-        renderJSON(comments);
     }
 
 }

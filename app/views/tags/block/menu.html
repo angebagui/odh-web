@@ -1,4 +1,4 @@
-<ul class="nav">
+<ul class="left">
     <li>
         <a href="@{web.WebController.index()}">
             <i class="icon-home"></i>
@@ -7,8 +7,14 @@
     </li>
     <li>
         <a href="@{web.Documents.list()}">
-            <i class="icon-copy"></i>
-            &{'_.explore'}
+            <i class="icon-folder"></i>
+            &{'_.documents'}
+        </a>
+    </li>
+    <li>
+        <a href="@{web.Documents.list()}">
+            <i class="icon-comments"></i>
+            &{'_.discussions'}
         </a>
     </li>
     <li>
@@ -16,5 +22,23 @@
             <i class="icon-upload">&nbsp;</i>
             &{'_.uploadDocument'}
         </a>
+    </li>
+    <li class="has-dropdown">
+        <a href="#"><i class="icon-search"></i> &{'_.search'}</a>
+        <ul class="dropdown"> 
+            <li class="search">
+                #{form @web.Documents.list()}
+                    <input type="text" name="keyword" placeholder="&{'_.searchDocuments'}" value="${keyword}">
+                    <input type="submit" class="button" value="&{'_.searchDocuments'}" />
+                #{/form}
+            </li>
+            <li class="divider"></li>
+            <li class="search">
+                #{form @web.Webcontroller.search()}
+                    <input type="text" name="keyword" placeholder="&{'_.searchDiscussions'}" value="${keyword}">
+                    <input type="submit" class="button" value="&{'_.searchDiscussions'}" />
+                #{/form}
+            </li>
+        </ul>
     </li>
 </ul>

@@ -1,3 +1,3 @@
 #{form.field field : _field, label : _label,  help : _help}
-    <input placeholder="${_placeholder}" type="${_type != null ? _type : 'text' }" id="${_field.id}" name="${_field.name}" class="${_class}" value="${_value}" ${_required ?  'required' : ''}/>
+    <input placeholder="${_placeholder}" type="${_type != null ? _type : 'text' }" id="${_field.id}" name="${_field.name}" class="${_class} ${_field.error == null ? '' : 'error'}" value="${_value}" ${_required ?  'required' : ''}/>
 #{/form.field}

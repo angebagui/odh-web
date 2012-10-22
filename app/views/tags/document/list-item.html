@@ -1,29 +1,161 @@
-<td>
-    <a href="${_document.permalink}">
-        <img src="${_document.thumbnailUrl}" alt="${_document.title}"  style="border : 1px solid #dddddd" width="50">
+<div class="document-list-item">
+    <div class="row">
+        <div class="nine columns">
+            #{document.title document : _document /}
+            <div class="document-list-item-description">
+                ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
+                &nbsp;
+            </div>
+            <div class="right">
+                #{document.preview document : _document /}
+            </div>
+            <div class="document-list-item-tags">
+                <i class="icon-tag"></i>
+                #{list _document.tagsAsList}
+                    <a href="@{web.Documents.list(_)}"><span class="label round secondary">${_}</span></a>
+                #{/list}
+            </div>
+            <div class="small document-time right">
+                <i class="icon-clock"></i> #{block.time time : _document.created /}
+            </div>
+            <div class="small">
+                #{user.picture user : _document.owner, showName : true, size : 20 /}
+            </div>
+        </div>
+        <div class="three columns">
+            #{document.stats document : _document /}
+        </div>
+    </div>
+</div>
+                <!-- 
+    <div class="span8">
+        <div class="document-list-item-title">
+            <a href="${_document.permalink}"> ${_document.title} </a>
+        </div>
+    
+        <div class="document-list-item-user-block">
+            #{user.picture user : _document.owner, size : 30, showName : true /}
+            <span class="timeago" title="${_document.created}">
+                ${_document.created}
+            </span>
+        </div>
+        <div class="document-list-item-tags">
+            #{list _document.tagsAsList}
+                <a href="@{web.Documents.list(_)}"><span class="label label-info">${_}</span></a>
+            #{/list}
+        </div>
+    </div>
+    <div class="span4">
+        <div class="row-fluid">
+            <div class="span4">
+                <div class="stats-number-block">
+                    <div class="stats-number-count">
+                        ${_document.voteCount}
+                    </div>
+                    <div class="stats-number-label">
+                        &{'_.votes'}
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="stats-number-block">
+                    <div class="stats-number-count">
+                        ${_document.commentCount}
+                    </div>
+                    <div class="stats-number-label">
+                        &{'_.comments'}
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="stats-number-block">
+                    <div class="stats-number-count">
+                        ${_document.discussionCount}
+                    </div>
+                    <div class="stats-number-label">
+                        &{'_.discussions'}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span4">
+                <div class="stats-number-block">
+                    <div class="stats-number-count">
+                        ${_document.viewCount}
+                    </div>
+                    <div class="stats-number-label">
+                        &{'_.views'}
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="stats-number-block">
+                    <div class="stats-number-count">
+                        ${_document.downloadCount}
+                    </div>
+                    <div class="stats-number-label">
+                        &{'_.downloads'}
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="stats-number-block">
+                    <div class="stats-number-count">
+                        ${_document.copyCount}
+                    </div>
+                    <div class="stats-number-label">
+                        &{'_.copies'}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  
+<td width="60%">
+    <a href="${_document.permalink}" class="document-list-item-image pull-right">
+        <img src="${_document.thumbnailUrl}" alt="${_document.title}" class="img-polaroid" />
     </a>
-</td>
-<td>
     <div class="document-list-item-title">
         <a href="${_document.permalink}"> ${_document.title} </a>
     </div>
-    <p>
+    <p class="document-list-item-description">
         ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
         &nbsp;
     </p>
-    <div class="timeago" title="${_document.created}">
-        ${_document.created}
+    <div class="document-list-item-tags">
+        #{list _document.tags}
+            <a href="@{web.Documents.list(_)}"><span class="label label-info">${_}</span></a>
+        #{/list}
+    </div>
+    <div class="document-list-item-user-block">
+        #{user.picture user : _document.owner, size : 30, showName : true /}
+        <span class="timeago" title="${_document.created}">
+            ${_document.created}
+        </span>
     </div>
 </td>
-<td>
-    <a href="@{web.Documents.list(null, _document.category.id, null, null)}">${_document.category.name}</a>
-</td>
-<td>
-    <div class="document-view-stat">
-        <i class="document-view-stat-icon icon-thumbs-up"></i>
-        <span class="document-view-stat-number">${_document.likeCount}</span>
+<td width="30%">
+    <div class="stats-number-block">
+        <div class="stats-number-count">
+            ${_document.voteCount}
+        </div>
+        <div class="stats-number-label">
+            &{'_.votes'}
+        </div>
+    </div>
+    <div class="stats-number-block">
+        <div class="stats-number-count">
+            ${_document.commentCount}
+        </div>
+        <div class="stats-number-label">
+            &{'_.comments'}
+        </div>
     </div>
 </td>
+-->
+<!-- 
 <td>
     <div class="document-view-stat">
         <i class="document-view-stat-icon icon-download-alt"></i>
@@ -44,13 +176,8 @@
 </td>
 <td>
     <div class="document-view-stat">
-        <i class="document-view-stat-icon icon-comments"></i>
-        <span class="document-view-stat-number">${_document.commentCount}</span>
-    </div>
-</td>
-<td>
-    <div class="document-view-stat">
         <i class="document-view-stat-icon icon-th-list"></i>
         <span class="document-view-stat-number">${_document.commentCount}</span>
     </div>
 </td>
+ -->

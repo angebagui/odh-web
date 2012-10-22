@@ -5,6 +5,7 @@ import java.util.List;
 import models.Category;
 import models.Document;
 import models.User;
+import play.Play;
 import play.mvc.Before;
 import play.mvc.Util;
 import controllers.AppController;
@@ -13,23 +14,21 @@ public class WebController extends AppController {
 
     @Before
     public static void addViewArgs() {
-        List <Category> categories = Category.find("order by name asc").fetch();
-        renderArgs.put("categories", categories);
         renderArgs.put("me", getMe());
+        renderArgs.put("siteName", Play.configuration.getProperty("application.fullName"));
     }
 
     @Before(unless = {
         "web.Auth.googleCode",
         "web.Auth.googleToken",
         "web.Auth.googleOAuth",
-        "web.Documents.incrementReadCount",
+        "web.Comments.list",
         "web.Documents.go",
         "web.Documents.list",
-        "web.Documents.listClones",
         "web.Documents.read",
-        "web.Documents.listComments",
         "web.Users.read",
-        "web.WebController.index"
+        "web.WebController.index",
+        "web.WebController.search"
     })
     public static void checkAccess() {
         if (getMe() == null) {
@@ -67,12 +66,13 @@ public class WebController extends AppController {
     public static void index() {
         List<Document> recentDocuments = Document.find("order by created desc").fetch(4);
         List<User> recentUsers = User.find("order by created desc").fetch(12);
-        render(recentDocuments, recentUsers);
+        List <Category> documentCategories = Category.findForDocuments();
+        render(documentCategories, recentDocuments, recentUsers);
     }
 
-    public static void search(String keyword, String searchType) {
-        if (searchType != null) {
-            if (searchType.equals("documents")) {
+    public static void search(String keyword, String type) {
+        if (type != null) {
+            if (type.equals("documents")) {
                 Documents.list(keyword, 0, null, null);
             }
         }

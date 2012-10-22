@@ -1,22 +1,3 @@
-<table class="table table-striped table-hover document-list">
-  <thead>
-    <tr>
-      <th class="span1">&nbsp;</th>
-      <th class="span4">&{'document.title'}</th>
-      <th class="span1">&{'document.category'}</th>
-      <th class="span1">&{'_.likes'}</th>
-      <th class="span1">&{'_.downloads'}</th>
-      <th class="span1">&{'_.copies'}</th>
-      <th class="span1">&{'_.views'}</th>
-      <th class="span1">&{'_.comments'}</th>
-      <th class="span1">&{'_.discussions'}</th>
-    </tr>
-  </thead>
-  <tbody>
-    #{list _documents}
-        <tr>
-            #{document.list-item document : _ /}
-        </tr>
-    #{/list}
-  </tbody>
-</table>
+#{list _documents}
+    #{document.list-item document : _ /}
+#{/list}

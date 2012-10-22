@@ -1,0 +1,15 @@
+<div class="document-title">
+    #{if _document.mime.humanFriendlyName == '.pdf' }
+        <i class="icon-file-pdf"></i>
+    #{/if}
+    #{elseif  _document.mime.humanFriendlyName == '.docx' || _document.mime.humanFriendlyName == '.doc'}
+        <i class="icon-file-word"></i>
+    #{/elseif}
+    #{elseif  _document.mime.humanFriendlyName == '.pptx' }
+        <i class="icon-file-powerpoint"></i>
+    #{/elseif}
+    #{elseif  _document.mime.humanFriendlyName == '.pptx' }
+        <i class="icon-document-alt-stroke"></i>
+    #{/elseif}
+    <a href="${_document.permalink}"> ${_document.title.toLowerCase()} </a>
+</div>

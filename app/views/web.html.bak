@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="${appLanguage}">
+    <head>
+        <title>#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${play.configuration.getProperty('application.fullName')}</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${play.configuration.getProperty('application.fullName')}">
+
+        <meta property="og:title" content="#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${play.configuration.getProperty('application.fullName')}" />
+        <meta property="og:url" content="${request.secure ? 'https' : 'http' }://${request.host + request.url}" />
+        <meta property="og:image" content="${request.secure ? 'https' : 'http' }://${request.host + (document?.thumbnailUrl ? document.thumbnailUrl : '/public/images/logo.png')}" />
+        <meta property="og:description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${play.configuration.getProperty('application.fullName')}" />
+        <meta property="og:site_name" content="${play.configuration.getProperty('application.fullName')}" />
+
+        <link rel="image_src" type="image/jpeg" href="${request.secure ? 'https' : 'http' }://${request.host + (document?.thumbnailUrl ? document.thumbnailUrl : '/public/images/logo.png')}" />
+        <link rel="icon" type="image/png" href="@@{'/public/images/favicon.png'}">
+
+        #{press.stylesheet 'bootstrap.min.css' /}
+        #{press.stylesheet 'web.css' /}
+        #{press.compressed-stylesheet /}
+
+        <link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet" type="text/css">
+        <!--[if lt IE 9]>
+            <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome-ie7.css" type="text/css">
+        <![endif]-->
+    </head>
+
+    <body>
+        <!--
+        <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="span12">
+                        #{block.top-bar-user user : me/}
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+
+        <div class="container" id="main-container">
+            <div class="row-fluid header">
+                <div class="span3">
+                    <a class="logo" href="@{web.WebController.index()}">
+                        ${play.configuration.getProperty("application.fullName")}
+                    </a>
+                </div>
+                <div class="span9">
+                    #{form @web.Webcontroller.search(), class : 'form-search pull-right'}
+                        <input type="text" name="keyword" class="input-xlarge" placeholder="&{'_.enterSearchKeyword'}" value="${keyword}">
+                            <select name="type">
+                                <option value="documents">Documents</option>
+                                <option value="discussions">Discussions</option>
+                            </select>
+                        <button type="submit" class="btn btn-primary">
+                            &{'_.search'}
+                        </button>
+                    #{/form}
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12 nav-bar">
+                    #{block.menu/}
+                </div>
+            </div>
+            <div id="main-section">
+                #{if flash?.error || flash?.success}
+                    <div class="row-fluid">
+                        <div class="span12">
+                            #{if flash?.error}
+                                <div class="alert alert-error">
+                                    ${flash?.error.raw()}
+                                </div>
+                            #{/if}
+                            #{if flash?.success}
+                                <div class="alert alert-success">
+                                    ${flash?.success.raw()}
+                                </div>
+                            #{/if}
+                        </div>
+                    </div>
+                #{/if}
+                #{if request.url != '/'}
+                    <div class="page-header">
+                        <h1>#{get 'title' /}
+                            #{if get('subTitle')}
+                                <small>:: #{get 'subTitle' /}</small>
+                            #{/if}
+                        </h1>
+                    </div>
+                #{/if}
+                #{doLayout /}
+            </div>
+        </div><!-- /container -->
+        <div class="container" id="footer">
+            <div class="row-fluid">
+                <div class="span12">
+                    &copy; <a href="@{web.WebController.index()}">${play.configuration.getProperty("application.fullName")}</a> - Powered By
+                    <a href="http://www.opendocshub.org">&{'_.openDocsHubProject'}</a>
+                </div>
+            </div>
+        </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/js/bootstrap.min.js" type="text/javascript"></script>
+    #{press.script 'jquery.timeago.js' /}
+    #{press.script 'jquery.timeago.' + lang + '.js' /}
+    #{press.script 'jquery-form-3.10.js' /}
+    #{press.script 'json2.js' /}
+    #{press.compressed-script /}
+    <script>
+        $(document).ready(function() {
+                $('.timeago').timeago();
+                $('.tooltip-info').tooltip();
+        });
+    </script>
+    #{get 'moreScripts' /}
+  </body>
+</html>

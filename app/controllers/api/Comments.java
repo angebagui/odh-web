@@ -17,8 +17,9 @@ public class Comments extends AppController {
             User me = getMe();
             comment.content = comment.content.trim();
             comment.author = me;
+            // TODO : Need to add validation rule in Comment model that checks that comment.objectType is either "document" or "comment".
             if (comment.validateAndSave()) {
-                new UpdateDocumentCommentCountJob(comment.document.id, true).in(10);
+                comment.updateCountForObject(true);
                 renderJSON(comment);
             }
         }
@@ -30,9 +31,8 @@ public class Comments extends AppController {
         notFoundIfNull(comment);
         User me = getMe();
         if (comment.author.id.equals(me.id)) {
-            long documentId = comment.document.id;
+            comment.updateCountForObject(false);
             comment.delete();
-            new UpdateDocumentCommentCountJob(documentId, false).in(10);
             renderJSON(true);
         } else {
             unauthorized();

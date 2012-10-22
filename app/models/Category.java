@@ -1,9 +1,12 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.PreRemove;
 
 import play.data.validation.Required;
+import play.db.jpa.GenericModel.JPAQuery;
 import play.i18n.Messages;
 import play.templates.JavaExtensions;
 
@@ -12,25 +15,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 public class Category extends BaseModel {
 
-    @JsonProperty
-    public int documentCount;
-
     @Required
     @JsonProperty
     public String name;
+    
+    @Required
+    @JsonProperty
+    public String objectType;
 
-    public Category() {
-        this.documentCount = 0;
-    }
-
-    public Category(String name) {
+    public Category(String name, String objectType) {
         this.name = name;
-        this.documentCount = 0;
+        this.objectType = objectType;
     }
 
     @PreRemove
-    protected void beforeDelete() {
-        if (this.hasDocuments()) {
+    public void beforeDelete() {
+        if (this.hasObjects(this.objectType)) {
             throw new RuntimeException(Messages.get("category.delete.error.documents"));
         }
     }
@@ -39,14 +39,22 @@ public class Category extends BaseModel {
         return JavaExtensions.slugify(this.name);
     }
 
-    public boolean hasDocuments() {
-        Document check = Document.find("category is ?", this).first();
-        return (check != null);
+    public boolean hasObjects(String objectType) {
+        boolean hasObjects = false;
+        if ("document".equals(this.objectType)) {
+            Document check = Document.find("category is ?", this).first();
+            hasObjects = (check != null);
+        }
+        return hasObjects;
     }
 
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public static List<Category> findForDocuments() {
+        return Category.find("objectType is ? order by name", "document").fetch();
     }
 
 }

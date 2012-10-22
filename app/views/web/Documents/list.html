@@ -1,5 +1,6 @@
 #{extends 'web.html' /}
 #{set title : 'Documents' /}
+#{i18n keys:['_.errorTryAgain', '_.loading'] /}
 
 #{if order == null}
     #{set 'title' }
@@ -34,53 +35,68 @@
     #{/set}
 #{/if}
 
-<div class="row-fluid">
-    <div class="span2">
-        <div class="control-group">
-            #{if keyword}
-                <a href="@{web.Documents.list()}">&{'document.list.clearSearchOptions'}</a>
-            #{/if}
+<div class="row">
+    <div class="nine columns">
+        <div id="document-list">
+            #{include 'web/Documents/ajax_list.html' /}
         </div>
-        <ul class="nav nav-list">
-            <li class="nav-header">
-                <i class="icon-sort"></i> Sort by </span>
-            </li>
-            <li class="${order == null || order == 'recent' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'recent', null)}">
-                    &{'document.list.order.recent'}
-                </a>
-            </li>
-            <li class="${order == 'likes' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'likes', null)}">
-                    &{'document.list.order.likes'}
-                </a>
-            </li>
-            <li class="${order == 'copies' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'copies', null)}">
-                    &{'document.list.order.copies'}
-                </a>
-            </li>
-            <li class="${order == 'downloads' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'downloads', null)}">
-                    &{'document.list.order.downloads'}
-                </a>
-            </li>
-            <li class="${order == 'views' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'views', null)}">
-                    &{'document.list.order.views'}
-                </a>
-            </li>
-            <li class="${order == 'comments' ? 'active' : ''}">
-                <a href="@{list(keyword, category?.id, 'comments', null)}">
-                    &{'document.list.order.comments'}
-                </a>
-            </li>
-        </ul>
-        <hr />
-        <ul class="nav nav-list">
-            <li class="nav-header">
-                <i class="icon-folder-open"></i> Category
-            </li>
+    </div>
+    <div class="three columns">
+        <div class="panel">
+            <h4>Search Filter</h4>
+            #{form @web.Documents.list()}
+                <input type="text" name="keyword" placeholder="&{'_.enterKeyword'}" value="${keyword}">
+                <input type="submit" class="button" value="&{'_.filterResults'}" />
+            #{/form}
+            <p>
+                #{if keyword}
+                    <a href="@{web.Documents.list()}">&{'document.list.clearSearchOptions'}</a>
+                #{/if}
+            </p>
+        </div>
+        <div class="panel">
+            <h4>&{'_.order'}</h4>
+            <ul class="side-nav">
+                <li class="${order == null || order == 'recent' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'recent', null)}">
+                        &{'document.list.order.recent'}
+                    </a>
+                </li>
+                <li class="${order == 'votes' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'votes', null)}">
+                        &{'document.list.order.votes'}
+                    </a>
+                </li>
+                <li class="${order == 'comments' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'comments', null)}">
+                        &{'document.list.order.comments'}
+                    </a>
+                </li>
+                <li class="${order == 'discussions' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'discussions', null)}">
+                        &{'document.list.order.discussions'}
+                    </a>
+                </li>
+                <li class="${order == 'copies' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'copies', null)}">
+                        &{'document.list.order.copies'}
+                    </a>
+                </li>
+                <li class="${order == 'downloads' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'downloads', null)}">
+                        &{'document.list.order.downloads'}
+                    </a>
+                </li>
+                <li class="${order == 'views' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'views', null)}">
+                        &{'document.list.order.views'}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel">
+            <h4>&{'_.categories'}</h4>
+            <ul class="side-nav">
             <li class="${category == _null ? 'active' : ''}">
                 #{a @web.Documents.list(keyword, null, order, null)}&{'_.allCategories'}#{/a}
             </li>
@@ -90,10 +106,6 @@
                 </li>
             #{/list}
         </ul>
-    </div>
-    <div class="span10">
-        <div id="document-list">
-            #{include 'web/Documents/ajax_list.html' /}            
         </div>
     </div>
 </div>
@@ -101,11 +113,16 @@
 #{set 'moreScripts'}
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.btn-more').button();
+        $('.document-button-preview').live('click', function() {
+                var modalElementSelector = '.document-preview-modal-' + $(this).data('document-id');
+                //alert(modalElementSelector);
+                $(modalElementSelector).reveal();
+        });
+    //    $('.btn-more').button();
         $('.btn-more').live('click', function() {
             var button = $(this);
             var list = $('#document-list');
-            button.button('loading');
+            button.html(i18n('_.loading'));
             $.ajax({
                 url : button.attr('href'),
                 type : 'GET'
@@ -113,7 +130,7 @@
                 list.append(html);
                 button.remove();
             }).error(function(data) {
-                button.button('reset');
+                button.html(i18n('_.errorTryAgain'));
             });
             return false;
         });

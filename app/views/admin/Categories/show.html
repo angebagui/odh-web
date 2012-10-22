@@ -8,9 +8,9 @@
     <div class="objectForm">
     #{form action:@save(object._key()), enctype:'multipart/form-data'}
         #{crud.form}
-            #{crud.custom 'documentCount'}
-                <label>&{'documentCount'}</label>
-                ${object.documentCount}
+            #{crud.custom 'objectType'}
+                <label>&{'objectType'}</label>
+                ${object.objectType}
             #{/crud.custom}
             #{crud.custom 'created'}
                 <label>&{'created'}</label>

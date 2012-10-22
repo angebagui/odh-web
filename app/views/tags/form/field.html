@@ -1,14 +1,23 @@
-<div class="${_field.errorClass} control-group">
-    <label for="${_field.id}" class="control-label">&{_field.name}</label>
-    <div class="controls">
+<div class="${_field.errorClass} row">
+    <div class="two mobile-one columns">
+        <label for="${_field.id}" class="right inline ${_field.error == null ? '' : 'error'}">
+            #{if _label}
+                ${_label}
+            #{/if}
+            #{else}
+                &{_field.name}
+            #{/else}
+        </label>
+    </div>
+    <div class="ten columns">
         #{doBody /}
-        <span class="label label-important radius red error  ${_field.error == null ? 'hide' : '' }">
+        <small class="error ${_field.error == null ? 'hide' : '' }">
             ${_field.error}
-        </span>
+        </small>
         #{if _help}
-            <p class="help-block">
-                <small>&{_help}</small>
-            </p>
+            <div class="small help-block">
+                &{_help}
+            </div>
         #{/if}
     </div>
 </div>

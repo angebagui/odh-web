@@ -1,88 +1,71 @@
 #{extends 'web.html' /}
 #{set 'title'}&{'welcome'}#{/set}
-<div class="row-fluid">
-    <div class="span2"></div>
-    <div class="span8">
-        <div class="hero-msg hero-msg-title">
-            &{'_.welcomeMessage'}
-        </div>
+<div class="row">
+    <div class="twelve column">
+        <h1>&{'_.welcome', siteName}</h1>
+        <p class="panel">
+            Your slogan goes here
+        </p>
     </div>
 </div>
-<div class="row-fluid">
-    <div class="span3"></div>
-    <div class="span6">
-        #{form @web.Documents.list(), class : 'form-search well well-small hero-msg'}
-            <input type="text" name="keyword" class="span10 search-query" placeholder="&{'_.enterSearchKeyword'}">
-            <button type="submit" class="btn btn-primary">
-                &{'_.search'}
-            </button>
-        #{/form}
+<div class="row">
+    <div class="four column">
+        <h3>&{'_.explore'}</h3>
+        <i class="home-hero-icon icon-big icon-folder color-one"></i>
+        <p>
+            &{'_.explore.expand'}
+        </p>
+    </div>
+    <div class="four column">
+        <h3>&{'_.discuss'}</h3>
+        <i class="home-hero-icon icon-big icon-comments color-two"></i>
+        <p>
+            &{'_.discuss.expand'}
+        </p>
+    </div>
+    <div class="four column">
+        <h3>&{'_.share'}</h3>
+        <i class="home-hero-icon icon-big icon-upload color-three"></i>
+        <p>
+            &{'_.share.expand'}
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="twelve column">
         <hr />
     </div>
 </div>
-<div class="row-fluid">
-    <div class="span1"></div>
-    <div class="span10">
-        <div class="row-fluid">
-            <div class="span4">
-                <h3>&{'_.explore'}</h3>
-                <p>
-                    <i class="icon-big icon-copy"></i> &{'_.explore.expand'}
-                </p>
-                <hr />
-            </div>
-            <div class="span4">
-                <h3>&{'_.share'}</h3>
-                <p>
-                    <i class="icon-big icon-upload"></i> &{'_.share.expand'}
-                </p>
-                <hr />
-            </div>
-            <div class="span4">
-                <h3>&{'_.discuss'}</h3>
-                <p>
-                    <i class="icon-big icon-comments"></i> &{'_.discuss.expand'}
-                </p>
-                <hr />
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row-fluid">
-    <div class="span1"></div>
-    <div class="span10">
-        <div class="row-fluid">
-            <div class="span4">
-                <h4 class="well well-small">&{'_.recentDocuments'}</h4>
-                <table class="table table-striped">
-                    #{list recentDocuments}
-                    <tr>
-                        <td>
-                        <div>
-                            <strong> <a href="${_.permalink}"> ${_.title} </a> </strong>
-                        </div>
-                        <div class="small">
-                            &{'document.sharedBy'}
-                            #{user.name user : _.owner /}
-                        </div></td>
-                    </tr>
-                    #{/list}
-                </table>
-                <p>
-                    #{a @web.Documents.list()}<strong>All categories</strong>#{/a}
-                    #{list categories}
-                        - #{a @web.Documents.list(null, _.id, null, null)}${_.name}#{/a}
-                    #{/list}
-                </p>
-            </div>
-            <div class="span4">
-                <h4 class="well well-small">&{'_.newestMembers'}</h4>
-                <div class="home-users-list clearfix">
-                    #{list recentUsers}
-                        #{user.picture user : _, size : 50 /}
-                    #{/list}
+<div class="row">
+    <div class="four column">
+        <h4 class="box-header">&{'_.recentDocuments'}</h4>
+        #{list recentDocuments}
+            <div class="box-list-row">
+                #{document.title document : _ /}
+                <div class="small document-time right">
+                    <i class="icon-clock"></i> #{block.time time : _.created /}
+                </div>
+                <div class="small">
+                    <i class="icon-user"></i> #{user.name user : _.owner /}
                 </div>
             </div>
+        #{/list}
+        <p>
+            <i class="icon-folder"></i> #{a @web.Documents.list()}<strong>All categories</strong>#{/a}
+            #{list documentCategories}
+                - #{a @web.Documents.list(null, _.id, null, null)}${_.name}#{/a}
+            #{/list}
+        </p>
+    </div>
+    <div class="four column">
+        <h4 class="box-header">Recent discussions</h4>
+    </div>
+    <div class="four column">
+        <h4 class="box-header">&{'_.newestMembers'}</h4>
+        <div class="home-users-list clearfix">
+            #{list recentUsers}
+                #{user.picture user : _, size : 50 /}
+            #{/list}
         </div>
     </div>
 </div>

@@ -3,57 +3,64 @@
     &{'document.upload'}
 #{/set}
 #{i18n keys:['document.view', 'document.editDetails', 'document.upload.error'] /}
-<div class="row-fluid">
-    <div class="span12">
-        <div class="alert alert-error hide">
+<div class="row">
+    <div class="eight columns">
+        <div class="alert-box alert hide">
             <h3>&{'_.error.title'}</h3>
             <p> </p>
         </div>
-        #{form @api.Documents.create(), enctype:'multipart/form-data', class : 'form-horizontal'}
+        #{form @api.Documents.create(), enctype:'multipart/form-data', class : 'document-upload-form'}
             #{field 'document.title'}
-                #{form.input field : field, value : document?.title, class : 'input-xxlarge', required  : false /}
+                #{form.input field : field, value : document?.title, class : 'input-xxlarge', required : true /}
             #{/field}
             #{field 'document.category.id'}
-                #{form.select field : field, items : categories, valueProperty : 'id', labelProperty : 'name',  value : document?.category?.id/}
+                #{form.select field : field, items : categories, valueProperty : 'id', labelProperty : 'name',  value : document?.category?.id, required : true /}
             #{/field}
             #{field 'file'}
-                #{form.input field : field, type : 'file', 'help' : '.pdf, .doc, .docx, .ppt, .pptx, .txt, .rtf, .html' , required  : false /}
+                #{form.input field : field, type : 'file', 'help' : '.pdf, .doc, .docx, .ppt, .pptx, .txt, .rtf, .html' , required : true /}
             #{/field}
             #{field 'document.description'}
-                #{form.textarea field : field, value : document?.description, class : 'input-xxlarge', required  : false /}
+                #{form.textarea field : field, value : document?.description, class : 'input-xxlarge', required : true /}
             #{/field}
             #{field 'document.source'}
-                #{form.input field : field, label : 'Source', value : document?.source, class : 'input-xxlarge', 'help' : 'document.source.help', required  : false /}
+                #{form.input field : field, value : document?.source, class : 'input-xxlarge', 'help' : 'document.source.help', required  : false /}
             #{/field}
-            <p class="alert">
-                &{'document.upload.notice'}
-            </p>
+            #{field 'document.tags'}
+                #{form.input field : field, value : document?.tags, class : 'input-xxlarge', 'help' : 'tags.help', required : true /}
+            #{/field}
+            <div class="alert-box">
+                <i class="icon-google-drive"></i> &{'document.upload.notice'}
+            </div>
             <div class="form-actions">
                 <div class="progress progress-striped active hide">
                     <div class="bar" style="width: 0%;"> </div>
                 </div>
-                <input type="submit" value="&{'document.upload.submit'}" class="btn btn-primary" data-loading-text="&{'_.loading'}"/>
+                <button type="submit" value="" class="button success button-upload" data-loading-text="&{'_.loading'}">
+                    <i class="icon-upload"></i> &{'document.upload.submit'}
+                </button>
             </div>
         #{/form}
         <div id="upload-result" class="hide">
-            <div class="alert alert-success">
+            <div class="alert-box success">
                 <h3>&{'_.success.title'}</h3>
                 <p>
                     &{'document.upload.success'}
                 </p>
             </div>
-            <div class="span2">
-                <div class="result-document-thumbnail"> </div>
-            </div>
-            <div class="span6">
-                <div class="result-document-info">
-                    <h3 class="result-document-title"> </h3>
-                    <p class="alert alert-info">&{'document.upload.thumbnail.notice'}</p>
-                    <span class="result-document-read-link"> </span>
-                    <span class="result-document-edit-link"> </span>
-                    <hr />
-                    <div>
-                        <a href="@{web.Documents.add()}" class="btn btn-primary"><i class="icon-upload-alt"> </i> &{'document.upload'}</a>
+            <div class="row">
+                <div class="four columns">
+                    <div class="result-document-thumbnail"> </div>
+                </div>
+                <div class="eight columns">
+                    <div class="result-document-info">
+                        <h3 class="result-document-title"> </h3>
+                        <p class="alert alert-info">&{'document.upload.thumbnail.notice'}</p>
+                        <span class="result-document-read-link"> </span>
+                        <span class="result-document-edit-link"> </span>
+                        <hr />
+                        <div>
+                            <a href="@{web.Documents.add()}" class="button"><i class="icon-upload"> </i> &{'document.shareAnother'}</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,17 +70,19 @@
 #{set 'moreScripts'}
 <script type="text/javascript">
     (function() {
-        $('.btn').button();
+        $('.button-upload').button();
         var barElement = $('.bar');
 
-        $('form').ajaxForm({
+        $('form.document-upload-form').ajaxForm({
             beforeSubmit: function() {
-                $('form .btn-primary').button('loading');
+                $('.document-upload-form .button').button('loading');
                 $('.progress').show();
                 $('.progress').removeClass('progress-danger');
-                $('.alert-error').hide();
-                $('.control-group').removeClass('error');
-                $('.control-group').find('.label').html("").hide();
+                $('.alert-box.alert').hide();
+                $('.document-upload-form input').removeClass('error');
+                $('.document-upload-form label').removeClass('error');
+                $('.document-upload-form small.error').hide();
+                //$('.control-group').find('.label').html("").hide();
                 var percentVal = '0%';
                 barElement.css('width', percentVal)
             },
@@ -83,16 +92,16 @@
             },
             success: function(document) {
                 barElement.parents('.progress').addClass('progress-success');
-                $('form').slideUp('slow');
-                $('form').remove();
-                $('.result-document-thumbnail').html('<a href="' + document.permalink + '" class="thumbnail"><img src="' + document.thumbnailUrl +'" alt="' + document.title + '" /></a>');
+                $('.document-upload-form').slideUp('slow');
+                $('.document-upload-form').remove();
+                $('.result-document-thumbnail').html('<a href="' + document.permalink + '" class="th"><img src="' + document.thumbnailUrl +'" alt="' + document.title + '" /></a>');
                 $('.result-document-title').html('<a href="' + document.permalink + '">' + document.title + '</a>');
-                $('.result-document-read-link').html('<a href="' + document.permalink + '" class="btn"><i class="icon-eye-open"></i> ' + i18n('document.view') + '</a>');
-                $('.result-document-edit-link').html('<a href="/documents/' + document.id + '/edit" class="btn"><i class="icon-pencil"></i> ' + i18n('document.editDetails') + '</a>');
+                $('.result-document-read-link').html('<a href="' + document.permalink + '" class="button"><i class="icon-eye"></i> ' + i18n('document.view') + '</a>');
+                $('.result-document-edit-link').html('<a href="/documents/' + document.id + '/edit" class="button"><i class="icon-pencil"></i> ' + i18n('document.editDetails') + '</a>');
                 $('#upload-result').show();
             },
             error: function(xhr) {
-                $('.btn-primary').button('reset');
+                $('.button').button('reset');
                 if (xhr.status == 500) {
                     $('.alert-error p').html(i18n('document.upload.error'));
                     $('.alert-error').show();
@@ -101,8 +110,8 @@
                     $('.alert-error').show();
                     var errors = JSON.parse(xhr.responseText);
                     $.each(errors, function(field, message){
-                        $('[name=\'' + field + '\']').parents('.control-group').addClass('error');
-                        $('[name=\'' + field + '\']').parents('.control-group').find('.label').html(message).show();
+                        $('[name=\'' + field + '\']').addClass('error');
+                        $('[name=\'' + field + '\']').parents('.row').first().find('small.error').html(message).show();
                     });
                 }
                 barElement.parents('.progress').addClass('progress-danger');

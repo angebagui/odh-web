@@ -14,11 +14,11 @@ GET     /upload                                                                 
 POST    /logout                                                                 web.Auth.logout
 
 #WEB
+GET     /comments                                                               web.Comments.list
 GET     /documents                                                              web.Documents.list
 GET     /documents/{<[0-9]+>id}-{slug}                                          web.Documents.read
 GET     /documents/{<[0-9]+>id}/go                                              web.Documents.go
 GET     /documents/{<[0-9]+>id}/edit                                            web.Documents.edit
-GET     /documents/{<[0-9]+>id}/comments                                        web.Documents.listComments
 GET     /users/{<[0-9]+>id}                                                     web.Users.read
 GET     /                                                                       web.WebController.index
 
@@ -40,9 +40,9 @@ POST    /api/documents/downloads/{<[0-9]+>exportLinkId}                         
 GET     /api/documentsjobsstatus/{<[0-9]+>id}                                   api.DocumentsJobsStatus.read
 POST    /api/comments                                                           api.Comments.create
 DELETE  /api/comments/{<[0-9]+>id}                                              api.Comments.delete
-POST    /api/likes                                                              api.Likes.create
-DELETE  /api/likes/{<[0-9]+>id}                                                 api.Likes.delete
-GET     /api/likes                                                              api.Likes.read
+POST    /api/votes                                                              api.Votes.create
+DELETE  /api/votes/{<[0-9]+>id}                                                 api.Votes.delete
+GET     /api/votes                                                              api.Votes.read
 
 
 *       /api/*                                                                  404

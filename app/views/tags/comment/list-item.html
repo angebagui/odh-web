@@ -1,21 +1,22 @@
 <div class="comment-list-item clearfix">
     #{user.picture user : _comment.author, size : 60, class : 'comment-list-item-user-picture pull-left' /}
     <div class="comment-list-item-body">
+        <div class="right comment-list-item-time">
+            <i class="icon-clock"></i>
+            #{block.time time : _comment.created /}
+        </div>
         <div class="comment-list-item-user-name">
             #{user.name user : _comment.author /}
         </div>
-        <p>
+        <p class="comment-list-item-content">
             ${_comment.content}
         </p>
-        <div class="comment-list-item-extras">
-            <span class="comment-list-item-date"> <i class="icon-time"></i> <em class="timeago" title="${_comment.created}">${_comment.created}</em></span>
+        <div class="comment-list-item-actions clearfix">
+             #{vote.button class : 'label secondary radius', me : _me, objectType : 'comment', objectId : _comment.id, voteCount : _comment.voteCount /}
             #{if _me?.id == _comment.author.id}
-            -
-            <strong>
-                #{a @api.Comments.delete(_comment.id), class : 'comment-delete'}
+                #{a @api.Comments.delete(_comment.id), class : 'label radius alert comment-delete right'}
                     <i class="icon-trash"></i> &{'_.delete'}
                 #{/a}
-            </strong>
             #{/if}
         </div>
     </div>

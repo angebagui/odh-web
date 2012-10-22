@@ -1,51 +1,22 @@
 #{extends 'web.html' /}
 #{set title : document.title /}
-#{i18n keys:['auth.login.needed', 'document.copy.error', 'document.copy.success', 'document.openOnGoogleDrive'] /}
-
-<div class="copy-result"></div>
-<div class="progress progress-striped active hide">
-    <div class="bar" style="width: 100%;">
-    </div>
-</div>
-<div class="row-fluid">
-    <div class="span12">
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                 #{if me?.id == document.owner?.id}
-                    <a href="@{edit(document.id)}"  class="btn btn-primary"><i class="icon-pencil"></i>
-                        &{'document.edit'}
-                    </a>
-                #{/if}
-            </div>
-            <div class="btn-group">
-                #{else}
-                    <button type="button" class="btn btn-success button-copy" data-loading-text="&{'_.loading'}"><i class="icon-copy"></i>
-                        &{'document.copyToGoogleDrive'}
-                    </button>
-                #{/else}
-            </div>
-            <div class="btn-group">
-                 #{if me}
-                    #{if me.getLikeForObject('document', document.id)}
-                        <a href="#" class="btn btn-unlike" data-id="${me.getLikeForObject('document', document.id).id}"  data-object-id="${document.id}" data-object-type="document" data-loading-text="&{'_.loading'}">
-                            <i class="icon-thumbs-up"></i>
-                            <span class="label-text">&{'_.unlike'}</span>
-                        </a>
-                   #{/if}
-                   #{else}
-                        <a href="#" class="btn btn-like" data-object-id="${document.id}" data-object-type="document" data-loading-text="&{'_.loading'}">
-                           <i class="icon-thumbs-up"></i>
-                            <span class="label-text">&{'_.like'}</span>
-                        </a>
-                  #{/else}
-                #{/if}
-            </div>
-            <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-download-alt"></i> &{'document.downloadAs'}
-                    <span class="caret"></span>
+#{i18n keys:['_.you', 'auth.login.needed', 'document.copy.error', 'document.copy.success', 'document.openOnGoogleDrive'] /}
+<div class="row">
+    <div class="twelve columns">
+        <div class="copy-result"></div>
+        <div class="progress progress-striped active hide">
+            <div class="bar" style="width: 100%;"></div>
+        </div>
+        <div class="button-section">
+            #{if me?.id == document.owner?.id}
+                <a href="@{edit(document.id)}"  class="button small"><i class="icon-pencil"></i>
+                    &{'document.edit'}
                 </a>
-                <ul class="dropdown-menu">
+            #{/if}
+            #{vote.button class : 'button small', me : me, objectType : 'document', objectId : document.id, voteCount : document.voteCount /}
+            <div class="small button dropdown">
+                <i class="icon-download"></i> &{'document.download'} (${document.downloadCount})
+                <ul>
                     #{list document.exportLinks}
                         <li>
                             #{a @api.Documents.download(_.id)}
@@ -55,103 +26,79 @@
                     #{/list}
                 </ul>
             </div>
+            #{if me}
+                #{if document.owner?.id != me.id}
+                    <button type="button" class="button small button-copy" data-loading-text="&{'_.loading'}"><i class="icon-google-drive"></i>
+                        &{'document.copyToGoogleDrive'} (${document.copyCount})
+                    </button>
+                #{/if}
+                <a href="#new-comment" class="button small button-comment-focus">
+                    <i class="document-stat-icon icon-comments-2"></i>
+                    &{'document.postComment'} (${document.commentCount})
+                </a>
+                <a href="#" class="button small button-login">
+                    <i class="document-stat-icon icon-comments"></i>
+                    &{'document.startDiscussion'} (${document.discussionCount})
+                </a>
+            #{/if}
+            #{else}
+                <button type="button" class="button small button-login" data-loading-text="&{'_.loading'}">
+                    <i class="icon-google-drive"></i>
+                    &{'document.copyToGoogleDrive'} (${document.copyCount})
+                </button>
+                <a href="#" class="button small button-login">
+                    <i class="document-stat-icon icon-comments-2"></i>
+                    &{'document.postComment'} (${document.commentCount})
+                </a>
+                <a href="#" class="button small button-login">
+                    <i class="document-stat-icon icon-comments"></i>
+                    &{'document.startDiscussion'} (${document.discussionCount})
+                </a>
+            #{/else}
         </div>
     </div>
 </div>
-<div class="row-fluid">
-    <div class="span8">
-        <div class="row-fluid">
-            <div class="span12">
-                #{if document.embedLink}
-                    <iframe src="${document.embedLink.raw()}" width="100%" height="800" frameborder="0"></iframe>
-                #{/if}
-                #{else}
-                    <div class="alert alert-error">
-                        <h3>&{'_.sorry'}</h3>
-                        <p>&{'document.previewNotAvailable'}</p>
-                    </div>
-                #{/else}
+<div class="row">
+    <div class="eight columns">
+        #{if document.embedLink}
+            <iframe src="${document.embedLink.raw()}" width="100%" height="850" class="document-iframe" frameborder="0"></iframe>
+        #{/if}
+        #{else}
+            <div class="alert-box error">
+                <h3>&{'_.sorry'}</h3>
+                    <p>&{'document.previewNotAvailable'}</p>
             </div>
+        #{/else}
+        <div>
+            <span class='st_googleplus_hcount' displayText='Google +' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+            <span class='st_twitter_hcount' displayText='Twedsdset' st_url="@@{web.Documents.read(document.id, document.slug)}" st_via="opendocshub"></span>
+            <span class='st_facebook_hcount' displayText='Facebook' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+            <span class='st_linkedin_hcount' displayText='LinkedIn' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
+            <span class='st_email_hcount' displayText='Email'></span>
         </div>
-        <div class="row-fluid">
-            <div class="span12">
-                <h3>&{'_.comments'}</h3>
-                <div id="document-comments">
-                    <div class="progress progress-striped active">
-                        <div class="bar" style="width: 100%;">
-                        </div>
-                    </div>
+        <h4 class="box-header">&{'_.comments'} (${document.commentCount})</h4>
+        <div id="document-comments">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;">
                 </div>
-                <hr />
             </div>
         </div>
     </div>
-    <div class="span4">
-        <div class="document-view-infos">
-            <div class="box">
-                <span class='st_googleplus_vcount' displayText='Google +' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
-                <span class='st_twitter_vcount' displayText='Twedsdset' st_url="@@{web.Documents.read(document.id, document.slug)}" st_via="opendocshub"></span>
-                <span class='st_facebook_vcount' displayText='Facebook' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
-                <span class='st_linkedin_vcount' displayText='LinkedIn' st_url="@@{web.Documents.read(document.id, document.slug)}"></span>
-                <span class='st_email_vcount' displayText='Email'></span>
+    <div class="four columns">
+        <div class="box">
+            <h4 class="box-header">&{'_.discussions'} (${document.discussionCount})</h4>
+            <div class="box-content">
+                #{if taggedDiscussions}
+                #{/if}
+                #{else}
+                    <p>There are no discussions about this document yet. <a href="#" class="button tiny success">Start one!</a>
+                #{/else}
             </div>
-            <div class="box">
-                <h3>&{'document.stats'}</h3>
-                <div class="box-content">
-                    <table class="document-view-stats">
-                        <tr>
-                            <td>
-                                 <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-thumbs-up"></i>
-                                    <span class="document-view-stat-number">${document.likeCount}</span>
-                                    &{'_.likes'}
-                                 </div>
-                            </td>
-                            <td>
-                                <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-copy"></i>
-                                    <span class="document-view-stat-number">${document.copyCount}</span>
-                                    &{'_.copies'}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-download-alt"></i>
-                                    <span class="document-view-stat-number">${document.downloadCount}</span>
-                                    &{'_.downloads'}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-eye-open"></i>
-                                    <span class="document-view-stat-number">${document.viewCount}</span>
-                                    &{'_.views'}
-                                </div>
-                            </td>
-                            <td>
-                                 <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-comments"></i>
-                                    <span class="document-view-stat-number">${document.commentCount}</span>
-                                    &{'_.comments'}
-                                </div>
-                            </td>
-                            <td>
-                                 <div class="document-view-stat">
-                                    <i class="document-view-stat-icon icon-th-list"></i>
-                                    <span class="document-view-stat-number">${document.commentCount}</span>
-                                    &{'_.discussions'}
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="box">
-                <h3>&{'document.about'}</h3>
-                <div class="box-content">
-                    <table class="table">
+        </div>
+        <div class="box">
+            <h4 class="box-header">&{'document.about'}</h4>
+            <div class="box-content">
+                    <table class="document-view-infos">
                         <tr>
                             <td class="table-label">&{'document.sharedBy'}</td>
                             <td>
@@ -174,7 +121,7 @@
                         </tr>
                         <tr>
                             <td class="table-label">&{'document.created'}</td>
-                            <td><div class="timeago" title="${_.created}">${document.created}</div></td>
+                            <td>#{block.time time : document.created /}</td>
                         </tr>
                         <tr>
                             <td class="table-label">&{'document.description'}</td>
@@ -185,30 +132,45 @@
                         <tr>
                             <td class="table-label">&{'document.source'}</td>
                             <td>
-                                ${document.source}
+                                <p class="document-source">
+                                    ${document.source}
+                                 </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">&{'document.tags'}</td>
+                            <td>
+                                #{list document.tagsAsList}
+                                    <a href="@{web.Documents.list(_)}"><span class="label round secondary">${_}</span></a>
+                                #{/list}
                             </td>
                         </tr>
                         <tr>
                             <td class="table-label">Original</td>
                             <td>
                                 <a href="${document.alternateLink}" target="_blank">
-                                    <i class="icon-external-link"></i> &{'document.openOnGoogleDrive'}
+                                    <i class="icon-new-tab"></i> &{'document.openOnGoogleDrive'}
                                 </a>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
-        </div>
     </div>
 </div>
+
 #{set 'moreScripts'}
 
 <script type="text/javascript">
+    function refreshVoteCount(objectType, objectId, voteCount) {
+        var el = $('.' + objectType + '-' + objectId + '-voteCount');
+        el.html(voteCount);
+    }
+
     function loadDocumentComments() {
-        var listCommentsAction = #{jsRoute @web.Documents.listComments(':id', ':page') /};
+        var listCommentsAction = #{jsRoute @web.Comments.list(':objectType', ':objectId', ':page') /};
         $.ajax({
-            url : listCommentsAction.url({id: ${document.id}, page : 1}),
+            url : listCommentsAction.url({objectType : 'document', objectId: ${document.id}, page : 1}),
             type : listCommentsAction.method
         }).success(function(data){
             $('#document-comments').html(data);
@@ -216,10 +178,10 @@
     };
 
     $(document).ready(function() {
-        $('button.btn').button();
+        $('.button').button();
         $('.button-copy').click(function() {
             #{if me == null}
-                $('.copy-result').html('<div class="alert"><a href="/auth/google/code?next=${request.url}">' + i18n('auth.login.needed') + '</a></div>');
+                $('.copy-result').html('<div class="alert-box"><a href="/auth/google/code?next=${request.url}">' + i18n('auth.login.needed') + '</a></div>');
                 return false;
             #{/if}
             $('.button-copy').button('loading');
@@ -248,7 +210,7 @@
                                     $('.progress').removeClass('progress-warning');
                                     if (data.status == 'SUCCESS') {
                                         $('.progress').addClass('progress-success');
-                                        $('.copy-result').html('<div class="alert alert-success">' + i18n('document.copy.success') + ' <a href="' + data.result + '" target="_blank"><strong><i class="icon-external-link"></i> ' + i18n('document.openOnGoogleDrive') + '</strong></a></div>');
+                                        $('.copy-result').html('<div class="alert-box success">' + i18n('document.copy.success') + ' <a href="' + data.result + '" target="_blank"><strong><i class="icon-new-tab"></i> ' + i18n('document.openOnGoogleDrive') + '</strong></a></div>');
                                         $('.button-copy').button('reset');
                                         clearInterval(checkInterval);
                                     } else if (data.status == 'FAIL') {
@@ -263,7 +225,7 @@
                                 }).error(function(data) {});
                             } else {
                                 $('.progress').removeClass('progress-warning');
-                                $('.copy-result').html('<div class="alert alert-error">' + i18n('document.copy.error') + '</div>');                                
+                                $('.copy-result').html('<div class="alert-box alert">' + i18n('document.copy.error') + '</div>');                                
                                 $('.progress').addClass('progress-danger');
                                 $('.button-copy').button('reset');
                                 clearInterval(checkInterval);
@@ -273,7 +235,7 @@
                     );
                 }
             }).error(function(data) {
-                $('.copy-result').html('<div class="alert alert-error">' + i18n('document.upload.error.notice') + '</div>');
+                $('.copy-result').html('<div class="alert-box alert">' + i18n('document.upload.error.notice') + '</div>');
                 $('.progress').addClass('progress-danger');
                 $('button.btn').button('reset');
             });
@@ -305,11 +267,11 @@
 
     $('.comment-new-form').live('submit', function() {
         var form = this;
-        var button = $(form).find('.btn-primary');
+        var button = $(form).find('.button-comment-create');
         var list =  $(form).parent().parent().prev(); // not really nice, but will do for now
 
-        var alert =  $(form).find('.alert');
-        alert.hide();
+        var alert =  $(form).find('.alert-box');
+            alert.hide();
             button.button('loading');
             var createCommentAction = #{jsRoute @api.Comments.create() /};
             $.ajax({
@@ -319,7 +281,7 @@
             }).success(function(data) {
                 loadDocumentComments();
             }).error(function() {
-                alert.addClass('alert-error').html('&{"error.notice"}').show();
+                alert.addClass('alert').html('&{"error.notice"}').show();
             }).complete(function() {
                 button.button('reset');
             });
@@ -339,54 +301,64 @@
         return false;
     });
 
-    $('.btn-like').live('click', function() {
+    $('.btn-vote').live('click', function() {
         var _this = $(this);
         var objectType = _this.data('objectType');
         var objectId = _this.data('objectId');
-        var createLikeAction = #{jsRoute @api.Likes.create() /};
+        var createVoteAction = #{jsRoute @api.Votes.create() /};
         _this.button('loading');
         $.ajax({
-            url : createLikeAction.url(),
-            type : createLikeAction.method,
+            url : createVoteAction.url(),
+            type : createVoteAction.method,
             data : {
                 authenticityToken : '${session.authenticityToken}',
-                'like.objectType' : objectType,
-                'like.objectId' : objectId
+                'vote.objectType' : objectType,
+                'vote.objectId' : objectId
             }
          }).success(function(data) {
             _this.button('reset');
-            _this.removeClass('btn-like');
-            _this.addClass('btn-unlike');
-            _this.find('.label-text').html('&{'_.unlike'}');
+            _this.removeClass('btn-vote');
+            _this.addClass('btn-unvote');
             _this.data('id', data.id);
+            var countEl = _this.find('.' + data.objectType + '-' + data.objectId + '-voteCount');
+            var html = "";
+            if (data.objectVoteCount > 1) {
+                html = "" + (data.objectVoteCount - 1) + ' + ' + i18n('_.you');
+            } else {
+                html = i18n('_.you');
+            }
+            countEl.html(html);
          }).error(function() {
             _this.button('reset');
          });
         return false;
     });
 
-    $('.btn-unlike').live('click', function() {
+    $('.btn-unvote').live('click', function() {
         var _this = $(this);
         var id = _this.data('id');
-        var deleteLikeAction = #{jsRoute @api.Likes.delete(':id') /};
+        var deleteVoteAction = #{jsRoute @api.Votes.delete(':id') /};
         _this.button('loading');
         $.ajax({
-            url : deleteLikeAction.url({id : id}),
-            type : deleteLikeAction.method,
+            url : deleteVoteAction.url({id : id}),
+            type : deleteVoteAction.method,
             data : {
                 authenticityToken : '${session.authenticityToken}',
             }
          }).success(function(data) {
             _this.button('reset');
-            _this.removeClass('btn-unlike');
-            _this.addClass('btn-like');
-            _this.find('.label-text').html('&{'_.like'}');
+            _this.removeClass('btn-unvote');
+            _this.addClass('btn-vote');
+            var countEl = _this.find('.' + data.objectType + '-' + data.objectId + '-voteCount');
+            countEl.html(data.objectVoteCount);
          }).error(function() {
             _this.button('reset');
          });
         return false;
     });
-
+    $('.button-comment-focus').live('click', function() {
+        $('.comment-new-form textarea').focus();
+    });
 </script>
 
 <script type="text/javascript">var switchTo5x=true;</script>

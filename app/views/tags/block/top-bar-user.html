@@ -1,15 +1,13 @@
-<ul class="nav">
+<ul class="left">
+    <li class="divider"></li>
     #{if _user}
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-user"></i> &{'_.account'}
-                <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
+        <li class="has-dropdown">
+            <a href="#"><i class="icon-user"></i> &{'_.account'}</a>
+            <ul class="dropdown">
                 <li>
                     #{user.picture user : _user, size : 20, showName : true /}
                 </li>
-                 <li class="divider"></li>
+                <li class="divider"></li>
                 <li>
                     #{a @web.Auth.logout()}
                         &{'auth.logout'}
@@ -20,8 +18,8 @@
     #{/if}
     #{else}
         <li>
-            #{a @web.Auth.googleCode()}
-                <i class="icon-google-plus-sign"></i>
+            #{a @web.Auth.googleCode(request.url)}
+                <i class="icon-google-plus"></i>
                 &{'auth.login'}
             #{/a}
         </li>

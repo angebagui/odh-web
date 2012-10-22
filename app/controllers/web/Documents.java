@@ -10,15 +10,22 @@ import models.Document;
 import models.User;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
+import play.mvc.After;
+import play.mvc.Before;
 import play.mvc.With;
 import controllers.AppController;
 
 @With(WebController.class)
 public class Documents extends AppController {
 
+    @Before
+    public static void addViewArgs() {
+        List <Category> categories = Category.findForDocuments();
+        renderArgs.put("categories", categories);
+    }
+
     public static void add() {
-        List<Category> categories = Category.all().fetch();
-        render(categories);
+        render();
     }
 
     public static void edit(long id) {
@@ -54,13 +61,6 @@ public class Documents extends AppController {
         } else {
             notFound();
         }
-    }
-
-    public static void listComments(long id, Integer page) {
-        Document document = Document.findById(id);
-        notFoundIfNull(document);
-        List<Comment> comments = Comment.findByDocument(document.id, page);
-        render(comments, document);
     }
 
 }

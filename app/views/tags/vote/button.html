@@ -1,0 +1,17 @@
+#{if _me}
+    #{if _me.getVoteForObject(_objectType, _objectId)}
+        <a href="#" class="${_class} btn-unvote" data-id="${_me.getVoteForObject(_objectType, _objectId).id}" data-object-id="${ _objectId}" data-object-type="${_objectType}" data-loading-text="&{'_.loading'}">
+            <i class="vote-icon icon-thumbs-up"></i> (<span class="${_objectType}-${_objectId}-voteCount">${_voteCount > 1 ? _voteCount - 1 + ' + ' + messages.get('_.you') : messages.get('_.you')}</span>)
+        </a>
+    #{/if}
+    #{else}
+        <a href="#" class="${_class} btn-vote"  data-object-id="${ _objectId}" data-object-type="${_objectType}" data-loading-text="&{'_.loading'}">
+            <i class="vote-icon icon-thumbs-up"></i> (<span class="${_objectType}-${_objectId}-voteCount">${_voteCount}</span>)
+        </a>
+    #{/else}
+#{/if}
+#{else}
+    <a href="#" class="${_class} button-login">
+        <i class="vote-icon icon-thumbs-up"></i> (<span class="${_objectType}-${_objectId}-voteCount">${_voteCount}</span>)
+    </a>
+#{/else}
