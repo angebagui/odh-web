@@ -24,6 +24,7 @@ public class WebController extends AppController {
         "web.Auth.googleOAuth",
         "web.Comments.list",
         "web.Discussions.goTo",
+        "web.Discussions.list",
         "web.Discussions.view",
         "web.Documents.go",
         "web.Documents.list",
@@ -68,7 +69,7 @@ public class WebController extends AppController {
     public static void index() {
         List<Document> recentDocuments = Document.find("order by created desc").fetch(4);
         List<User> recentUsers = User.find("order by created desc").fetch(12);
-        List <Category> documentCategories = Category.findForDocuments();
+        List <Category> documentCategories = Category.findForDocument();
         render(documentCategories, recentDocuments, recentUsers);
     }
 

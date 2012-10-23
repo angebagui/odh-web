@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 import models.Category;
 import models.Comment;
+import models.DiscussionDocument;
 import models.Document;
 import models.User;
 import play.db.jpa.JPA;
@@ -20,7 +21,7 @@ public class Documents extends AppController {
 
     @Before
     public static void addViewArgs() {
-        List <Category> categories = Category.findForDocuments();
+        List <Category> categories = Category.findForDocument();
         renderArgs.put("categories", categories);
     }
 
@@ -56,11 +57,9 @@ public class Documents extends AppController {
 
     public static void read(long id, String slug) {
         Document document = Document.findById(id);
-        if (document != null) {
-            render(document);
-        } else {
-            notFound();
-        }
+        notFoundIfNull(document);
+        List<DiscussionDocument> discussions = DiscussionDocument.findByDocument(document.id);
+        render(document, discussions);
     }
 
 }

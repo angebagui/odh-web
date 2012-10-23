@@ -43,11 +43,15 @@ DELETE  /api/documents/{<[0-9]+>id}                                             
 POST    /api/documents/downloads/{<[0-9]+>exportLinkId}                         api.Documents.download
 GET     /api/documentsjobsstatus/{<[0-9]+>id}                                   api.DocumentsJobsStatus.read
 
+GET     /api/discussions                                                        api.Discussions.list
 POST    /api/discussions                                                        api.Discussions.create
 PUT     /api/discussions/{<[0-9]+>id}                                           api.Discussions.update
 POST    /api/discussions/{<[0-9]+>id}/viewed                                    api.Discussions.markAsViewed
 DELETE  /api/discussions/{<[0-9]+>id}                                           api.Discussions.delete
 POST    /api/discussions/{<[0-9]+>id}/documents                                 api.Discussions.tagDocument
+
+POST    /api/discussionDocuments                                                api.DiscussionDocuments.create
+DELETE  /api/discussionDocuments                                                api.DiscussionDocuments.delete
 
 POST    /api/comments                                                           api.Comments.create
 DELETE  /api/comments/{<[0-9]+>id}                                              api.Comments.delete

@@ -10,6 +10,9 @@
             </p>
         </div>
         #{form @api.Discussions.create(), class : 'discussion-create-form'}
+            #{if document}
+                <input type="hidden" name="document.id" value = "${document.id}" />
+            #{/if}
             #{field 'discussion.title'}
                 #{form.input field : field, value : discussion?.title, class : 'input-xxlarge', required : true /}
             #{/field}
@@ -29,16 +32,16 @@
         #{/form}
     </div>
     <div class="four columns">
-        #{if taggedDocument}
+        #{if document}
         <div class="panel">
-            <h4>Tagged Document</h4>
+            <h4>Linked Document</h4>
             <ul>
                 <li>
-                    #{document.title document : taggedDocument /}
+                    #{document.title document : document /}
                 </li>
             </ul>
             <p>
-                Please note that you will be able to tag additional documents to this discussion once you save it.
+                Please note that you will be able to link additional documents to this discussion once you save it.
             </p>
         </div>
         #{/if}
@@ -63,7 +66,7 @@
                 url : createDiscussionAction.url(),
                 type : createDiscussionAction.method,
                 data : $('form').serialize()
-            }).success(function(data) {            
+            }).success(function(data) {
                 $('#result').addClass('success').html(i18n('discussion.create.success'));
                 var goToDiscussionAction = #{jsRoute @web.Discussions.go(':id') /};
                 window.location = goToDiscussionAction.url({id : data.id});
@@ -74,7 +77,7 @@
                     $('[name=\'' + field + '\']').addClass('error');
                     $('[name=\'' + field + '\']').parents('.row').first().find('small.error').html(message).show();
                 });
-            }).complete(function() {                
+            }).complete(function() {
                 $('#result').removeClass('hide');
                 $(btn).button('reset');
             });

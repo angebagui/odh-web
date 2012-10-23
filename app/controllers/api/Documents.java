@@ -10,6 +10,7 @@ import jobs.CopyDocumentJob;
 import jobs.IncrementDocumentDownloadCountJob;
 import models.Category;
 import models.Comment;
+import models.DiscussionDocument;
 import models.Document;
 import models.DocumentJobStatus;
 import models.ExportLink;
@@ -143,6 +144,7 @@ public class Documents extends AppController {
                 check.source = document.source;
                 check.description = document.description;
                 check.tags = document.tags;
+                check.owner = me;
                 document = check;
                 if (document.validateAndSave()) {
                     renderJSON(document);

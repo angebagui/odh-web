@@ -8,11 +8,6 @@
             <div class="bar" style="width: 100%;"></div>
         </div>
         <div class="button-section">
-            #{if me?.id == document.owner?.id}
-                <a href="@{edit(document.id)}"  class="button small"><i class="icon-pencil"></i>
-                    &{'document.edit'}
-                </a>
-            #{/if}
             #{vote.button class : 'button small', me : me, objectType : 'document', objectId : document.id, voteCount : document.voteCount /}
             <div class="small button dropdown">
                 <i class="icon-download"></i> &{'document.download'} (${document.downloadCount})
@@ -33,12 +28,8 @@
                     </button>
                 #{/if}
                 <a href="#new-comment" class="button small button-comment-focus">
-                    <i class="document-stat-icon icon-comments-2"></i>
+                    <i class="icon-comments-2"></i>
                     &{'document.postComment'} (${document.commentCount})
-                </a>
-                <a href="#" class="button small button-login">
-                    <i class="document-stat-icon icon-comments"></i>
-                    &{'document.startDiscussion'} (${document.discussionCount})
                 </a>
             #{/if}
             #{else}
@@ -47,12 +38,8 @@
                     &{'document.copyToGoogleDrive'} (${document.copyCount})
                 </button>
                 <a href="#" class="button small button-login">
-                    <i class="document-stat-icon icon-comments-2"></i>
+                    <i class="icon-comments-2"></i>
                     &{'document.postComment'} (${document.commentCount})
-                </a>
-                <a href="#" class="button small button-login">
-                    <i class="document-stat-icon icon-comments"></i>
-                    &{'document.startDiscussion'} (${document.discussionCount})
                 </a>
             #{/else}
         </div>
@@ -87,81 +74,102 @@
     <div class="four columns">
         <div class="box">
             <h4 class="box-header">&{'_.discussions'} (${document.discussionCount})</h4>
+            <div class="button-section">
+                <a href="@{web.Discussions.add(document.id)}" class="button small success">
+                    <i class="icon-comments-3">&nbsp;</i> &{'_.startDiscussion'}
+                </a>
+             </div>
             <div class="box-content">
-                #{if taggedDiscussions}
+                #{if discussions}
+                    <ul>
+                    #{list discussions}
+                        <li>
+                            #{discussion.title discussion : _.discussion /}
+                        </li>
+                    #{/list}
+                    </ul>
                 #{/if}
                 #{else}
                     <p>
                         There are no discussions about this document yet.
                     </p>
-                    <a href="@{web.Discussions.add(document.id)}" class="button small success">
-                        <i class="icon-comments-3">&nbsp;</i>
-                            &{'_.startDiscussion'}
-                    </a>
                 #{/else}
             </div>
         </div>
         <div class="box">
             <h4 class="box-header">&{'document.about'}</h4>
-            <div class="box-content">
-                    <table class="document-view-infos">
-                        <tr>
-                            <td class="table-label">&{'document.sharedBy'}</td>
-                            <td>
-                                #{user.picture user : document.owner, size : 30, showName : true /}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">&{'document.category.id'}</td>
-                            <td><a href="@{list(null, document.category.id, null, null)}">${document.category.name}</a></td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">&{'document.mimeType'}</td>
-                            <td>
-                                ${document.mime.humanFriendlyName}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">&{'document.fileSize'}</td>
-                            <td>${document.fileSize.formatSize()}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">&{'document.created'}</td>
-                            <td>#{block.time time : document.created /}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">&{'document.description'}</td>
-                            <td>
-                                ${document.description}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">&{'document.source'}</td>
-                            <td>
-                                <p class="document-source">
-                                    ${document.source}
-                                 </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">&{'document.tags'}</td>
-                            <td>
-                                #{list document.tagsAsList}
-                                    <a href="@{web.Documents.list(_)}"><span class="label round secondary">${_}</span></a>
-                                #{/list}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-label">Original</td>
-                            <td>
-                                <a href="${document.alternateLink}" target="_blank">
-                                    <i class="icon-new-tab"></i> &{'document.openOnGoogleDrive'}
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+            <div class="button-section">
+                #{if me?.id == document.owner?.id}
+                    <a href="@{edit(document.id)}"  class="button small alert"><i class="icon-pencil"></i>
+                        &{'document.edit'}
+                    </a>
+                #{/if}
             </div>
+            <div class="box-content">
+                <table class="document-view-infos">
+                    <tr>
+                        <td class="table-label">&{'document.sharedBy'}</td>
+                        <td>
+                            #{user.picture user : document.owner, size : 30, showName : true /}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'document.category.id'}</td>
+                        <td><a href="@{list(null, document.category.id, null, null)}">${document.category.name}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'document.mimeType'}</td>
+                        <td>
+                             ${document.mime.humanFriendlyName}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'document.fileSize'}</td>
+                        <td>${document.fileSize.formatSize()}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'document.created'}</td>
+                        <td>#{block.time time : document.created /}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'document.description'}</td>
+                        <td>
+                            ${document.description}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'document.source'}</td>
+                        <td>
+                             <p class="document-source">
+                                 ${document.source}
+                             </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'document.tags'}</td>
+                        <td>
+                            #{list document.tagsAsList}
+                                <a href="@{web.Documents.list(_)}"><span class="label round secondary">${_}</span></a>
+                            #{/list}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'_.views'}</td>
+                        <td>
+                            ${document.viewCount }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">Original</td>
+                        <td>
+                            <a href="${document.alternateLink}" target="_blank">
+                                <i class="icon-new-tab"></i> &{'document.openOnGoogleDrive'}
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 

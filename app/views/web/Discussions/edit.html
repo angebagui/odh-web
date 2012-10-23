@@ -1,0 +1,83 @@
+#{extends 'web.html' /}
+#{set title : discussion.title/}
+#{set 'subTitle'}
+    &{'discussion.edit'}
+#{/set}
+#{i18n keys:['discussion.update.error', 'discussion.update.success', 'discussion.delete.success', 'discussion.delete.error'] /}
+<div class="row">
+    <div class="eight columns">
+        <div class="alert-box hide" id="result">
+            <p class="message">
+            </p>
+        </div>
+        #{form @api.Discussions.update(discussion.id), enctype:'multipart/form-data'}
+            #{field 'discussion.title'}
+                #{form.input field : field, value : discussion?.title, class : 'input-xxlarge', required  : true /}
+            #{/field}
+            #{field 'discussion.category.id'}
+                #{form.select field : field, items : categories, valueProperty : 'id', labelProperty : 'name',  value : discussion?.category?.id /}
+            #{/field}
+            #{field 'discussion.content'}
+                #{form.textarea field : field, value : discussion?.content, required  : true /}
+            #{/field}
+            #{field 'discussion.tags'}
+                #{form.input field : field, value : discussion?.tags, class : 'input-xxlarge', required  : true /}
+            #{/field}
+            <div class="form-actions">
+                <input type="submit" value="&{'discussion.update'}" class="button button-discussion-update" data-loading-text="&{'_.loading'}"/>
+                #{a @web.Discussions.view(discussion?.id, discussion?.slug), class : 'button secondary'}&{'_.cancel'}#{/a}
+            </div>
+        #{/form}
+
+        #{a @api.Discussions.delete(discussion.id), class : 'button alert small button-discussion-delete', 'data-loading-text' : messages.get('_.loading')}&{'discussion.delete'}#{/a}
+    </div>
+</div>
+#{set 'moreScripts'}
+<script type="text/javascript">
+    $('.button-discussion-update').button();
+    $(document).ready(function() {
+         $('.button-discussion-update').click(function() {
+            $('#result').removeClass('alert');
+            $('#result').removeClass('success');
+            var btn = this;
+            $(btn).button('loading');
+            var updateDiscussionAction = #{jsRoute @api.Discussions.update(':id') /};
+            $.ajax({
+                url : updateDiscussionAction.url({id : ${discussion.id}}),
+                type : updateDiscussionAction.method,
+                data : $('form').serialize()
+            }).success(function(data) {            
+                $('#result').addClass('success').html(i18n('discussion.update.success'));
+            }).error(function(data) {                
+                $('#result').addClass('alert').html(i18n('discussion.update.error'));
+            }).complete(function() {                
+                $('#result').removeClass('hide');
+                $(btn).button('reset');
+            });
+            return false;
+         });
+         
+         $('.button-discussion-delete').click(function() {
+            var btn = this;
+            $(btn).button('loading');
+            $('#result').removeClass('alert');
+            $('#result').removeClass('success');
+            var deleteDiscussionAction = #{jsRoute @api.Discussions.delete(':id') /};
+            $.ajax({
+                url : deleteDiscussionAction.url({id : ${discussion.id}}),
+                type : deleteDiscussionAction.method,
+                data : { authenticityToken : '${session.authenticityToken}'}
+            }).success(function(data) {            
+                $('#result').addClass('success').html(i18n('discussion.update.success'));
+                window.location = '@@{web.Discussions.list()}';
+            }).error(function(data) {                
+                $('#result').addClass('alert').html(i18n('discussion.delete.error'));
+            }).complete(function() {
+                $('#result').removeClass('hide');
+                $(btn).button('reset');
+            });
+            return false;
+         });
+    });
+</script>
+#{/set}

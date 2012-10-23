@@ -15,6 +15,7 @@ public class ApiController extends AppController {
     @Before(unless = {
         "api.Categories.list",
         "api.Categories.listDocuments",
+        "api.Discussions.list",
         "api.Documents.read",
         "api.Documents.readThumbnail",
         "api.Documents.markAsViewed",

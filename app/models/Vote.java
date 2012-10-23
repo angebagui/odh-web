@@ -68,16 +68,24 @@ public class Vote extends BaseModel {
         return count;
     }
 
+    public static void deleteAllForComment(long id) {
+        deleteAllForObject("comment", id);
+    }
+
+    public static void deleteAllForDiscussion(long id) {
+        deleteAllForObject("discussion", id);
+    }
+
+    public static void deleteAllForDocument(long id) {
+        deleteAllForObject("document", id);
+    }
+
     private static void deleteAllForObject(String objectType, long objectId) {
         if (objectType != null) {
             Vote.delete("objectType is ? and objectId is ?", objectType, objectId);
         } else {
             throw new RuntimeException("objectType parameter can't be null");
         }
-    }
-
-    public static void deleteAllForDocument(long id) {
-        deleteAllForObject("document", id);
     }
 
 }

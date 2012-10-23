@@ -79,11 +79,11 @@ public class User extends BaseModel implements RoleHolder {
     }
 
     public Vote getVoteForObject(String objectType, long objectId) {
-    	if (this.id!= null && objectType != null) {
-    		return Vote.find("user.id is ? and objectType is ? and objectId is ?", this.id, objectType.toLowerCase(), objectId).first();
-    	} else {
-    		return null;
-    	}
+        if (this.id != null && objectType != null) {
+            return Vote.find("user.id is ? and objectType is ? and objectId is ?", this.id, objectType.toLowerCase(), objectId).first();
+        } else {
+            return null;
+        }
     }
 
     @Override

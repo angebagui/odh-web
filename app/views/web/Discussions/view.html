@@ -2,31 +2,32 @@
 #{set title : discussion.title /}
 #{i18n keys:['_.you', 'auth.login.needed'] /}
 <div class="row">
-    <div class="eight columns">
+    <div class="twelve columns">
         <div class="button-section">
-            #{if me?.id == discussion.user?.id}
-                <a href="#"  class="button small"><i class="icon-pencil"></i>
-                    &{'discussion.edit'}
-                </a>
-            #{/if}
             #{vote.button class : 'button small', me : me, objectType : 'discussion', objectId : discussion.id, voteCount : discussion.voteCount /}
             #{if me}
                 <a href="#new-comment" class="button small button-comment-focus">
-                    <i class="document-stat-icon icon-comments-2"></i>
+                    <i class="icon-comments-2"></i>
                     &{'discussion.postComment'} (${discussion.commentCount})
                 </a>
             #{/if}
             #{else}
                 <a href="#" class="button small button-login">
-                    <i class="document-stat-icon icon-comments-2"></i>
+                    <i class="icon-comments-2"></i>
                     &{'discussion.postComment'} (${discussion.commentCount})
                 </a>
             #{/else}
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="eight columns">
         <div class="discussion-view">
-            <p class="lead">
-                ${discussion.content}
-            </p>
+            <div class="discussion-view-content">
+                <p class="lead">
+                    ${discussion.content}
+                </p>
+            </div>
             #{user.picture user : discussion.user, showName : true, size : 15 /}
             <div class="right">
                 <i class="icon-clock"></i>
@@ -41,9 +42,175 @@
             </div>
         </div>
     </div>
+    <div class="four columns">
+        <div class="box">
+            <h4 class="box-header">&{'_.documents'}</h4>
+            #{if documents}
+            <ul>
+                #{list documents}
+                    <li>
+                        #{if _.user.id == me?.id}
+                            #{a @api.DiscussionDocuments.delete(_.id), 'data-loading-text' : messages.get('_.loading'), class : 'button tiny alert right button-delete-discussionDocument'}Remove#{/a}
+                        #{/if}
+                        #{document.title document : _.document /}
+                    </li>
+                #{/list}
+            </ul>
+            #{/if}
+            #{else}
+                <p>
+                    There are no documents linked to this discussion yet.
+                </p>
+            #{/else}
+            <a href="#" class="discussion-link-document-button button small success"><i class="icon-copy"></i> Link document</a>
+        </div>
+        <div class="box">
+            <h4 class="box-header">&{'discussion.about'}</h4>
+            <div class="button-section">
+                #{if me?.id == discussion.user?.id}
+                    <a href="@{edit(discussion.id)}"  class="button small alert"><i class="icon-pencil"></i>
+                        &{'discussion.edit'}
+                    </a>
+                #{/if}
+            </div>
+            <div class="box-content">
+                <table class="document-view-infos">
+                    <tr>
+                        <td class="table-label">&{'discussion.startedBy'}</td>
+                        <td>
+                            #{user.picture user : discussion.user, size : 30, showName : true /}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'discussion.category.id'}</td>
+                        <td><a href="@{web.Discussions.list(null, discussion.category.id, null, null)}">${discussion.category.name}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'discussion.created'}</td>
+                        <td>#{block.time time : discussion.created /}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'discussion.tags'}</td>
+                        <td>
+                            #{list discussion.tagsAsList}
+                                <a href="@{web.Discussions.list(_)}"><span class="label round secondary">${_}</span></a>
+                            #{/list}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">&{'_.views'}</td>
+                        <td>
+                            ${discussion.viewCount }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 #{set 'moreScripts'}
     #{comment.scripts objectType : 'discussion', objectId : discussion.id, commentsElement : '#discussion-comments' /}
     #{vote.scripts /}
+<script>
+    var lastSearchKeyword =  '';
+    function searchDocuments() {
+        var keyword = $('.discussion-link-document-keyword').val();
+        if (lastSearchKeyword != keyword) {
+            var listDocumentsAction = #{jsRoute @api.Documents.list(':keyword') /};
+            $('.discussion-link-document-error').hide();
+            $('.discussion-link-document-progress').show();
+            lastSearchKeyword = keyword;
+            $.ajax({
+                url : listDocumentsAction.url({keyword : keyword}),
+                type : listDocumentsAction.method,
+            }).success(function(documents) {
+                if (documents.length > 0) {
+                    $('.discussion-link-document-document-list').html('');
+                    for(var i=0,j=documents.length; i<j; i++){
+                        var html = '<div class="box-list-row clearfix">'
+                        html += '<strong>' + documents[i].title +'</strong>'
+                        html += '<div class="button-bar right">';
+                        html += '<button class="button link-document-button success tiny" data-document-id="' + documents[i].id +'" data-loading-text="&{"_.loading"}"><i class="icon-copy"></i> Link document</button> ';
+                        html += '<a href="/documents/'+ documents[i].id +'/go" class="button link-document-button tiny" target="_blank"><i class="icon-new-tab"></i> Open</a>'
+                        html += '</div>';
+                        html += '</div>';
+                        $('.discussion-link-document-document-list').append(html);
+                    };
+                } else {
+                    $('.discussion-link-document-document-list').html('<div class="alert-box discussion-link-document-list-empty">&{"_.emptyList"}</div>');
+                }
+            }).error(function() {
+                $('.discussion-link-document-error').show();
+            }).complete(function() {
+                $('.discussion-link-document-progress').hide();
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        var createDiscussionDocumentsAction = #{jsRoute @api.DiscussionDocuments.create() /};
+        $('.discussion-link-document-button').live('click', function() {
+            $('.discussion-link-document-modal').reveal();
+            return false;
+        });
+        $('.discussion-link-document-search-form').live('submit', function() {
+            searchDocuments();
+            return false;
+        });
+
+        $('.discussion-link-document-keyword').keyup(function() {
+            searchDocuments();
+        });
+
+        $('.link-document-button').live('click', function() {
+            var button = $(this);
+            button.button('loading');
+            $.ajax({
+                url : createDiscussionDocumentsAction.url(),
+                type : createDiscussionDocumentsAction.method,
+                data : {
+                    'discussionDocument.document.id' : $(this).data('document-id'),
+                    'discussionDocument.discussion.id' : ${discussion.id},
+                    'authenticityToken' : '${session.authenticityToken}'
+                }
+            }).success(function(data) {
+                window.location = data.discussion.permalink;
+            }).complete(function() {
+                button.button('reset');
+            });
+            return false;
+        });
+        $('.button-delete-discussionDocument').live('click', function() {
+            var button = $(this);
+            button.prev().ajaxSubmit({
+                beforeSubmit : function() {
+                    button.button('loading');
+                },
+                success : function(data) {
+                    window.location = '${request.url}';
+                }
+            });
+            return false;
+        });
+    });
+</script>
+#{/set}
+#{set 'modalDialogs'}
+    <div class="discussion-link-document-modal reveal-modal medium">
+        <h2>Link document</h2>
+        <p>Start typing something and list of matching documents will show up.</p>
+        <form class="discussion-link-document-search-form">
+            <input type="text" class="discussion-link-document-keyword" placeholder="Document title, description, tags or source" />
+        </form>
+        <div class="progress progress-striped active hide discussion-link-document-progress">
+            <div class="bar" style="width: 100%;">
+            </div>
+        </div>
+        <div class="alert-box alert discussion-link-document-error hide">
+            &{'_.error'}
+        </div>
+        <div class="discussion-link-document-document-list"></div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
 #{/set}

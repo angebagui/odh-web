@@ -56,11 +56,11 @@ public class Category extends BaseModel {
         return this.name;
     }
 
-    public static List<Category> findForDocuments() {
+    public static List<Category> findForDocument() {
         return findForObjectType("document");
     }
     
-    public static List<Category> findForDiscussions() {
+    public static List<Category> findForDiscussion() {
         return findForObjectType("discussion");
     }
     

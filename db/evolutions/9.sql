@@ -87,7 +87,41 @@ CREATE TRIGGER ts_searchable_text
     BEFORE INSERT OR UPDATE ON discussion
     FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(searchable_text, 'pg_catalog.english', title, content, tags);
 
+CREATE TABLE discussiondocument
+(
+  id bigint NOT NULL,
+  created timestamp without time zone,
+  updated timestamp without time zone,
+  document_id bigint,
+  discussion_id bigint,
+  user_id bigint,
+  CONSTRAINT discussiondocument_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+ALTER TABLE discussiondocument
+  ADD CONSTRAINT fk_discussiondocument_document FOREIGN KEY (document_id)
+      REFERENCES "document" (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+      
+ALTER TABLE discussiondocument
+  ADD CONSTRAINT fk_discussiondocument_discussion FOREIGN KEY (discussion_id)
+      REFERENCES discussion (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+      
+ALTER TABLE discussiondocument
+  ADD CONSTRAINT fk_discussiondocument_user FOREIGN KEY (user_id)
+      REFERENCES user_ (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+
 # --- !Downs
+
+ALTER TABLE discussiondocument DROP CONSTRAINT fk_discussiondocument_user;
+ALTER TABLE discussiondocument DROP CONSTRAINT fk_discussiondocument_discussion;
+ALTER TABLE discussiondocument DROP CONSTRAINT fk_discussiondocument_document;
+DROP TABLE discussiondocument;
 
 DROP TRIGGER ts_searchable_text ON discussion;
 DROP INDEX discussion_search_idx;
