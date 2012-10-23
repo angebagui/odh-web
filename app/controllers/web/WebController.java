@@ -23,6 +23,8 @@ public class WebController extends AppController {
         "web.Auth.googleToken",
         "web.Auth.googleOAuth",
         "web.Comments.list",
+        "web.Discussions.goTo",
+        "web.Discussions.view",
         "web.Documents.go",
         "web.Documents.list",
         "web.Documents.read",

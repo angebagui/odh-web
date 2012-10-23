@@ -36,5 +36,8 @@
         #{if objectType == 'document'}
             <a href="/auth/google/code?next=@{web.Documents.go(objectId)}">&{'comment.auth.login.needed'} </a>
         #{/if}
+        #{elseif objectType == 'discussion'}
+            <a href="/auth/google/code?next=@{web.Discussions.go(objectId)}">&{'comment.auth.login.needed'} </a>
+        #{/elseif}
     </p>
 #{/else}

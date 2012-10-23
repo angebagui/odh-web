@@ -1,0 +1,59 @@
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.btn-vote').live('click', function() {
+        var _this = $(this);
+        var objectType = _this.data('objectType');
+        var objectId = _this.data('objectId');
+        var createVoteAction = #{jsRoute @api.Votes.create() /};
+        _this.button('loading');
+        $.ajax({
+            url : createVoteAction.url(),
+            type : createVoteAction.method,
+            data : {
+                authenticityToken : '${session.authenticityToken}',
+                'vote.objectType' : objectType,
+                'vote.objectId' : objectId
+            }
+         }).success(function(data) {
+            _this.button('reset');
+            _this.removeClass('btn-vote');
+            _this.addClass('btn-unvote');
+            _this.data('id', data.id);
+            var countEl = _this.find('.' + data.objectType + '-' + data.objectId + '-voteCount');
+            var html = "";
+            if (data.objectVoteCount > 1) {
+                html = "" + (data.objectVoteCount - 1) + ' + ' + i18n('_.you');
+            } else {
+                html = i18n('_.you');
+            }
+            countEl.html(html);
+         }).error(function() {
+            _this.button('reset');
+         });
+        return false;
+    });
+
+    $('.btn-unvote').live('click', function() {
+        var _this = $(this);
+        var id = _this.data('id');
+        var deleteVoteAction = #{jsRoute @api.Votes.delete(':id') /};
+        _this.button('loading');
+        $.ajax({
+            url : deleteVoteAction.url({id : id}),
+            type : deleteVoteAction.method,
+            data : {
+                authenticityToken : '${session.authenticityToken}',
+            }
+         }).success(function(data) {
+            _this.button('reset');
+            _this.removeClass('btn-unvote');
+            _this.addClass('btn-vote');
+            var countEl = _this.find('.' + data.objectType + '-' + data.objectId + '-voteCount');
+            countEl.html(data.objectVoteCount);
+         }).error(function() {
+            _this.button('reset');
+         });
+        return false;
+    });
+});
+</script>

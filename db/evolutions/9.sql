@@ -50,11 +50,14 @@ CREATE TABLE discussion (
   created timestamp without time zone,
   updated timestamp without time zone,
   "content" character varying(5000),
+  slug character varying(500),
   tags character varying(1000),
   title character varying(255),
   category_id bigint,
   user_id bigint,
   commentcount integer NOT NULL,
+  documentcount integer NOT NULL,
+  viewcount integer NOT NULL,
   votecount integer NOT NULL
 ) WITH (
   OIDS=FALSE
@@ -82,7 +85,7 @@ CREATE INDEX discussion_search_idx
 
 CREATE TRIGGER ts_searchable_text
     BEFORE INSERT OR UPDATE ON discussion
-    FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(searchable_text, 'pg_catalog.english', title, description, source);
+    FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(searchable_text, 'pg_catalog.english', title, content, tags);
 
 # --- !Downs
 

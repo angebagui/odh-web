@@ -7,7 +7,7 @@
     </li>
     <li>
         <a href="@{web.Documents.list()}">
-            <i class="icon-folder"></i>
+            <i class="icon-copy"></i>
             &{'_.documents'}
         </a>
     </li>
@@ -18,9 +18,15 @@
         </a>
     </li>
     <li>
-        <a href="@{web.Documents.add}">
+        <a href="@{web.Documents.add()}">
             <i class="icon-upload">&nbsp;</i>
             &{'_.uploadDocument'}
+        </a>
+    </li>
+    <li>
+        <a href="@{web.Discussions.add()}">
+            <i class="icon-comments-3">&nbsp;</i>
+            &{'_.startDiscussion'}
         </a>
     </li>
     <li class="has-dropdown">

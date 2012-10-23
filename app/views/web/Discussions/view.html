@@ -1,0 +1,49 @@
+#{extends 'web.html' /}
+#{set title : discussion.title /}
+#{i18n keys:['_.you', 'auth.login.needed'] /}
+<div class="row">
+    <div class="eight columns">
+        <div class="button-section">
+            #{if me?.id == discussion.user?.id}
+                <a href="#"  class="button small"><i class="icon-pencil"></i>
+                    &{'discussion.edit'}
+                </a>
+            #{/if}
+            #{vote.button class : 'button small', me : me, objectType : 'discussion', objectId : discussion.id, voteCount : discussion.voteCount /}
+            #{if me}
+                <a href="#new-comment" class="button small button-comment-focus">
+                    <i class="document-stat-icon icon-comments-2"></i>
+                    &{'discussion.postComment'} (${discussion.commentCount})
+                </a>
+            #{/if}
+            #{else}
+                <a href="#" class="button small button-login">
+                    <i class="document-stat-icon icon-comments-2"></i>
+                    &{'discussion.postComment'} (${discussion.commentCount})
+                </a>
+            #{/else}
+        </div>
+        <div class="discussion-view">
+            <p class="lead">
+                ${discussion.content}
+            </p>
+            #{user.picture user : discussion.user, showName : true, size : 15 /}
+            <div class="right">
+                <i class="icon-clock"></i>
+                #{block.time time : discussion.created /}
+            </div>
+        </div>
+        <h4 class="box-header">&{'_.comments'} (${discussion.commentCount})</h4>
+        <div id="discussion-comments">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+#{set 'moreScripts'}
+    #{comment.scripts objectType : 'discussion', objectId : discussion.id, commentsElement : '#discussion-comments' /}
+    #{vote.scripts /}
+#{/set}

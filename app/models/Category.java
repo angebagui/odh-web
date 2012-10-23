@@ -44,6 +44,9 @@ public class Category extends BaseModel {
         if ("document".equals(this.objectType)) {
             Document check = Document.find("category is ?", this).first();
             hasObjects = (check != null);
+        } else if ("discussion".equals(this.objectType)) {
+            Discussion check = Discussion.find("category is ?", this).first();
+            hasObjects = (check != null);
         }
         return hasObjects;
     }
@@ -54,7 +57,19 @@ public class Category extends BaseModel {
     }
 
     public static List<Category> findForDocuments() {
-        return Category.find("objectType is ? order by name", "document").fetch();
+        return findForObjectType("document");
+    }
+    
+    public static List<Category> findForDiscussions() {
+        return findForObjectType("discussion");
+    }
+    
+    private static List<Category> findForObjectType(String objectType) {
+        if (objectType != null && ("document".equals(objectType) || "discussion".equals(objectType))) {
+            return Category.find("objectType is ? order by name", objectType).fetch();
+        } else {
+            throw new RuntimeException("Invalid object type.");
+        }
     }
 
 }

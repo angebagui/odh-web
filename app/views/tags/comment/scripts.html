@@ -1,0 +1,60 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        function loadDocumentComments() {
+        var listCommentsAction = #{jsRoute @web.Comments.list(':objectType', ':objectId', ':page') /};
+            $.ajax({
+                url : listCommentsAction.url({objectType : '${_objectType}', objectId: ${_objectId}, page : 1}),
+                type : listCommentsAction.method
+            }).success(function(data){
+                $('${_commentsElement}').html(data);
+            });
+        };
+
+        setTimeout(
+            function() {
+                loadDocumentComments();
+            },
+            2000
+        );
+
+        $('.comment-new-form').live('submit', function() {
+            var form = this;
+            var button = $(form).find('.button-comment-create');
+            var list =  $(form).parent().parent().prev(); // not really nice, but will do for now
+    
+            var alert =  $(form).find('.alert-box');
+            alert.hide();
+            button.button('loading');
+            var createCommentAction = #{jsRoute @api.Comments.create() /};
+            $.ajax({
+                url : createCommentAction.url(),
+                type : createCommentAction.method,
+                data : $(this).serialize()
+            }).success(function(data) {
+                loadDocumentComments();
+            }).error(function() {
+                alert.addClass('alert').html('&{"error.notice"}').show();
+            }).complete(function() {
+                button.button('reset');
+            });
+            return false;
+        });
+
+        $('.comment-delete').live('click', function() {
+            var link =  $(this);
+            var form = link.prev();
+            $.ajax({
+                url : form.attr('action'),
+                type : 'POST',
+                data : form.serialize()
+            }).success(function(data) {
+                link.parent().parent().parent().html("&{'comment.deleted'}");
+            });
+            return false;
+        });
+
+        $('.button-comment-focus').live('click', function() {
+            $('.comment-new-form textarea').focus();
+        });
+    });
+</script>

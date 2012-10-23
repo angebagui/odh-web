@@ -1,6 +1,6 @@
 #{extends 'web.html' /}
 #{set 'title'}
-    &{'document.upload'}
+    &{'_.uploadDocument'}
 #{/set}
 #{i18n keys:['document.view', 'document.editDetails', 'document.upload.error'] /}
 <div class="row">
@@ -80,6 +80,7 @@
                 $('.progress').removeClass('progress-danger');
                 $('.alert-box.alert').hide();
                 $('.document-upload-form input').removeClass('error');
+                $('.document-upload-form textarea').removeClass('error');
                 $('.document-upload-form label').removeClass('error');
                 $('.document-upload-form small.error').hide();
                 //$('.control-group').find('.label').html("").hide();

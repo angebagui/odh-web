@@ -1,0 +1,85 @@
+#{extends 'web.html' /}
+#{set 'title'}
+    &{'_.startDiscussion'}
+#{/set}
+#{i18n keys:['discussion.create.success', 'discussion.create.error'] /}
+<div class="row">
+    <div class="eight columns">
+        <div class="alert-box hide" id="result">
+            <p class="message">
+            </p>
+        </div>
+        #{form @api.Discussions.create(), class : 'discussion-create-form'}
+            #{field 'discussion.title'}
+                #{form.input field : field, value : discussion?.title, class : 'input-xxlarge', required : true /}
+            #{/field}
+            #{field 'discussion.category.id'}
+                #{form.select field : field, items : categories, valueProperty : 'id', labelProperty : 'name',  value : discussion?.category?.id /}
+            #{/field}
+            #{field 'discussion.content'}
+                #{form.textarea field : field, value : discussion?.content, class : 'input-xxlarge', required : true /}
+            #{/field}
+            #{field 'discussion.tags'}
+                #{form.input field : field, value : discussion?.tags, class : 'input-xxlarge', 'help' : 'tags.help', required : true /}
+            #{/field}
+            <div class="form-actions">
+                <input type="submit" value="&{'discussion.create'}" class="button button-discussion-create" data-loading-text="&{'_.loading'}"/>
+                #{a @web.Discussions.list(), class : 'button secondary'}&{'_.cancel'}#{/a}
+            </div>
+        #{/form}
+    </div>
+    <div class="four columns">
+        #{if taggedDocument}
+        <div class="panel">
+            <h4>Tagged Document</h4>
+            <ul>
+                <li>
+                    #{document.title document : taggedDocument /}
+                </li>
+            </ul>
+            <p>
+                Please note that you will be able to tag additional documents to this discussion once you save it.
+            </p>
+        </div>
+        #{/if}
+    </div>
+</div>
+#{set 'moreScripts'}
+<script type="text/javascript">
+    $('.button-discussion-create').button();
+    $(document).ready(function() {
+         $('.discussion-create-form').submit(function() {
+            $('#result').addClass('hide');
+            $('#result').removeClass('alert');
+            $('#result').removeClass('success');
+            $('.discussion-create-form input').removeClass('error');
+            $('.discussion-create-form textarea').removeClass('error');
+            $('.discussion-create-form label').removeClass('error');
+            $('.discussion-create-form small.error').hide();
+            var btn = $('.button-discussion-create');
+            $(btn).button('loading');
+            var createDiscussionAction = #{jsRoute @api.Discussions.create() /};
+            $.ajax({
+                url : createDiscussionAction.url(),
+                type : createDiscussionAction.method,
+                data : $('form').serialize()
+            }).success(function(data) {            
+                $('#result').addClass('success').html(i18n('discussion.create.success'));
+                var goToDiscussionAction = #{jsRoute @web.Discussions.go(':id') /};
+                window.location = goToDiscussionAction.url({id : data.id});
+            }).error(function(data) {                
+                $('#result').addClass('alert').html(i18n('discussion.create.error'));
+                var errors = JSON.parse(data.responseText);
+                $.each(errors, function(field, message){
+                    $('[name=\'' + field + '\']').addClass('error');
+                    $('[name=\'' + field + '\']').parents('.row').first().find('small.error').html(message).show();
+                });
+            }).complete(function() {                
+                $('#result').removeClass('hide');
+                $(btn).button('reset');
+            });
+            return false;
+         });
+    });
+</script>
+#{/set}

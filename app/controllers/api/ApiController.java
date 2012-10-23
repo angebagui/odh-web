@@ -19,7 +19,7 @@ public class ApiController extends AppController {
         "api.Documents.readThumbnail",
         "api.Documents.markAsViewed",
         "api.Documents.download",
-        "api.Documents.listComments"
+        "api.Documents.list"
     })
     public static void checkAccess() {
         if (getMe() == null) {

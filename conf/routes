@@ -6,19 +6,22 @@ GET   /admin           AdminController.index
 *     /admin           module:crud
 *     /                module:press
 
-# Home page
-
-GET     /auth/google/code                                                       web.Auth.googleCode
-GET     /auth/google/token                                                      web.Auth.googleToken
-GET     /upload                                                                 web.Documents.add
-POST    /logout                                                                 web.Auth.logout
 
 #WEB
+GET     /auth/google/code                                                       web.Auth.googleCode
+GET     /auth/google/token                                                      web.Auth.googleToken
 GET     /comments                                                               web.Comments.list
 GET     /documents                                                              web.Documents.list
+GET     /documents/add                                                          web.Documents.add
 GET     /documents/{<[0-9]+>id}-{slug}                                          web.Documents.read
 GET     /documents/{<[0-9]+>id}/go                                              web.Documents.go
 GET     /documents/{<[0-9]+>id}/edit                                            web.Documents.edit
+GET     /discussions                                                            web.Discussions.list
+GET     /discussions/add                                                        web.Discussions.add
+GET     /discussions/{<[0-9]+>id}-{slug}                                        web.Discussions.view
+GET     /discussions/{<[0-9]+>id}/go                                            web.Discussions.go
+GET     /discussions/{<[0-9]+>id}/edit                                          web.Discussions.edit
+POST    /logout                                                                 web.Auth.logout
 GET     /users/{<[0-9]+>id}                                                     web.Users.read
 GET     /                                                                       web.WebController.index
 
@@ -30,14 +33,22 @@ GET     /api/categories/{<[0-9]+>id}                                            
 POST    /api/categories                                                         api.Categories.create
 PUT     /api/categories/{<[0-9]+>id}                                            api.Categories.update
 DELETE  /api/categories/{<[0-9]+>id}                                            api.Categories.delete
+GET     /api/documents                                                          api.Documents.list
 POST    /api/documents                                                          api.Documents.create
 GET     /api/documents/{<[0-9]+>id}/thumbnail                                   api.Documents.readThumbnail
-PUT     /api/documents/{<[0-9]+>id}/update                                      api.Documents.update
+PUT     /api/documents/{<[0-9]+>id}                                             api.Documents.update
 POST    /api/documents/{<[0-9]+>id}/copy                                        api.Documents.createCopy
 POST    /api/documents/{<[0-9]+>id}/viewed                                      api.Documents.markAsViewed
-POST    /api/documents/{<[0-9]+>id}/delete                                      api.Documents.delete
+DELETE  /api/documents/{<[0-9]+>id}                                             api.Documents.delete
 POST    /api/documents/downloads/{<[0-9]+>exportLinkId}                         api.Documents.download
 GET     /api/documentsjobsstatus/{<[0-9]+>id}                                   api.DocumentsJobsStatus.read
+
+POST    /api/discussions                                                        api.Discussions.create
+PUT     /api/discussions/{<[0-9]+>id}                                           api.Discussions.update
+POST    /api/discussions/{<[0-9]+>id}/viewed                                    api.Discussions.markAsViewed
+DELETE  /api/discussions/{<[0-9]+>id}                                           api.Discussions.delete
+POST    /api/discussions/{<[0-9]+>id}/documents                                 api.Discussions.tagDocument
+
 POST    /api/comments                                                           api.Comments.create
 DELETE  /api/comments/{<[0-9]+>id}                                              api.Comments.delete
 POST    /api/votes                                                              api.Votes.create

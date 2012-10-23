@@ -83,6 +83,11 @@ public class Documents extends AppController {
         redirect(exportLink.link);
     }
 
+    public static void list(String keyword, long categoryId, String order, Integer page) {
+        List<Document> documents = Document.search(keyword, categoryId, order, page);
+        renderJSON(documents);
+    }
+
     public static void markAsViewed(long id) {
         checkAuthenticity();
         Document document = Document.findById(id);

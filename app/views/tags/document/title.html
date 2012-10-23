@@ -8,8 +8,8 @@
     #{elseif  _document.mime.humanFriendlyName == '.pptx' }
         <i class="icon-file-powerpoint"></i>
     #{/elseif}
-    #{elseif  _document.mime.humanFriendlyName == '.pptx' }
+    #{else}
         <i class="icon-document-alt-stroke"></i>
-    #{/elseif}
+    #{/else}
     <a href="${_document.permalink}"> ${_document.title.toLowerCase()} </a>
 </div>

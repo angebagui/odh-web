@@ -11,7 +11,7 @@
 <div class="row">
     <div class="four column">
         <h3>&{'_.explore'}</h3>
-        <i class="home-hero-icon icon-big icon-folder color-one"></i>
+        <i class="home-hero-icon icon-big icon-copy color-one"></i>
         <p>
             &{'_.explore.expand'}
         </p>
@@ -46,7 +46,7 @@
                     <i class="icon-clock"></i> #{block.time time : _.created /}
                 </div>
                 <div class="small">
-                    <i class="icon-user"></i> #{user.name user : _.owner /}
+                    #{user.picture showName : true, size : 15, user : _.owner /}
                 </div>
             </div>
         #{/list}

@@ -2,24 +2,26 @@
     <div class="row">
         <div class="nine columns">
             #{document.title document : _document /}
+            <div class="right">
+                #{document.preview document : _document /}
+            </div>
             <div class="document-list-item-description">
                 ${_document.description?.length() >  200 ? _document.description.substring(0, 200) + '...' :  _document.description}
                 &nbsp;
             </div>
-            <div class="right">
-                #{document.preview document : _document /}
-            </div>
+            #{if _document.tagsAsList}
             <div class="document-list-item-tags">
                 <i class="icon-tag"></i>
                 #{list _document.tagsAsList}
                     <a href="@{web.Documents.list(_)}"><span class="label round secondary">${_}</span></a>
                 #{/list}
             </div>
+            #{/if}
             <div class="small document-time right">
                 <i class="icon-clock"></i> #{block.time time : _document.created /}
             </div>
             <div class="small">
-                #{user.picture user : _document.owner, showName : true, size : 20 /}
+                #{user.picture user : _document.owner, showName : true, size : 15 /}
             </div>
         </div>
         <div class="three columns">
