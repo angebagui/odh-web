@@ -22,6 +22,8 @@ public class DiscussionDocuments extends AppController {
         if (check != null) {
             renderJSON(check);
         } else if (discussionDocument.validateAndSave()) {
+            discussionDocument.discussion.updateDocumentCountAndSave(true);
+            discussionDocument.document.updateDiscussionCountAndSave(true);
             renderJSON(discussionDocument);
         }
     }
@@ -33,6 +35,8 @@ public class DiscussionDocuments extends AppController {
         notFoundIfNull(discussionDocument);
         if (discussionDocument.user.id == me.id) {
             discussionDocument.delete();
+            discussionDocument.discussion.updateDocumentCountAndSave(false);
+            discussionDocument.document.updateDiscussionCountAndSave(false);
             renderJSON(true);
         } else {
             unauthorized();

@@ -89,7 +89,7 @@ public class Discussion extends BaseModel {
         List<Discussion> discussions = new ArrayList<Discussion>();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("googleDriveFileId != null");
+        sb.append("user.id != null");
 
         if ((keyword != null) && (keyword.length() > 0)) {
             sb.append(" and fts(:keyword) = true");
@@ -118,7 +118,7 @@ public class Discussion extends BaseModel {
         }
 
         if (sb.toString() != "") {
-            JPAQuery query = Document.find(sb.toString());
+            JPAQuery query = Discussion.find(sb.toString());
 
             if ((keyword != null) && (keyword.length() > 0)) {
                 query.setParameter("keyword", keyword);
@@ -184,6 +184,14 @@ public class Discussion extends BaseModel {
             }
         }
         return false;
+    }
+
+    public static List<Discussion> findByUser(User user) {
+        List<Discussion> discussions = new ArrayList<Discussion>();
+        if (user != null) {
+            discussions = Discussion.find("user is ? order by created desc", user).fetch(DEFAULT_PAGINATE_COUNT);
+        }
+        return discussions;
     }
 
 }

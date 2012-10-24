@@ -21,9 +21,6 @@ public class User extends BaseModel implements RoleHolder {
     @JsonProperty
     public String bio;
 
-    @JsonProperty
-    public Integer documentCount;
-
     @Required
     @Email
     public String email;
@@ -46,7 +43,7 @@ public class User extends BaseModel implements RoleHolder {
     public String picture;
 
     @JsonProperty
-    public Integer score;
+    public int karma;
 
     public ArrayList<String> userRoles;
 
@@ -55,16 +52,13 @@ public class User extends BaseModel implements RoleHolder {
         this.name = name;
         this.email = email;
         this.picture = picture;
-        this.score = 0;
-        this.documentCount = 0;
+        this.karma = 0;
     }
 
-    public long getDocumentCount() {
-        if (this.id != null) {
-            return Document.count("owner is ?", this);
-        } else {
-            return 0;
-        }
+    public int addToKarmaAndSave(int addition) {
+        this.karma = this.karma + addition;
+        this.save();
+        return this.karma;
     }
 
     @Override

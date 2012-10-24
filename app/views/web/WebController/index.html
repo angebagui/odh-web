@@ -4,7 +4,7 @@
     <div class="twelve column">
         <h1>&{'_.welcome', siteName}</h1>
         <p class="panel">
-            Your slogan goes here
+            Site description goes here.
         </p>
     </div>
 </div>
@@ -59,6 +59,23 @@
     </div>
     <div class="four column">
         <h4 class="box-header">Recent discussions</h4>
+        #{list recentDiscussions}
+            <div class="box-list-row">
+                #{discussion.title discussion : _ /}
+                <div class="small document-time right">
+                    <i class="icon-clock"></i> #{block.time time : _.created /}
+                </div>
+                <div class="small">
+                    #{user.picture showName : true, size : 15, user : _.user /}
+                </div>
+            </div>
+        #{/list}
+        <p>
+            <i class="icon-folder"></i> #{a @web.Discussions.list()}<strong>All categories</strong>#{/a}
+            #{list discussionCategories}
+                - #{a @web.Discussions.list(null, _.id, null, null)}${_.name}#{/a}
+            #{/list}
+        </p>
     </div>
     <div class="four column">
         <h4 class="box-header">&{'_.newestMembers'}</h4>

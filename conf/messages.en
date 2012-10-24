@@ -12,6 +12,7 @@ _.discuss.expand = Give feedback, ask questions, leave a comment, start a conver
 _.discussions = Discussions
 _.discussionsIconHelp = Number of discussions
 _.documents = Documents
+_.documentsIconHelp = Number of linked documents
 _.downloads = Downloads
 _.downloadsIconHelp = Number of downloads
 _.emptyList = No results

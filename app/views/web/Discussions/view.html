@@ -44,7 +44,7 @@
     </div>
     <div class="four columns">
         <div class="box">
-            <h4 class="box-header">&{'_.documents'}</h4>
+            <h4 class="box-header">&{'_.documents'} (${discussion.documentCount})</h4>
             #{if documents}
             <ul>
                 #{list documents}
@@ -62,7 +62,12 @@
                     There are no documents linked to this discussion yet.
                 </p>
             #{/else}
-            <a href="#" class="discussion-link-document-button button small success"><i class="icon-copy"></i> Link document</a>
+            #{if me}
+                <button class="discussion-link-document-button button small success"><i class="icon-copy"></i> Link a document</button>
+            #{/if}
+            #{else}
+                <button class="button-login button small success"><i class="icon-copy"></i> Link a document</button>
+            #{/else}
         </div>
         <div class="box">
             <h4 class="box-header">&{'discussion.about'}</h4>
@@ -131,8 +136,8 @@
                         var html = '<div class="box-list-row clearfix">'
                         html += '<strong>' + documents[i].title +'</strong>'
                         html += '<div class="button-bar right">';
-                        html += '<button class="button link-document-button success tiny" data-document-id="' + documents[i].id +'" data-loading-text="&{"_.loading"}"><i class="icon-copy"></i> Link document</button> ';
-                        html += '<a href="/documents/'+ documents[i].id +'/go" class="button link-document-button tiny" target="_blank"><i class="icon-new-tab"></i> Open</a>'
+                        html += '<button class="button link-document-button success tiny" data-document-id="' + documents[i].id +'" data-loading-text="&{"_.loading"}"><i class="icon-copy"></i> Link this document</button> ';
+                        html += '<a href="/documents/'+ documents[i].id +'/go" class="button tiny" target="_blank"><i class="icon-new-tab"></i> Open</a>'
                         html += '</div>';
                         html += '</div>';
                         $('.discussion-link-document-document-list').append(html);
@@ -198,7 +203,7 @@
 #{/set}
 #{set 'modalDialogs'}
     <div class="discussion-link-document-modal reveal-modal medium">
-        <h2>Link document</h2>
+        <h2>Link a document</h2>
         <p>Start typing something and list of matching documents will show up.</p>
         <form class="discussion-link-document-search-form">
             <input type="text" class="discussion-link-document-keyword" placeholder="Document title, description, tags or source" />

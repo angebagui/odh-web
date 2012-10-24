@@ -53,7 +53,7 @@ public class Discussions extends AppController {
         Category category = Category.findById(categoryId);
         List<Discussion> discussions = Discussion.search(keyword, categoryId, order, page);
         if (request.isAjax()) {
-            renderTemplate("web/Discussion/ajax_list.html", discussions, category, keyword, order, page);
+            renderTemplate("web/Discussions/ajax_list.html", discussions, category, keyword, order, page);
         } else {
             render(discussions, category, keyword, order, page);
         }

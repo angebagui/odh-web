@@ -53,16 +53,25 @@ public class Vote extends BaseModel {
             Document document = Document.findById(this.objectId);
             if (document != null) {
                 count = document.updateVoteCountAndSave(increase);
+                if (this.user.id != document.owner.id) {
+                    document.owner.addToKarmaAndSave(increase ? 1 : -1);
+                }
             }
         } else if ("comment".equals(this.objectType)) {
             Comment comment = Comment.findById(this.objectId);
             if (comment != null) {
                 count = comment.updateVoteCountAndSave(increase);
+                if (this.user.id != comment.author.id) {
+                    comment.author.addToKarmaAndSave(increase ? 1 : -1);
+                }
             }
         } else if ("discussion".equals(this.objectType)) {
             Discussion discussion = Discussion.findById(this.objectId);
             if (discussion != null) {
                 count = discussion.updateVoteCountAndSave(increase);
+                if (this.user.id != discussion.user.id) {
+                    discussion.user.addToKarmaAndSave(increase ? 1 : -1);
+                }
             }
         }
         return count;

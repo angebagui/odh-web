@@ -21,7 +21,7 @@ public class Documents extends AppController {
 
     @Before
     public static void addViewArgs() {
-        List <Category> categories = Category.findForDocument();
+        List<Category> categories = Category.findForDocument();
         renderArgs.put("categories", categories);
     }
 
@@ -49,16 +49,17 @@ public class Documents extends AppController {
         Category category = Category.findById(categoryId);
         List<Document> documents = Document.search(keyword, categoryId, order, page);
         if (request.isAjax()) {
-        	renderTemplate("web/Documents/ajax_list.html", documents, category, keyword, order, page);
+            renderTemplate("web/Documents/ajax_list.html", documents, category, keyword, order, page);
         } else {
-        	render(documents, category, keyword, order, page);
+            render(documents, category, keyword, order, page);
         }
     }
 
     public static void read(long id, String slug) {
         Document document = Document.findById(id);
         notFoundIfNull(document);
-        List<DiscussionDocument> discussions = DiscussionDocument.findByDocument(document.id);
+        List<DiscussionDocument> discussions = DiscussionDocument
+                .findByDocument(document.id);
         render(document, discussions);
     }
 

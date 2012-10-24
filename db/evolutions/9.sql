@@ -116,7 +116,15 @@ ALTER TABLE discussiondocument
       REFERENCES user_ (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE;
 
+ALTER TABLE user_ DROP COLUMN score;
+ALTER TABLE user_ DROP COLUMN documentcount;
+ALTER TABLE user_ ADD COLUMN karma integer DEFAULT 0 NOT NULL;
+
 # --- !Downs
+
+ALTER TABLE user_ DROP COLUMN karma;
+ALTER TABLE user_ ADD COLUMN documentcount integer;
+ALTER TABLE user_ ADD COLUMN score integer;
 
 ALTER TABLE discussiondocument DROP CONSTRAINT fk_discussiondocument_user;
 ALTER TABLE discussiondocument DROP CONSTRAINT fk_discussiondocument_discussion;

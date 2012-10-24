@@ -1,0 +1,118 @@
+#{extends 'web.html' /}
+#{set title : messages.get('discussions') /}
+#{i18n keys:['_.errorTryAgain', '_.loading'] /}
+
+#{if order == null}
+    #{set 'title' }
+        &{'discussions'}
+    #{/set}
+#{/if}
+
+#{if keyword}
+    #{set 'subTitle' }
+        #{if get('subTitle')}
+            #{get 'subTitle' /} -
+        #{/if}
+        '${keyword}'
+    #{/set}
+#{/if}
+
+#{if category}
+    #{set 'subTitle' }
+        #{if get('subTitle')}
+            #{get 'subTitle' /} -
+        #{/if}
+        ${category.name}
+    #{/set}
+#{/if}
+
+#{if order}
+    #{set 'subTitle' }
+        #{if get('subTitle')}
+            #{get 'subTitle' /} -
+        #{/if}
+        &{'document.list.order.' + order}
+    #{/set}
+#{/if}
+
+<div class="row">
+    <div class="nine columns">
+        <div id="discussion-list">
+            #{include 'web/Discussions/ajax_list.html' /}
+        </div>
+    </div>
+    <div class="three columns">
+        <div class="panel">
+            <h4>Search Filter</h4>
+            #{form @web.Discussions.list()}
+                <input type="text" name="keyword" placeholder="&{'_.enterKeyword'}" value="${keyword}">
+                <input type="submit" class="button" value="&{'_.filterResults'}" />
+            #{/form}
+            <p>
+                #{if keyword}
+                    <a href="@{web.Discussions.list()}">&{'document.list.clearSearchOptions'}</a>
+                #{/if}
+            </p>
+        </div>
+        <div class="panel">
+            <h4>&{'_.order'}</h4>
+            <ul class="side-nav">
+                <li class="${order == null || order == 'recent' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'recent', null)}">
+                        &{'document.list.order.recent'}
+                    </a>
+                </li>
+                <li class="${order == 'votes' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'votes', null)}">
+                        &{'document.list.order.votes'}
+                    </a>
+                </li>
+                <li class="${order == 'comments' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'comments', null)}">
+                        &{'document.list.order.comments'}
+                    </a>
+                </li>
+                <li class="${order == 'views' ? 'active' : ''}">
+                    <a href="@{list(keyword, category?.id, 'views', null)}">
+                        &{'document.list.order.views'}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel">
+            <h4>&{'_.categories'}</h4>
+            <ul class="side-nav">
+            <li class="${category == _null ? 'active' : ''}">
+                #{a @web.Discussions.list(keyword, null, order, null)}&{'_.allCategories'}#{/a}
+            </li>
+            #{list categories}
+                <li class="${category?.id == _.id ? 'active' : ''}">
+                    #{a @web.Discussions.list(keyword, _.id, order, null)}${_.name}#{/a}
+                </li>
+            #{/list}
+        </ul>
+        </div>
+    </div>
+</div>
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.btn-more').live('click', function() {
+            var button = $(this);
+            var list = $('#discussion-list');
+            button.html(i18n('_.loading'));
+            $.ajax({
+                url : button.attr('href'),
+                type : 'GET'
+            }).success(function(html) {
+                list.append(html);
+                button.remove();
+            }).error(function(data) {
+                button.html(i18n('_.errorTryAgain'));
+            });
+            return false;
+        });
+    });
+</script>
+#{/set}

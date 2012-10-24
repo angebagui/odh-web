@@ -1,55 +1,48 @@
-#{extends 'web.html' /}
-#{set title : user.name /}
-
-<div class="row-fluid">
-    <div class="span9">
-        <div class="tabbable">
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#documents" data-toggle="tab">&{'_.recentDocuments'}</a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="documents">
-                    #{if documents}
-                        #{document.list documents : documents /}
-                    #{/if}
-                    #{else}
-                        <p class="alert alert-info">
-                            &{'document.list.end'}
-                        </p>
-                    #{/else}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="span3">
-        <div class="box">
-            #{user.picture user : user, size : 300 /}
-        </div>
+#{extends 'web.html' /} #{set title : user.name /}
+<div class="row">
+    <div class="three columns">
+        <div class="box">#{user.picture user : user, size : 300 /}</div>
+        <h4 class="box-header">About</h4>
         <table class="table">
             <tr>
                 <td class="table-label">Joined</td>
                 <td><span class="timeago" title="${user.created}">${user.created}</span></td>
             </tr>
             <tr>
-                <td class="table-label">Bio</td>
-                <td>${user.bio}</td>
-            </tr>
-            <tr>
                 <td class="table-label">Links</td>
                 <td>
                     <ul class="unstyled">
-                        <li>
-                            <a href="https://plus.google.com/${user.googleUserId}" target="_blank">Google +</a>
-                        </li>
+                        <li><a href="https://plus.google.com/${user.googleUserId}"
+                            target="_blank">Google +</a></li>
                     </ul>
                 </td>
             </tr>
             <tr>
-                <td class="table-label">Documents</td>
-                <td><span class="label label-info">${user.documentCount}</span></td>
+                <td class="table-label">Karma</td>
+                <td><span class="label label-success">${user.karma}</span></td>
             </tr>
         </table>
+    </div>
+    <div class="nine columns">
+        <dl class="tabs">
+            <dd class="active"><a href="#documents">&{'_.recentDocuments'}</a></dd>
+            <dd><a href="#discussions">Recent Discussions</a></dd>
+        </dl>
+        <ul class="tabs-content">
+            <li class="active" id="documentsTab">
+                #{if documents} #{document.list documents : documents /} #{/if}
+                #{else}
+                    <div class="alert-box">&{'document.list.end'}</div>
+                #{/else}
+            </li>
+            <li id="discussionsTab">
+                #{if discussions}
+                    #{discussion.list discussions : discussions /}
+                #{/if}
+                #{else}
+                    <div class="alert-box">&{'document.list.end'}</div>
+                #{/else}
+            </li>
+        </ul>
     </div>
 </div>

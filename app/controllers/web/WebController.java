@@ -3,6 +3,7 @@ package controllers.web;
 import java.util.List;
 
 import models.Category;
+import models.Discussion;
 import models.Document;
 import models.User;
 import play.Play;
@@ -67,16 +68,20 @@ public class WebController extends AppController {
     }
 
     public static void index() {
-        List<Document> recentDocuments = Document.find("order by created desc").fetch(4);
-        List<User> recentUsers = User.find("order by created desc").fetch(12);
+        List<Document> recentDocuments = Document.find("order by created desc").fetch(3);
+        List<Discussion> recentDiscussions = Discussion.find("order by created desc").fetch(3);
+        List<User> recentUsers = User.find("order by created desc").fetch(20);
         List <Category> documentCategories = Category.findForDocument();
-        render(documentCategories, recentDocuments, recentUsers);
+        List <Category> discussionCategories = Category.findForDiscussion();
+        render(discussionCategories, documentCategories, recentDiscussions, recentDocuments, recentUsers);
     }
 
     public static void search(String keyword, String type) {
         if (type != null) {
             if (type.equals("documents")) {
                 Documents.list(keyword, 0, null, null);
+            } else if (type.equals("discussions")) {
+                Discussions.list(keyword, 0, null, null);
             }
         }
         index();

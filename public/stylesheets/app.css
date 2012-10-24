@@ -72,6 +72,9 @@ dl.sub-nav dt, dl.sub-nav dd{
     font-size : 12px;
 }
 
+.table {
+    width : 100%;
+}
 .color-one {
     color: #3399CC;
 }
@@ -142,10 +145,11 @@ dl.sub-nav dt, dl.sub-nav dd{
     max-width : 200px;
 }
 
-.document-title {
+.document-title, .discussion-title{
     font-weight : bold;
     margin-bottom : 15px;
     text-transform:capitalize;
+    display : block;
 }
 
 .document-list-item {

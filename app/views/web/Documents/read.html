@@ -74,11 +74,6 @@
     <div class="four columns">
         <div class="box">
             <h4 class="box-header">&{'_.discussions'} (${document.discussionCount})</h4>
-            <div class="button-section">
-                <a href="@{web.Discussions.add(document.id)}" class="button small success">
-                    <i class="icon-comments-3">&nbsp;</i> &{'_.startDiscussion'}
-                </a>
-             </div>
             <div class="box-content">
                 #{if discussions}
                     <ul>
@@ -95,6 +90,11 @@
                     </p>
                 #{/else}
             </div>
+            <div class="button-section">
+                <a href="@{web.Discussions.add(document.id)}" class="button small success">
+                    <i class="icon-comments-3">&nbsp;</i> &{'_.startDiscussion'}
+                </a>
+             </div>
         </div>
         <div class="box">
             <h4 class="box-header">&{'document.about'}</h4>

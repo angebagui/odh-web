@@ -1,0 +1,28 @@
+<div class="document-list-item">
+    <div class="row">
+        <div class="seven columns">
+            <div class="small document-time right">
+                <i class="icon-clock"></i> #{block.time time : _discussion.created /}
+            </div>
+            #{discussion.title discussion : _discussion /}
+            <div class="document-list-item-description">
+                ${_discussion.content?.length() >  200 ? _discussion.content.substring(0, 200) + '...' :  _discussion.content}
+                &nbsp;
+            </div>
+            #{if _discussion.tagsAsList}
+            <div class="document-list-item-tags">
+                <i class="icon-tag"></i>
+                #{list _discussion.tagsAsList}
+                    <a href="@{web.Discussions.list(_)}"><span class="label round secondary">${_}</span></a>
+                #{/list}
+            </div>
+            #{/if}
+            <div class="small">
+                #{user.picture user : _discussion.user, showName : true, size : 15 /}
+            </div>
+        </div>
+        <div class="five columns">
+            #{discussion.stats discussion : _discussion /}
+        </div>
+    </div>
+</div>
