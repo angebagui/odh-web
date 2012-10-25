@@ -1,8 +1,0 @@
-siteName=YOUR SITE NAME
-siteDescription = YOUR SITE DESCRIPTION
-lang=en
-google.oAuth.client_id=YOUR GOOGLE OAUTH CLIENT ID
-google.oAuth.client_secret=YOUR GOOGLE OAUTH CLIENT SECRET
-
-application.secret=YOUR APPLICATION SECRET
-db=postgres://user:password@host/database
