@@ -1,5 +1,6 @@
 package controllers.api;
 
+import java.util.Date;
 import java.util.List;
 
 import jobs.UpdateDocumentCommentCountJob;
@@ -52,6 +53,27 @@ public class Discussions extends AppController {
     public static void list(String keyword, long categoryId, String order, Integer page) {
         List<Document> documents = Document.search(keyword, categoryId, order, page);
         renderJSON(documents);
+    }
+
+    public static void markAsViewed(long id) {
+        checkAuthenticity();
+        Discussion discussion = Discussion.findById(id);
+        if (discussion != null) {
+            String sessionKey = String.format("lastDiscussionViewed", id);
+
+            if (session.get(sessionKey) != null) {
+                if (session.get(sessionKey) != discussion.id.toString()) {
+                    discussion.increaseViewCountAndSave();
+                    session.put(sessionKey, discussion.id);
+                }
+            } else {
+                discussion.increaseViewCountAndSave();
+                session.put(sessionKey, new Date().getTime());
+            }
+        } else {
+            notFound();
+        }
+        ok();
     }
 
     public static void update(long id, @Required Discussion discussion) {

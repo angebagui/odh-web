@@ -8,6 +8,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+import models.Document.CategoryCheck;
+
+import play.data.binding.NoBinding;
+import play.data.validation.Check;
+import play.data.validation.CheckWith;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Transactional;
 import play.db.jpa.GenericModel.JPAQuery;
@@ -19,22 +25,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 public class Discussion extends BaseModel {
 
+    @JsonProperty
+    @NoBinding
     public int commentCount;
 
     @JsonProperty
     @ManyToOne
     @Required
+    @CheckWith(CategoryCheck.class)
     public Category category;
 
     @JsonProperty
     @Required
+    @MaxSize(5000)
     public String content;
 
     @JsonProperty
+    @NoBinding
     public String slug;
 
     @JsonProperty
     @Required
+    @MaxSize(1000)
     public String tags;
 
     @JsonProperty
@@ -44,12 +56,19 @@ public class Discussion extends BaseModel {
     @JsonProperty
     @ManyToOne
     @Required
+    @NoBinding
     public User user;
 
+    @JsonProperty
+    @NoBinding
     public int documentCount;
-    
+
+    @JsonProperty
+    @NoBinding
     public int voteCount;
 
+    @JsonProperty
+    @NoBinding
     public int viewCount;
 
     @JsonGetter
@@ -186,12 +205,27 @@ public class Discussion extends BaseModel {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return this.title;
+    }
+
     public static List<Discussion> findByUser(User user) {
         List<Discussion> discussions = new ArrayList<Discussion>();
         if (user != null) {
             discussions = Discussion.find("user is ? order by created desc", user).fetch(DEFAULT_PAGINATE_COUNT);
         }
         return discussions;
+    }
+
+    public static class CategoryCheck extends Check {
+
+        @Override
+        public boolean isSatisfied(Object document, Object category) {
+            this.setMessage("Invalid Category");
+            return (category.toString().contains("discussion"));
+        }
+
     }
 
 }

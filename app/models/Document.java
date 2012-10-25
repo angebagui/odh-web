@@ -25,6 +25,7 @@ import play.data.Upload;
 import play.data.binding.NoBinding;
 import play.data.validation.Check;
 import play.data.validation.CheckWith;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Transactional;
 import play.templates.JavaExtensions;
@@ -47,6 +48,7 @@ public class Document extends BaseModel {
     @Required
     @ManyToOne
     @JsonProperty
+    @CheckWith(CategoryCheck.class)
     public Category category;
 
     @NoBinding
@@ -59,9 +61,11 @@ public class Document extends BaseModel {
 
     @JsonProperty
     @Required
+    @MaxSize(5000)
     public String description;
 
     @JsonProperty
+    @NoBinding
     public int discussionCount;
 
     @NoBinding
@@ -110,6 +114,7 @@ public class Document extends BaseModel {
     public String source;
 
     @Required
+    @MaxSize(1000)
     public String tags;
 
     @OneToOne(cascade = CascadeType.REMOVE)
@@ -283,6 +288,11 @@ public class Document extends BaseModel {
         }
     }
 
+    @Override
+    public String toString() {
+        return this.title;
+    }
+
     public void updateOnGoogleDrive() throws IOException {
         File driveFile = new File();
         driveFile.setTitle(this.title);
@@ -413,6 +423,16 @@ public class Document extends BaseModel {
             this.setMessage("validation.mimetype.invalid", (String) mimeTypeName);
             Mime mimeType = Mime.parseName((String) mimeTypeName);
             return (mimeType != null);
+        }
+
+    }
+
+    public static class CategoryCheck extends Check {
+
+        @Override
+        public boolean isSatisfied(Object document, Object category) {
+            this.setMessage("Invalid Category");
+            return (category.toString().contains("document"));
         }
 
     }

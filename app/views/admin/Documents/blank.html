@@ -1,0 +1,12 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.blank.title', type.modelName) /}
+
+<div id="crudBlank" class="${type.name}">
+
+    <h2 id="crudBlankTitle">&{'crud.blank.title', type.modelName}</h2>
+
+    <div class="objectForm">
+        <p>Please use the <a href="@{web.Documents.add()}">document upload form</a> on the frontend.</p>
+    </div>
+
+</div>

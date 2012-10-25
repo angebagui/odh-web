@@ -1,0 +1,76 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+
+<div id="crudShow" class="${type.name}">
+
+    <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
+
+    <div class="objectForm">
+    #{form action:@save(object._key()), enctype:'multipart/form-data'}
+        <div class="crudField">
+            <label>&{'email'}</label>
+            ${object.email}
+        </div>
+        <div class="crudField">
+            <label>&{'Profile'}</label>
+            <a href="@{web.Users.read(object.id)}">See profile</a>
+        </div>
+        <div class="crudField">
+            <label>&{'Google OAuth Access Token'}</label>
+            ${object.googleOAuthAccessToken}
+        </div>
+        <div class="crudField">
+            <label>&{'Google OAuth Refresh Token'}</label>
+            #{if object.googleOAuthRefreshToken}
+                ${object.googleOAuthRefreshToken}
+            #{/if}
+            #{else}
+                N/A
+            #{/else}
+        </div>
+        <div class="crudField">
+            <label>&{'Karma'}</label>
+            ${object.karma}
+        </div>
+        #{crud.form}
+            #{crud.custom 'picture'}
+                <label>&{'picture'}</label>
+                #{if object.picture }
+                    <img src="${object.picture}?size=60" alt="${object.name}" />
+                #{/if}
+                #{else}
+                    N/A
+                #{/else}
+            #{/crud.custom}
+            #{crud.custom 'userRoles'}
+                <label>&{'userRoles'}</label>
+                #{if object.userRoles}
+                    ${object.userRoles}
+                #{/if}
+                #{else}
+                    N/A
+                #{/else}
+            #{/crud.custom}
+            #{crud.custom 'created'}
+                <label>&{'created'}</label>
+                ${object.created?.since()}
+            #{/crud.custom}
+            #{crud.custom 'updated'}
+                <label>&{'updated'}</label>
+                ${object.updated?.since()}
+            #{/crud.custom}
+        #{/crud.form}
+        <p class="crudButtons">
+            <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
+            <input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+        </p>
+    #{/form}
+    </div>
+
+    #{form @delete(object._key())}
+        <p class="crudDelete">
+            <input type="submit" value="&{'crud.delete', type.modelName}" />
+        </p>
+    #{/form}
+
+</div>

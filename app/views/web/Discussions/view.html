@@ -198,6 +198,17 @@
             });
             return false;
         });
+        setTimeout(
+            function() {
+                var markAsViewedAction = #{jsRoute @api.Discussions.markAsViewed(':id') /};
+                $.ajax({
+                    url : markAsViewedAction.url({id: ${discussion.id}}),
+                    type : markAsViewedAction.method,
+                    data : { authenticityToken : '${session.authenticityToken}'}
+                });
+            },
+            30000
+        );
     });
 </script>
 #{/set}

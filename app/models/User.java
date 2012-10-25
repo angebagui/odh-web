@@ -8,7 +8,9 @@ import javax.persistence.Table;
 
 import models.deadbolt.Role;
 import models.deadbolt.RoleHolder;
+import play.data.binding.NoBinding;
 import play.data.validation.Email;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import services.googleoauth.GoogleUserInfo;
 
@@ -19,20 +21,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class User extends BaseModel implements RoleHolder {
 
     @JsonProperty
+    @MaxSize(1000)
     public String bio;
 
     @Required
     @Email
+    @NoBinding
     public String email;
 
     @Required
+    @NoBinding
     public String googleOAuthAccessToken;
 
     @Required
+    @NoBinding
     public String googleOAuthRefreshToken;
 
     @Required
     @JsonProperty
+    @NoBinding
     public String googleUserId;
 
     @Required
@@ -43,6 +50,7 @@ public class User extends BaseModel implements RoleHolder {
     public String picture;
 
     @JsonProperty
+    @NoBinding
     public int karma;
 
     public ArrayList<String> userRoles;

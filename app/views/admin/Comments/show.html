@@ -1,0 +1,41 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+
+<div id="crudShow" class="${type.name}">
+
+    <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
+
+    <div class="objectForm">
+    #{form action:@save(object._key()), enctype:'multipart/form-data'}
+        <div class="crudField">
+            <label>&{'author'}</label>
+            ${object.author} - <a href="@{web.Users.read(object.author.id)}">See profile</a>
+        </div>
+        <div class="crudField">
+            <label>&{'Object'}</label>
+            <a href="/${object.objectType}s/${object.objectId}/go">View Object - (${object.objectType} #${object.objectId})</a>
+        </div>
+        #{crud.form}
+            #{crud.custom 'created'}
+                <label>&{'created'}</label>
+                ${object.created?.since()}
+            #{/crud.custom}
+            #{crud.custom 'updated'}
+                <label>&{'updated'}</label>
+                ${object.updated?.since()}
+            #{/crud.custom}
+        #{/crud.form}
+        <p class="crudButtons">
+            <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
+            <input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+        </p>
+    #{/form}
+    </div>
+
+    #{form @delete(object._key())}
+        <p class="crudDelete">
+            <input type="submit" value="&{'crud.delete', type.modelName}" />
+        </p>
+    #{/form}
+
+</div>

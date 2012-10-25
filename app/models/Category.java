@@ -53,7 +53,7 @@ public class Category extends BaseModel {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.name + " (" + this.objectType + ")";
     }
 
     public static List<Category> findForDocument() {

@@ -1,10 +1,8 @@
-application.name=Open Docs Hub
-application.fullName=Demo Open Docs Hub
-application.secret=YOUR APPLICATION SECRET
-application.langs.default=en
-
+siteName=YOUR SITE NAME
+siteDescription = YOUR SITE DESCRIPTION
+lang=en
 google.oAuth.client_id=YOUR GOOGLE OAUTH CLIENT ID
 google.oAuth.client_secret=YOUR GOOGLE OAUTH CLIENT SECRET
 
-db=mysql://user:password@host/database
-jpa.dialect=org.hibernate.dialect.PostgreSQLDialect
+application.secret=YOUR APPLICATION SECRET
+db=postgres://user:password@host/database

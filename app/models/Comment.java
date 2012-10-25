@@ -14,6 +14,7 @@ import net.sf.oval.constraint.MinSize;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import play.data.binding.NoBinding;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Transactional;
@@ -23,10 +24,12 @@ public class Comment extends BaseModel {
 
     @ManyToOne
     @JsonProperty
+    @NoBinding
     public User author;
 
     @JsonProperty
     @Required
+    @MaxSize(5000)
     public String content;
 
     @JsonProperty
@@ -36,6 +39,7 @@ public class Comment extends BaseModel {
     public String objectType;
     
     @JsonProperty
+    @NoBinding
     public int voteCount;
 
     public Comment(User author, String content, long objectId) {

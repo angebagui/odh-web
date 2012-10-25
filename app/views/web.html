@@ -9,13 +9,13 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width" />
-        <meta name="description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${play.configuration.getProperty('application.fullName')}">
+        <meta name="description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${siteName}">
 
-        <meta property="og:title" content="#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${play.configuration.getProperty('application.fullName')}" />
+        <meta property="og:title" content="#{get 'title' /}#{if get('subTitle')} - #{get 'subTitle' /}#{/if} - ${siteName}" />
         <meta property="og:url" content="${request.secure ? 'https' : 'http' }://${request.host + request.url}" />
         <meta property="og:image" content="${request.secure ? 'https' : 'http' }://${request.host + (document?.thumbnailUrl ? document.thumbnailUrl : '/public/images/logo.png')}" />
-        <meta property="og:description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${play.configuration.getProperty('application.fullName')}" />
-        <meta property="og:site_name" content="${play.configuration.getProperty('application.fullName')}" />
+        <meta property="og:description" content="${document?.title ? messages.get('read.document.on', document.title) : get('title')} ${siteName}" />
+        <meta property="og:site_name" content="${siteName}" />
 
         <link rel="image_src" type="image/jpeg" href="${request.secure ? 'https' : 'http' }://${request.host + (document?.thumbnailUrl ? document.thumbnailUrl : '/public/images/logo.png')}" />
         <link rel="icon" type="image/png" href="@@{'/public/images/favicon.png'}">
@@ -34,7 +34,7 @@
                 <li class="name">
                     <h1>
                         <a class="logo" href="@{web.WebController.index()}">
-                            ${play.configuration.getProperty("application.fullName")}
+                            ${siteName}
                         </a>
                     </h1>
                 </li>
@@ -85,7 +85,7 @@
             <div class="row">
                 <div class="twelve columns">
                     <p>
-                        &copy; <a href="@{web.WebController.index()}">${play.configuration.getProperty("application.fullName")}</a> - Powered By <a href="http://www.opendocshub.org">&{'_.openDocsHubProject'}</a>
+                        &copy; <a href="@{web.WebController.index()}">${siteName}</a> - Powered By <a href="http://www.opendocshub.org">&{'_.openDocsHubProject'}</a>
                     </p>
                 </div>
             </div>

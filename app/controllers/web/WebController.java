@@ -16,7 +16,8 @@ public class WebController extends AppController {
     @Before
     public static void addViewArgs() {
         renderArgs.put("me", getMe());
-        renderArgs.put("siteName", Play.configuration.getProperty("application.fullName"));
+        renderArgs.put("siteName", Play.configuration.getProperty("siteName"));
+        renderArgs.put("siteDescription", Play.configuration.getProperty("siteDescription"));
     }
 
     @Before(unless = {
