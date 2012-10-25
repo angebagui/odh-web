@@ -25,6 +25,3 @@ server.pid
 *.ipr
 *.iml
 *.log
-
-# Comment out the line below if you want to to keep track of application.override.conf (Useful when you want to push it to Heroku too)
-conf/application.override.conf
