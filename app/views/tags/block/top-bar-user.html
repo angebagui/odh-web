@@ -18,7 +18,7 @@
     #{/if}
     #{else}
         <li>
-            #{a @web.Auth.googleCode(request.url)}
+            #{a @web.Auth.googleCode(request.url), id : 'menu-login-link'}
                 <i class="icon-google-plus"></i>
                 &{'auth.login'}
             #{/a}

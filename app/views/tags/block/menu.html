@@ -1,36 +1,36 @@
 <ul class="left">
     <li>
-        <a href="@{web.WebController.index()}">
+        <a href="@{web.WebController.index()}" id="menu-home-link">
             <i class="icon-home"></i>
             &{'_.home'}
         </a>
     </li>
     <li>
-        <a href="@{web.Documents.list()}">
+        <a href="@{web.Documents.list()}" id="menu-documents-link">
             <i class="icon-copy"></i>
             &{'_.documents'}
         </a>
     </li>
     <li>
-        <a href="@{web.Discussions.list()}">
+        <a href="@{web.Discussions.list()}" id="menu-discussions-link">
             <i class="icon-comments"></i>
             &{'_.discussions'}
         </a>
     </li>
     <li>
-        <a href="@{web.Documents.add()}">
+        <a href="@{web.Documents.add()}" id="menu-new-document-link">
             <i class="icon-upload">&nbsp;</i>
             &{'_.uploadDocument'}
         </a>
     </li>
     <li>
-        <a href="@{web.Discussions.add()}">
+        <a href="@{web.Discussions.add()}" id="menu-new-discussion-link">
             <i class="icon-comments-3">&nbsp;</i>
             &{'_.startDiscussion'}
         </a>
     </li>
     <li class="has-dropdown">
-        <a href="#"><i class="icon-search"></i> &{'_.search'}</a>
+        <a href="#" id="menu-search-link"><i class="icon-search"></i> &{'_.search'}</a>
         <ul class="dropdown"> 
             <li class="search">
                 #{form @web.Documents.list()}

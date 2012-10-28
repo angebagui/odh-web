@@ -86,3 +86,50 @@
         </div>
     </div>
 </div>
+<ol id="tipList" class=hide>
+  <li data-id="menu-home-link" data-button="Okay! Let's go!">
+    <p>
+        Hello! This quick tour will guide through you the main features of this application.
+    </p>
+  </li>
+  <li data-id="menu-documents-link">
+    <p>
+        Explore documents : read, comment and copy them directly to your Google Drive account.
+    </p>
+  </li>
+  <li data-id="menu-discussions-link">
+    <p>
+        Discussions are deeper conversations about documents. You can explore and read them here. You can also link additional documents to a discussion.
+    </p>
+  </li>
+  <li data-id="menu-new-document-link">
+    <p>
+        Upload a document to share it with others. A copy of that document will also be uploaded to your Google Drive.
+    </p>
+  </li>
+  <li data-id="menu-new-discussion-link">
+    <p>
+        Start a discussion : ask a question, post an idea or debate. Link documents to these discussions.
+    </p>
+  </li>
+  <li data-id="menu-search-link">
+    <p>
+        Quick search : access documents and discussions directly from here.
+    </p>
+  </li>
+  <li data-id="menu-login-link" data-button="That's it! Enjoy!">
+    <p>
+        You can use this application without signing in. However for community features, you will need to sign in.
+    </p>
+  </li>
+</ol>
+#{set 'moreScripts'}
+    <script type="text/javascript">
+        $("#tipList").joyride({
+            'tipAnimation': 'fade',
+             'tipLocation': 'top',
+             'cookieMonster': true,
+             'cookieName': 'tipList'
+        });
+    </script>
+#{/set}
